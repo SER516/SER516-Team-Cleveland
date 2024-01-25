@@ -27,14 +27,8 @@ Before running the script, make sure you have the following installed:
    ```bash
    pip install -r requirements.txt
    ```
-
-3. Create a .env file in the project root and add the following:
-
-   ```bash
-   TAIGA_URL=https://api.taiga.io/api/v1
-   ```
-
-4. Run the script:
+   
+3. Run the script:
 
    ```bash
    python3 app.py
