@@ -18,7 +18,7 @@ Before running the script, make sure you have the following installed:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/ser516asu/SER516-Team-Miami.git
+   git clone https://github.com/ser516asu/SER516-Team-Cleveland.git
    cd SER516-Team-Cleveland
    ```
 
