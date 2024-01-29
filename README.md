@@ -43,3 +43,8 @@ To interact with the Taiga API using the provided Python script, you will need t
 2. **Select the Project**: Navigate to the project for which you want to obtain the project slug.
 
 3. **Project URL**: Look at the URL in your browser's address bar while you are inside the project. The project slug is the part of the URL that comes after the last slash ("/"). For example:
+
+   https://tree.taiga.io/project/random-project-name
+   
+   Pick 'random-project-name' and provide the slug as an input. The Application will now provide you the Project name, the team members, and the task board columns as the output. 
+4. **Check stats**: Now, you can try to see the open user stories, task closed per week, average lead time, and average cycle time of the Project.
