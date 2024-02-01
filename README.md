@@ -43,3 +43,25 @@ To interact with the Taiga API using the provided Python script, you will need t
 2. **Select the Project**: Navigate to the project for which you want to obtain the project slug.
 
 3. **Project URL**: Look at the URL in your browser's address bar while you are inside the project. The project slug is the part of the URL that comes after the last slash ("/"). For example:
+
+
+## Running the Backend Application
+
+After running the command 
+``` bash
+   pip install -r requirements.txt
+   ```
+Go to the taigaProject folder (`cd taigaProject`) and run the command- 
+``` bash
+uvicorn main:app 
+```
+
+You can hit the API using `http:127.0.0.1/[requiredApiPath]`
+while providing the necessary payload. 
+
+Use the command 
+``` bash
+uvicorn main:app --reload
+```
+to run the application in developer mode, it reloads everytime 
+there's a change in a file. 
