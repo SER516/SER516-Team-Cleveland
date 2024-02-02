@@ -56,7 +56,7 @@ Go to the taigaProject folder (`cd taigaProject`) and run the command-
 uvicorn main:app 
 ```
 
-You can hit the API using `http:127.0.0.1/[requiredApiPath]`
+You can hit the API using `http://127.0.0.1:8000/[requiredApiPath]` or `http://localhost:8000/[requiredApiPath]`
 while providing the necessary payload. 
 
 Use the command 
