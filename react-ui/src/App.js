@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Button, Form, Row, Col } from "react-bootstrap";
 import './App.css';
 
@@ -19,6 +20,41 @@ function App() {
           Submit
         </Button>
       </Form>
+=======
+import React, { useState } from 'react';
+import logo from './logo.svg';
+import './App.css';
+import ProjectSelection from './ProjectSelection';
+
+function App() {
+  const [showProjectSelection, setShowProjectSelection] = useState(false);
+
+  return (
+    <div className="App">
+      {showProjectSelection ? (
+        <ProjectSelection />
+      ) : (
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <p>
+            Edit <code>src/App.js</code> and save to reload.
+          </p>
+          <a
+            className="App-link"
+            href="https://reactjs.org"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Learn React
+          </a>
+          <button
+            onClick={() => setShowProjectSelection(true)}
+          >
+            Go to Project Selection
+          </button>
+        </header>
+      )}
+>>>>>>> 778614a (US12Task42 Initial version of ProjectSelection.js and ProjectSelection.css)
     </div>
   );
 }

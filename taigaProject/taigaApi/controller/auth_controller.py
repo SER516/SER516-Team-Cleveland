@@ -15,7 +15,3 @@ def auth(auth: AuthRequest):
 
     cache.set("token", token)
     return {"auth_token": token}
-
-
-
-
