@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { Button, Form, Row, Col } from "react-bootstrap";
 import './App.css';
 
@@ -22,18 +23,19 @@ function App() {
       </Form>
 =======
 import React, { useState } from 'react';
+=======
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+>>>>>>> 4042ed0 (US12Task42 Modified HTML based code to React BootStrap based code and chaged the filename)
 import logo from './logo.svg';
 import './App.css';
-import ProjectSelection from './ProjectSelection';
+import ProjectSlug from './ProjectSlug';
+import Button from 'react-bootstrap/Button';
 
 function App() {
-  const [showProjectSelection, setShowProjectSelection] = useState(false);
-
   return (
-    <div className="App">
-      {showProjectSelection ? (
-        <ProjectSelection />
-      ) : (
+    <Router>
+      <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <p>
@@ -47,15 +49,21 @@ function App() {
           >
             Learn React
           </a>
-          <button
-            onClick={() => setShowProjectSelection(true)}
-          >
-            Go to Project Selection
-          </button>
+          <Link to="/ProjectSlug">
+            <Button variant="info">Go to Project Slug</Button>
+          </Link>
         </header>
+<<<<<<< HEAD
       )}
 >>>>>>> 778614a (US12Task42 Initial version of ProjectSelection.js and ProjectSelection.css)
     </div>
+=======
+        <Routes>
+          <Route path="/ProjectSlug" element={<ProjectSlug />} />
+        </Routes>
+      </div>
+    </Router>
+>>>>>>> 4042ed0 (US12Task42 Modified HTML based code to React BootStrap based code and chaged the filename)
   );
 }
 
