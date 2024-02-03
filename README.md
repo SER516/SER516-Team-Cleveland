@@ -63,8 +63,10 @@ Use the command
 ``` bash
 uvicorn main:app --reload
 ```
-to run the application in developer mode, it reloads everytime 
-there's a change in a file. 
+to run the application in developer mode, it reloads everytime there's a change in a file. 
+
+## To run the frontend
+
 ## Download Node.js
 
 Download node.js from https://nodejs.org/en/download
