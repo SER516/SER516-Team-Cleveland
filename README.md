@@ -56,17 +56,17 @@ Go to the taigaProject folder (`cd taigaProject`) and run the command-
 uvicorn main:app 
 ```
 
-You can hit the API using `http:127.0.0.1/[requiredApiPath]`
+You can hit the API using `http://127.0.0.1:8000/[requiredApiPath]` or `http://localhost:8000/[requiredApiPath]`
 while providing the necessary payload. 
 
 Use the command 
 ``` bash
 uvicorn main:app --reload
 ```
-to run the application in developer mode, it reloads everytime 
-there's a change in a file. 
+to run the application in developer mode, it reloads everytime there's a change in a file. 
 
 ## To run the frontend
+
 ## Download Node.js
 
 Download node.js from https://nodejs.org/en/download

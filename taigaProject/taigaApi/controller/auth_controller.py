@@ -7,7 +7,7 @@ from taigaApi.util.SimpleCache import cache
 
 router = APIRouter()
 
-@router.get("/auth")
+@router.post("/auth")
 def auth(auth: AuthRequest):
     token = authenticate(auth.username, auth.password)
     if token == None:
