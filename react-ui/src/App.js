@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { Button, Form, Row, Col } from "react-bootstrap";
 import './App.css';
 
@@ -27,15 +28,22 @@ import React, { useState } from 'react';
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 >>>>>>> 4042ed0 (US12Task42 Modified HTML based code to React BootStrap based code and chaged the filename)
+=======
+import React, { useState } from 'react';
+>>>>>>> 7bbe6ca (US12Task42 Added Clickon button effect for redirection page and modified css file for ProjectSlug.js)
 import logo from './logo.svg';
 import './App.css';
 import ProjectSlug from './ProjectSlug';
 import Button from 'react-bootstrap/Button';
 
 function App() {
+  const [showProjectSlug, setShowProjectSlug] = useState(false);
+
   return (
-    <Router>
-      <div className="App">
+    <div className="App">
+      {showProjectSlug ? (
+        <ProjectSlug />
+      ) : (
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <p>
@@ -49,10 +57,9 @@ function App() {
           >
             Learn React
           </a>
-          <Link to="/ProjectSlug">
-            <Button variant="info">Go to Project Slug</Button>
-          </Link>
+          <Button variant="info" onClick={() => setShowProjectSlug(true)}>Go to Project Slug</Button>
         </header>
+<<<<<<< HEAD
 <<<<<<< HEAD
       )}
 >>>>>>> 778614a (US12Task42 Initial version of ProjectSelection.js and ProjectSelection.css)
@@ -64,6 +71,10 @@ function App() {
       </div>
     </Router>
 >>>>>>> 4042ed0 (US12Task42 Modified HTML based code to React BootStrap based code and chaged the filename)
+=======
+      )}
+    </div>
+>>>>>>> 7bbe6ca (US12Task42 Added Clickon button effect for redirection page and modified css file for ProjectSlug.js)
   );
 }
 
