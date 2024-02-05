@@ -11,6 +11,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+<<<<<<< HEAD
 
 .mainbody{
   margin-left: 150px;
@@ -18,3 +19,5 @@ code {
   margin-top: 20px;
   align-items: left;
 }
+=======
+>>>>>>> 39bc5f467417a2448f34efe8550b57f0114efd90
