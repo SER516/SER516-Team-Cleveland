@@ -43,6 +43,7 @@ def get_closed_tasks(project_id, auth_token):
 
     # Call the get_tasks function to retrieve all tasks for the project
     tasks = get_tasks(project_id, auth_token)
+    print(tasks)
     if tasks:
 
         # Filter tasks to include only closed tasks and format the result
