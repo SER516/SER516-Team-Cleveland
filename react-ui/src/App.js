@@ -1,30 +1,23 @@
-import logo from './logo.svg';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import { Button, Form, Row, Col } from "react-bootstrap";
 import './App.css';
 
 function App() {
   return (
-    <div className="mainbody">
-      <Form>
-        <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Email Address: </Form.Label>
-          <Form.Control type="email" placeholder="Enter email" />
+    <div className="d-flex align-items-center justify-content-center vh-100">
+      <Form style={{ width: '100%' }}>
+        <Form.Group className="mb-3 col-sm-8 offset-sm-2" controlId="formUsername">
+          <Form.Label>Username: </Form.Label>
+          <Form.Control type="text" placeholder="Enter Username: " />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formBasicPassword">
+        <Form.Group className="mb-3 col-sm-8 offset-sm-2" controlId="formPassword">
           <Form.Label>Password: </Form.Label>
-          <Form.Control type="password" placeholder="Password" />
+          <Form.Control type="password" placeholder="Enter Password: " />
         </Form.Group>
-        <Row className="justify-content-md-center">
-          <Col xs lg="2">
-            <Button variant="primary" type="submit">
-              Submit
-            </Button>
-          </Col>
-        </Row>
+
+        <Button variant="primary" type="submit" className="col-sm-1 offset-sm-6">
+          Submit
+        </Button>
       </Form>
     </div>
   );
