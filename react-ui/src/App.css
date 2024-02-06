@@ -37,3 +37,13 @@
   }
 }
 
+.SubmitButton {
+  font-size: calc(10px + 2vmin);
+  background-color: #61dafb;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+}
