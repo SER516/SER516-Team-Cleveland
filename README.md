@@ -51,7 +51,7 @@ After running the command
 ``` bash
    pip install -r requirements.txt
    ```
-Go to the taigaProject folder (`cd taigaProject`) and run the command- 
+Go to the source folder of the backend application(`cd taigaProject/src`) and run the command- 
 ``` bash
 uvicorn main:app 
 ```
@@ -64,6 +64,19 @@ Use the command
 uvicorn main:app --reload
 ```
 to run the application in developer mode, it reloads everytime there's a change in a file. 
+
+### Writing unit test
+
+We're using pytest to write the unit test for the backend application. 
+The dependency is added to the requirements.txt file, please do a pip install before trying to run the tests. 
+In the test folder, create the python file in the format "test_{test-file-name}", since pytest only identifies the 
+files named in this format.
+
+To run the tests, go to the root folder, and run the command 
+```
+pytest
+```
+in the terminal to run the tests and get the results.
 
 ## To run the frontend
 
