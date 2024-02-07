@@ -37,7 +37,7 @@
   }
 }
 
-.SubmitButton {
+.submitButton {
   font-size: calc(10px + 2vmin);
   background-color: #61dafb;
   border: none;
@@ -46,4 +46,13 @@
   cursor: pointer;
   display: block;
   margin: 0 auto;
+}
+
+.errorMessage {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  font-size: 2vw;
+  color: red;
+  font-weight: bold;
 }
