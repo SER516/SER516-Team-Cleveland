@@ -1,12 +1,12 @@
 import getpass
 import json
 from datetime import datetime, timedelta
-from taigaApi.authenticate import authenticate
+from taigaApi.auth.authenticate import authenticate
 from taigaApi.project.getProjectBySlug import get_project_by_slug
 from taigaApi.project.getProjectTaskStatusName import get_project_task_status_name
 from taigaApi.userStory.getUserStory import get_user_story
 from taigaApi.task.getTaskHistory import get_task_history
-from taigaApi.task.getTasks import get_closed_tasks, get_all_tasks
+from taigaApi.task.getTasks import get_closed_tasks
 
 
 # Function to format datetime objects for JSON serialization
