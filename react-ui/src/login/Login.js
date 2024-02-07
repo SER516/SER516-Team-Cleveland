@@ -12,10 +12,12 @@ export default class Login extends React.Component {
     }
 
     handleUsernameInput = (event) => {
+        this.setState({ token: "" });
         this.setState({ username: event.target.value });
     }
 
     handlePasswordChange = (event) => {
+        this.setState({ token: "" });
         this.setState({ password: event.target.value });
     }
 
@@ -41,36 +43,44 @@ export default class Login extends React.Component {
         })
         .catch(ex => {
             this.setState({ validUser: false });
+            this.setState({ token: null })
         });
     }
 
     render() {
         return(
-            <Form onSubmit={this.handleSubmit}>
-                <FloatingLabel
-                    controlId="floatingUsername"
-                    label="Enter Username"
-                    className="mb-3"
-                >
-                    <Form.Control type="text" placeholder="Enter Username" onChange={this.handleUsernameInput} />
-                </FloatingLabel>
+            <div className="d-flex align-items-center justify-content-center vh-100">
+                <Form onSubmit={this.handleSubmit} style={{ width: "100%" }}>
+                    <FloatingLabel
+                        controlId="formUsername"
+                        label="Enter Username"
+                        className="mb-3 col-sm-8 offset-sm-2"
+                    >
+                        <Form.Control type="text" placeholder="Enter Username" onChange={this.handleUsernameInput} />
+                    </FloatingLabel>
 
-                <FloatingLabel
-                    controlId="floatingPassword"
-                    label="Enter Password"
-                    className="mb-3"
-                >
-                    <Form.Control type="password" placeholder="Enter Password" onChange={this.handlePasswordChange} />
-                </FloatingLabel>
+                    <FloatingLabel
+                        controlId="formPassword"
+                        label="Enter Password"
+                        className="mb-3 col-sm-8 offset-sm-2"
+                    >
+                        <Form.Control type="password" placeholder="Enter Password" onChange={this.handlePasswordChange} />
+                    </FloatingLabel>
 
-                <Button variant="primary" type="submit">
-                    Submit
-                </Button>
-                
-                {this.state.validUser ? (
-                    <Navigate replace to="/project" state={{ token: this.state.token }} />
-                ) : null}
-            </Form>
+                    <Button variant="info" type="submit" className="submitButton">
+                        Submit
+                    </Button>
+                    
+                    {this.state.validUser ? (
+                        <Navigate replace to="/project" state={{ token: this.state.token }} />
+                    ) : null}
+                    {
+                        this.state.token === null ? (
+                            <p className="errorMessage">Invalid auth</p>
+                        ) : null
+                    }
+                </Form>
+            </div>
         );
     }
 }
