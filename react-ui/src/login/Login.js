@@ -24,7 +24,6 @@ export default class Login extends React.Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-
         axios({
             method: "post",
             url: "http://localhost:8000/auth",
