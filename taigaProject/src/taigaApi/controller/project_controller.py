@@ -1,20 +1,18 @@
-from fastapi import FastAPI, Request, APIRouter
+from fastapi import FastAPI, Request, APIRouter, HTTPException
 
-from taigaApi.auth.authenticate import authenticate
-from taigaApi.model.authRequest import AuthRequest
-
-from taigaApi.util.SimpleCache import cache
+from taigaApi.model.projectRequest import ProjectRequest
 
 from taigaApi.project.getProjectBySlug import get_project_by_slug
 from taigaApi.project.getProjectTaskStatusName import get_project_task_status_name
 
 router = APIRouter()
 
-@router.get("/Project/{project_slug}")
-def auth(project_slug: str):
-    token = cache.get("token")
-    project_info = get_project_by_slug(project_slug, token)
-    task_status_name = get_project_task_status_name(project_info["id"], token)
+@router.get("/Project")
+def auth(projectRequest: ProjectRequest):
+    project_info = get_project_by_slug(projectRequest.projectslug, projectRequest.authtoken)
+    if project_info is None:
+        raise HTTPException(status_code=401, detail="Invalid Project Slug")
+    task_status_name = get_project_task_status_name(project_info["id"], projectRequest.authtoken)
 
     project_details = {
         "name": project_info["name"],
