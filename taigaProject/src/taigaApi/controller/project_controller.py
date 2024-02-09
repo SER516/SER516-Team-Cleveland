@@ -11,7 +11,7 @@ router = APIRouter()
 def auth(projectRequest: ProjectRequest):
     project_info = get_project_by_slug(projectRequest.projectslug, projectRequest.authtoken)
     if project_info is None:
-        raise HTTPException(status_code=401, detail="Invalid Project Slug")
+        raise HTTPException(status_code=404, detail="Project Slug Not found")
     task_status_name = get_project_task_status_name(project_info["id"], projectRequest.authtoken)
 
     project_details = {
