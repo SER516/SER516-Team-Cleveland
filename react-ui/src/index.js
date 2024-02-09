@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Project from './project';
+import Graph from './graph/index'; // Add for test
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,11 @@ const router = createBrowserRouter([
   {
     path: "/project",
     element: <Project auth="" />
+  },
+  // Added for test
+  {
+    path: "/graph",
+    element: <Graph />
   }
 ]);
 
