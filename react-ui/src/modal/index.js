@@ -4,7 +4,8 @@ import { Button, Modal } from "react-bootstrap";
 const CustomModal = ({ headerTitle, message, showModal }) => {
     const [show, setShow] = useState(true);
 
-    const handleClose = () => {
+    const handleClose = (event) => {
+        event.preventDefault();
         console.log("handle click");
         setShow(false);
     }
@@ -24,7 +25,7 @@ const CustomModal = ({ headerTitle, message, showModal }) => {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="danger" onClick={() => handleClose()}>Close</Button>
+                    <Button variant="danger" onClick={handleClose}>Close</Button>
                 </Modal.Footer>
             </Modal>
         </div>
