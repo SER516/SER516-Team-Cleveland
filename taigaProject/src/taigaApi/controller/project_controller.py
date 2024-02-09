@@ -1,4 +1,5 @@
-from fastapi import FastAPI, Request, APIRouter, HTTPException
+from fastapi import FastAPI, Request, APIRouter, HTTPException, Header
+from typing import Annotated
 
 from taigaApi.model.projectRequest import ProjectRequest
 
@@ -7,12 +8,12 @@ from taigaApi.project.getProjectTaskStatusName import get_project_task_status_na
 
 router = APIRouter()
 
-@router.get("/Project")
-def get_project_details(projectRequest: ProjectRequest):
-    project_info = get_project_by_slug(projectRequest.projectslug, projectRequest.authtoken)
+@router.post("/Project")
+def auth(projectRequest: ProjectRequest, token: Annotated[str | None, Header()] = None):
+    project_info = get_project_by_slug(projectRequest.projectslug, token)
     if project_info is None:
         raise HTTPException(status_code=404, detail="Project Slug Not Found.")
-    task_status_name = get_project_task_status_name(project_info["id"], projectRequest.authtoken)
+    task_status_name = get_project_task_status_name(project_info["id"], token)
 
     project_details = {
         "name": project_info["name"],
