@@ -1,6 +1,34 @@
 import React from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 
+// Tooltip for Userstory graph
+const UserstoryTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+        return (
+            <div className="custom-tooltip" style={{ backgroundColor: '#fff', padding: '10px', border: '1px solid #ccc' }}>
+                <p>Date : {payload[0].payload.name}</p>
+                <p>Userstory : {payload[1].value}</p>
+            </div>
+        );
+    }
+
+    return null;
+};
+
+// Tooltip for Task graph
+const TaskTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+        return (
+            <div className="custom-tooltip" style={{ backgroundColor: '#fff', padding: '10px', border: '1px solid #ccc' }}>
+                <p>Date : {payload[0].payload.name}</p>
+                <p>Task : {payload[1].value}</p>
+            </div>
+        );
+    }
+
+    return null;
+};
+
 const Graph = () => {
     // Sample data
     const data = [
@@ -36,7 +64,7 @@ const Graph = () => {
                                     tick={{ angle: -45, textAnchor: 'end', fontSize: 12}}/>
                             <YAxis type="number" dataKey="Userstory" name="Userstory" label={{ value: 'Points', 
                                     angle: -90, position: 'insideLeft', style: {fontSize: '20px'}}} />
-                            <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+                            <Tooltip content={<UserstoryTooltip />} />
                             <Scatter name="Userstory" data={data} fill="#8884d8" />
                             <ReferenceLine y={avgUserstory} stroke="red" strokeDasharray="3 3" strokeWidth={2}
                                             label={{ value: 'Average', position: 'bottom', fontSize: 15, offset: 10 }} />
@@ -56,7 +84,7 @@ const Graph = () => {
                                     tick={{ angle: -45, textAnchor: 'end', fontSize: 12}}/>
                             <YAxis type="number" dataKey="Task" name="Tasks" label={{ value: 'Count', 
                                     angle: -90, position: 'insideLeft', style: {fontSize: '20px'}}} />
-                            <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+                            <Tooltip content={<TaskTooltip />} />
                             <Scatter name="Tasks" data={data} fill="#82ca9d" />
                             <ReferenceLine y={avgTask} stroke="red" strokeDasharray="3 3" strokeWidth={2}
                                             label={{ value: 'Average', position: 'bottom', fontSize: 15, offset: 10 }} />
