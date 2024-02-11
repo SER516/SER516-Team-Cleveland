@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { Button, FloatingLabel, Form, Stack } from "react-bootstrap";
-import { useLocation, useNavigate } from "react-router-dom";  // Add useNavigate for test
+import { useLocation } from "react-router-dom";
 import CustomModal from "../modal";
 
 const Project = ({ auth }) => {
     let location = useLocation();
-    let navigate = useNavigate(); // Add navigate for test
     const [clicked, setClicked] = useState(false);
 
     const handleSubmit = () => {
@@ -13,16 +12,11 @@ const Project = ({ auth }) => {
         setClicked(true);
     }
 
-    // Add for test
-    const handleNavigateToGraph = () => {
-        navigate('/graph');
-    };
-
-    // if (!location?.state && !clicked) {
-    //     return (
-    //         <CustomModal message="User not authenticated" headerTitle="Invalid Authentication!" showModal={true} />
-    //     );
-    // }
+    if (!location?.state && !clicked) {
+        return (
+            <CustomModal message="User not authenticated" headerTitle="Invalid Authentication!" showModal={true} />
+        );
+    }
 
     return (
         <Stack gap={4} className="col-md-5 mx-auto">
@@ -38,11 +32,6 @@ const Project = ({ auth }) => {
 
                     <Button variant="info" type="submit" className="submitButton" onClick={() => handleSubmit()}>
                         Submit
-                    </Button>
-
-                    {/* Add for test*/}
-                    <Button variant="primary" className="mt-2" onClick={handleNavigateToGraph}>
-                        Graph
                     </Button>
                 </Form>
             </div>
