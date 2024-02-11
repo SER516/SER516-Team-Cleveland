@@ -5,8 +5,6 @@ from datetime import datetime
 
 from taigaApi.task.getTasks import get_closed_tasks
 
-from taigaApi.task.getTasks import get_closed_tasks
-
 # Load environment variables from .env file
 load_dotenv()
 
