@@ -12,9 +12,13 @@ const Project = () => {
     const [error, setError] = useState(false);
     const [data, setData] = useState(null);
     const [selectedValue, setSelectedValue] = useState(null);
+    const [metric, setMetric] = useState(null);
 
     const handleSelect = (eventKey) => {
         setSelectedValue(eventKey);
+        if (eventKey === "Lead Time") {
+            setMetric("LeadTime");
+        }
     };
 
     useEffect(() => {
@@ -26,7 +30,7 @@ const Project = () => {
 
         axios({
             method: "post",
-            url: `http://localhost:8000/metric/${selectedValue}`,
+            url: `http://localhost:8000/metric/${metric}`,
             data: {
                 projectslug: project
             },
@@ -83,7 +87,7 @@ const Project = () => {
                                             {selectedValue ? selectedValue : 'Select Metric'}
                                         </Dropdown.Toggle>
                                         <Dropdown.Menu>
-                                            <Dropdown.Item eventKey="LeadTime">Lead Time</Dropdown.Item>
+                                            <Dropdown.Item eventKey="Lead Time">Lead Time</Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
                                 </InputGroup>
