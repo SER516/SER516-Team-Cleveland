@@ -14,4 +14,4 @@ def auth(projectRequest: ProjectRequest):
         cache.set(projectRequest.projectslug, project_info)
         return get_lead_time_details(project_info, projectRequest.authtoken)
     else:
-        return get_lead_time_details(cache.get(projectRequest.authtoken), projectRequest.projectslug)
+        return get_lead_time_details(cache.get(projectRequest.projectslug), projectRequest.authtoken)

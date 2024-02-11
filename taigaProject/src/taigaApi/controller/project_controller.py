@@ -8,7 +8,7 @@ from taigaApi.project.getProjectTaskStatusName import get_project_task_status_na
 router = APIRouter()
 
 @router.get("/Project")
-def auth(projectRequest: ProjectRequest):
+def get_project_details(projectRequest: ProjectRequest):
     project_info = get_project_by_slug(projectRequest.projectslug, projectRequest.authtoken)
     if project_info is None:
         raise HTTPException(status_code=404, detail="Project Slug Not Found.")
