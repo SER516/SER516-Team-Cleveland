@@ -87,7 +87,7 @@ const Project = () => {
                                             {selectedValue ? selectedValue : 'Select Metric'}
                                         </Dropdown.Toggle>
                                         <Dropdown.Menu>
-                                            <Dropdown.Item eventKey="LeadTime">Lead Time</Dropdown.Item>
+                                            <Dropdown.Item eventKey="Lead Time">Lead Time</Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
                                 </InputGroup>
