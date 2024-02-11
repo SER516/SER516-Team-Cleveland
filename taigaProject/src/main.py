@@ -3,10 +3,12 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from taigaApi.controller import project_controller
 from taigaApi.controller import auth_controller
+from taigaApi.controller import metric_controller
 
 app = FastAPI()
 app.include_router(project_controller.router)
 app.include_router(auth_controller.router)
+app.include_router(metric_controller.router)
 
 origins = ["http://localhost:3000"]
 
