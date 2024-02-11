@@ -5,9 +5,13 @@ import Login from './login/Login';
 
 function App() {
   return (
-    <Stack gap={4} className="col-md-5 mx-auto">
-      <Login />
-    </Stack>
+    <div className='background' style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <div style={{ height: '80%', width: '30%', maxHeight: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Stack gap={4} style={{ borderRadius: '30px', overflow: 'hidden' }}>
+          <Login />
+        </Stack>
+      </div>
+    </div>
   );
 }
 
