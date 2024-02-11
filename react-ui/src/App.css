@@ -56,3 +56,28 @@
   color: red;
   font-weight: bold;
 }
+
+.background{
+  background-image: url('Background2.png');
+  background-size: cover;
+}
+
+.backgroundWhite{
+  background-color: white;
+}
+
+.backgroundButton{
+  background-image: url('Background1.png');
+  background-size: cover;
+  color: white;
+  border-radius: 6px;
+  font-size: 18px;
+  outline: none;
+}
+
+.projectName {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  font-size: 2vw;
+}

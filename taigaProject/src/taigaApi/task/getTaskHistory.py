@@ -3,6 +3,8 @@ import requests
 from dotenv import load_dotenv
 from datetime import datetime
 
+from taigaApi.task.getTasks import get_closed_tasks
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -53,6 +55,27 @@ def get_task_history(tasks, auth_token):
     return [cycle_time, closed_tasks]
 
 
+def get_task_lead_time(project_id, auth_token):
+    tasks = get_closed_tasks(project_id, auth_token)
+    lead_time = 0
+    closed_tasks = 0
+    lead_times = []
+    for task in tasks:
+        created_date = datetime.fromisoformat(task["created_date"])
+        finished_date = datetime.fromisoformat(task['finished_date'])
+        lead_time += (finished_date - created_date).days
+        lead_times.append({
+            "taskId": task["id"],
+            "startTime": task["created_date"],
+            "endTime": task['finished_date'],
+            "timeTaken": (finished_date - created_date).days
+        })
+        closed_tasks += 1
+    if closed_tasks == 0:
+        return lead_times, 0
+    avg_lead_time = round((lead_time / closed_tasks), 2)
+
+    return lead_times, avg_lead_time
 # Function to extract the date when a task transitioned from 'New' to 'In progress'
 def extract_new_to_in_progress_date(history_data):
     for event in history_data:
