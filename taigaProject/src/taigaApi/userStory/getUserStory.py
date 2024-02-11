@@ -71,7 +71,9 @@ def get_us_lead_time(project_id, auth_token):
         lead_times.append({
             "taskId": user_story["id"],
             "startTime": user_story["created_date"],
+            "startDate": created_date.date(),
             "endTime": user_story['finished_date'],
+            "endDate": finished_date.date(),
             "timeTaken": (finished_date - created_date).days
         })
         closed_user_stories += 1
