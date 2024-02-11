@@ -6,6 +6,7 @@ def get_lead_time_details(project_details, auth_token):
     us_lead_time, avg_us_lt = get_us_lead_time(project_details["id"], auth_token)
     task_lead_time, avg_task_lt = get_task_lead_time(project_details["id"], auth_token)
     
+    us_lead_time.sort(key=lambda l: l["endDate"])
     task_lead_time.sort(key=lambda l: l["endDate"])
 
     #get objects created that store the details for task and user story lead times

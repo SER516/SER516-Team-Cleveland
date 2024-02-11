@@ -71,7 +71,7 @@ const Project = () => {
                         <br />
                         <Form style={{ width: "100%" }}>
                             <Image src={Cleveland} className='col-sm-2 offset-sm-5' /><br /><br /><br /><br />
-                            <div className="mb-3 col-sm-6 offset-sm-2">Welcome to our project! <br /><br />Please input your Project Slug in the input box given below
+                            <div className="mb-3 col-sm-6 offset-sm-2">Welcome to our project! <br /><br />Please input your Project Slug 
                                 <br /></div>
                             <div className="d-flex justify-content-center col-sm-8 offset-sm-2">
                                 <InputGroup>
