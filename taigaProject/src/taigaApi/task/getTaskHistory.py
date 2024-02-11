@@ -68,7 +68,7 @@ def get_task_lead_time(project_id, auth_token):
             "taskId": task["id"],
             "startTime": task["created_date"],
             "endTime": task['finished_date'],
-            "timeTaken": lead_time
+            "timeTaken": (finished_date - created_date).days
         })
         closed_tasks += 1
     if closed_tasks == 0:

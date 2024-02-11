@@ -19,6 +19,7 @@ def get_user_story(project_id, auth_token):
     headers = {
         'Authorization': f'Bearer {auth_token}',
         'Content-Type': 'application/json',
+        "x-disable-pagination": "True"
     }
 
     try:
@@ -71,7 +72,7 @@ def get_us_lead_time(project_id, auth_token):
             "taskId": user_story["id"],
             "startTime": user_story["created_date"],
             "endTime": user_story['finished_date'],
-            "timeTaken": lead_time
+            "timeTaken": (finished_date - created_date).days
         })
         closed_user_stories += 1
     if closed_user_stories == 0:

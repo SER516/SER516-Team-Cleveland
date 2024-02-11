@@ -26,7 +26,7 @@ const Project = () => {
 
         axios({
             method: "post",
-            url: "http://localhost:8000/project",
+            url: "http://localhost:8000/metric/LeadTime",
             data: {
                 projectslug: project
             },
@@ -38,6 +38,7 @@ const Project = () => {
         })
         .then(res => {
             setData(res.data);
+            console.log(data);
             setError(false);
         })
         .catch(ex => {
@@ -96,8 +97,8 @@ const Project = () => {
                                 <p className="errorMessage">Unable to fetch project detail</p>
                             ) : null}
 
-                            {data?.name ? (
-                                <h6 className="projectName">{data.name}</h6>
+                            {data?.projectInfo?.name ? (
+                                <h6 className="projectName">{data.projectInfo.name}</h6>
                             ) : null}
                         </Form>
                     </div>
