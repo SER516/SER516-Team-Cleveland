@@ -58,7 +58,7 @@ def get_closed_tasks(project_id, auth_token):
 
         return closed_tasks
     else:
-        return None
+        return []
 
 
 # Function to retrieve all tasks for a specific project from the Taiga API
@@ -80,5 +80,5 @@ def get_all_tasks(project_id, auth_token):
 
         return all_tasks
     else:
-        return None
+        return []
 
