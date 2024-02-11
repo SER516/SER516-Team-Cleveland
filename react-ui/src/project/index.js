@@ -26,7 +26,7 @@ const Project = () => {
 
         axios({
             method: "post",
-            url: "http://localhost:8000/metric/LeadTime",
+            url: `http://localhost:8000/metric/${selectedValue}`,
             data: {
                 projectslug: project
             },
@@ -83,7 +83,7 @@ const Project = () => {
                                             {selectedValue ? selectedValue : 'Select Metric'}
                                         </Dropdown.Toggle>
                                         <Dropdown.Menu>
-                                            <Dropdown.Item eventKey="Lead Time">Lead Time</Dropdown.Item>
+                                            <Dropdown.Item eventKey="LeadTime">Lead Time</Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
                                 </InputGroup>
