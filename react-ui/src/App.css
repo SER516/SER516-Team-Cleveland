@@ -74,3 +74,10 @@
   font-size: 18px;
   outline: none;
 }
+
+.projectName {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  font-size: 2vw;
+}

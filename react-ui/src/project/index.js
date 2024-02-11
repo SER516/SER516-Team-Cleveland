@@ -1,24 +1,62 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, FloatingLabel, Form, Stack, Image, Dropdown, InputGroup } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import CustomModal from "../modal";
+import axios from "axios";
 import Cleveland from "./Cleveland.png"
 
-const Project = ({ auth }) => {
+const Project = () => {
+    const location = useLocation();
+    const [auth, setAuth] = useState("");
+    const [project, setProject] = useState("");
+    const [error, setError] = useState(false);
+    const [data, setData] = useState(null);
     const [selectedValue, setSelectedValue] = useState(null);
+    const [metric, setMetric] = useState(null);
 
     const handleSelect = (eventKey) => {
         setSelectedValue(eventKey);
+        if (eventKey === "Lead Time") {
+            setMetric("LeadTime");
+        }
     };
-    let location = useLocation();
-    const [clicked, setClicked] = useState(false);
 
-    const handleSubmit = () => {
-        console.log("handle user");
-        setClicked(true);
+    useEffect(() => {
+        setAuth(location?.state?.token);
+    }, [location]);
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        axios({
+            method: "post",
+            url: `http://localhost:8000/metric/${metric}`,
+            data: {
+                projectslug: project
+            },
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "http://localhost:3000/project",
+                "token": auth
+            }
+        })
+        .then(res => {
+            setData(res.data);
+            console.log(data);
+            setError(false);
+        })
+        .catch(ex => {
+            setError(true);
+        });
     }
 
-    if (!location?.state && !clicked) {
+    const handleProjectSlugField = (event) => {
+        event.preventDefault();
+        setProject(event.target.value);
+        setError(false);
+    }
+
+    if (!location?.state) {
         return (
             <CustomModal message="User not authenticated" headerTitle="Invalid Authentication!" showModal={true} />
         );
@@ -42,7 +80,7 @@ const Project = ({ auth }) => {
                                         controlId="formProjectSlug"
                                         label="Project Slug"
                                     >
-                                        <Form.Control type="text" placeholder="Project Slug" />
+                                        <Form.Control type="text" placeholder="Project Slug" onChange={handleProjectSlugField} />
                                     </FloatingLabel>
                                     <Dropdown onSelect={handleSelect}>
                                         <Dropdown.Toggle variant="outline-secondary" className="backgroundButton">
@@ -55,9 +93,17 @@ const Project = ({ auth }) => {
                                 </InputGroup>
                             </div><br/>
 
-                            <Button variant="info" type="submit" className="submitButton backgroundButton" onClick={() => handleSubmit()}>
+                            <Button variant="info" type="submit" className="submitButton backgroundButton" onClick={handleSubmit}>
                                 Submit
                             </Button>
+
+                            {error ? (
+                                <p className="errorMessage">Unable to fetch project detail</p>
+                            ) : null}
+
+                            {data?.projectInfo?.name ? (
+                                <h6 className="projectName">{data.projectInfo.name}</h6>
+                            ) : null}
                         </Form>
                     </div>
                 </Stack>

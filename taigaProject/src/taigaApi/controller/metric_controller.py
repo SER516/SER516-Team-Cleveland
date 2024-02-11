@@ -1,4 +1,5 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Header
+from typing import Annotated
 
 from taigaApi.model.projectRequest import ProjectRequest
 from taigaApi.project.getProjectBySlug import get_project_by_slug
@@ -7,11 +8,11 @@ from taigaApi.util.SimpleCache import cache
 
 router = APIRouter()
 
-@router.get("/metric/LeadTime")
-def auth(projectRequest: ProjectRequest):
+@router.post("/metric/LeadTime")
+def get_lead_time_metric(projectRequest: ProjectRequest, token: Annotated[str | None, Header()] = None):
     if cache.get(projectRequest.projectslug) is None:
-        project_info = get_project_by_slug(projectRequest.projectslug, projectRequest.authtoken)
+        project_info = get_project_by_slug(projectRequest.projectslug, token)
         cache.set(projectRequest.projectslug, project_info)
-        return get_lead_time_details(project_info, projectRequest.authtoken)
+        return get_lead_time_details(project_info, token)
     else:
-        return get_lead_time_details(cache.get(projectRequest.projectslug), projectRequest.authtoken)
+        return get_lead_time_details(cache.get(projectRequest.projectslug), token)
