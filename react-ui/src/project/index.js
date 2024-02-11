@@ -20,6 +20,9 @@ const Project = () => {
         if (eventKey === "Lead Time") {
             setMetric("LeadTime");
         }
+        else if (eventKey === "Cycle Time") {
+            setMetric("CycleTime");
+        }
     };
 
     useEffect(() => {
@@ -87,6 +90,7 @@ const Project = () => {
                                         </Dropdown.Toggle>
                                         <Dropdown.Menu>
                                             <Dropdown.Item eventKey="Lead Time">Lead Time</Dropdown.Item>
+                                            <Dropdown.Item eventKey="Cycle Time">Cycle Time</Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
                                 </InputGroup>
