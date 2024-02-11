@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, FloatingLabel, Form, Stack, Image, Dropdown, InputGroup } from "react-bootstrap";
+import { Button, FloatingLabel, Form, Stack, Image, Dropdown, InputGroup, Spinner } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import CustomModal from "../modal";
 import axios from "axios";
@@ -14,6 +14,7 @@ const Project = () => {
     const [data, setData] = useState(null);
     const [selectedValue, setSelectedValue] = useState(null);
     const [metric, setMetric] = useState(null);
+    const [spinnerFlag, setSpinnerFlag] = useState(false);
 
     const handleSelect = (eventKey) => {
         setSelectedValue(eventKey);
@@ -32,6 +33,8 @@ const Project = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
 
+        setSpinnerFlag(true);
+
         axios({
             method: "post",
             url: `http://localhost:8000/metric/${metric}`,
@@ -46,10 +49,12 @@ const Project = () => {
         .then(res => {
             setData(res.data);
             console.log(data);
+            setSpinnerFlag(false);
             setError(false);
         })
         .catch(ex => {
             setError(true);
+            setSpinnerFlag(false);
         });
     }
 
@@ -100,9 +105,13 @@ const Project = () => {
                                 Submit
                             </Button>
 
+                            <br />
+
                             {error ? (
                                 <p className="errorMessage">Unable to fetch project detail</p>
                             ) : null}
+
+                            {spinnerFlag ? <Spinner variant="primary" animation="border" style={{ justifyContent: "center", alignItems: "center", display:"flex", marginLeft: "49%" }} /> : null}
                         </Form>
                     </div>
 
