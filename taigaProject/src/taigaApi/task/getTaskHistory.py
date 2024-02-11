@@ -2,7 +2,8 @@ import os
 import requests
 from dotenv import load_dotenv
 from datetime import datetime
-from getTasks import get_closed_tasks
+
+from taigaApi.task.getTasks import get_closed_tasks
 
 from taigaApi.task.getTasks import get_closed_tasks
 
