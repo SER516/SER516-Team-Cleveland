@@ -8,7 +8,7 @@ This project is a Python script for interacting with the Taiga API to perform va
 
 Before running the script, make sure you have the following installed:
 
-- Python 3
+- Python 3 (Note: Python version>=3.11 for `date.fromisoformat()` to work properly)
 - Required Python packages (Go to `taigaProject` folder and install using `pip install -r requirements.txt`)
 - Taiga account with API access
 - Taiga project slug
