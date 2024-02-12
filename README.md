@@ -30,11 +30,11 @@ Go to `taigaProject` folder
 ``` bash
 cd taigaProject
 ```
-After running the command 
+Run the command to download required dependencies
 ``` bash
 pip install -r requirements.txt
 ```
-Go to the source folder of the backend application(`cd taigaProject/src`) and run the command- 
+Go to the source folder of the backend application(`cd taigaProject/src` or `cd src` depending on the current folder) and run the command- 
 ``` bash
 uvicorn main:app 
 ```
