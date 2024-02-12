@@ -12,6 +12,11 @@ Before running the script, make sure you have the following installed:
 - Required Python packages (Go to `taigaProject` folder and install using `pip install -r requirements.txt`)
 - Taiga account with API access
 - Taiga project slug
+- Clone the repository
+```bash
+   git clone https://github.com/ser516asu/SER516-Team-Cleveland.git
+   cd SER516-Team-Cleveland/taigaProject
+```
 
 ## Getting Taiga Project Slug
 
