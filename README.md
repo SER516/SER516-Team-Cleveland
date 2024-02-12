@@ -50,7 +50,7 @@ uvicorn main:app --reload
 ```
 to run the application in developer mode, it reloads everytime there's a change in a file. 
 
-### Running unit test
+### Writing/Running unit test
 
 We're using pytest to write the unit test for the backend application. 
 The dependency is added to the requirements.txt file, please do a pip install before trying to run the tests. 
