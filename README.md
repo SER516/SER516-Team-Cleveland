@@ -9,7 +9,7 @@ This project is a Python script for interacting with the Taiga API to perform va
 Before running the script, make sure you have the following installed:
 
 - Python 3
-- Required Python packages (install using `pip install -r requirements.txt`)
+- Required Python packages (Go to `taigaProject` folder and install using `pip install -r requirements.txt`)
 - Taiga account with API access
 - Taiga project slug
 
@@ -25,6 +25,11 @@ To interact with the Taiga API using the provided Python script, you will need t
 
 
 ## Running the Backend Application
+
+Go to `taigaProject` folder
+``` bash
+cd taigaProject
+```
 
 After running the command 
 ``` bash
@@ -46,7 +51,7 @@ uvicorn main:app --reload
 ```
 to run the application in developer mode, it reloads everytime there's a change in a file. 
 
-### Writing unit test
+### Running unit test
 
 We're using pytest to write the unit test for the backend application. 
 The dependency is added to the requirements.txt file, please do a pip install before trying to run the tests. 
@@ -83,7 +88,7 @@ Command to check the npm version
 ### `npm -v`
 
 ### Run the project
-1. Go to react-ui folder
+1. Go to `react-ui` folder
 2. Install the packages using command:
 ## `npm install`
 3. After successful install, start the project:

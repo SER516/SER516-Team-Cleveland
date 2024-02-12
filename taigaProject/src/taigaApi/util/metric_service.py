@@ -1,5 +1,5 @@
-from taigaApi.task.getTaskHistory import get_task_lead_time, get_task_cycle_time
-from taigaApi.userStory.getUserStory import get_us_lead_time, get_us_cycle_time
+from ..task.getTaskHistory import get_task_lead_time, get_task_cycle_time
+from ..userStory.getUserStory import get_us_lead_time, get_us_cycle_time
 
 
 def get_lead_time_details(project_details, auth_token):
