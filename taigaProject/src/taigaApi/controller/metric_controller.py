@@ -2,8 +2,10 @@ from fastapi import APIRouter, Header
 from typing import Annotated
 
 from taigaApi.model.projectRequest import ProjectRequest
+from taigaApi.model.burndownChartRequest import BurndownChartRequest
 from taigaApi.project.getProjectBySlug import get_project_by_slug
-from taigaApi.util.metric_service import get_lead_time_details, get_cycle_time_details
+from taigaApi.util.metric_service import get_lead_time_details, get_cycle_time_details, get_burndown_chart_metric_detail
+from taigaApi.milestone.get_milestone import get_milestone
 from taigaApi.util.SimpleCache import cache
 
 router = APIRouter()
@@ -26,3 +28,8 @@ def get_cycle_time_metric(projectRequest: ProjectRequest, token: Annotated[str |
         return get_cycle_time_details(project_info, token)
     else:
         return get_cycle_time_details(cache.get(projectRequest.projectslug), token)
+
+
+@router.post("/metric/Burndown")
+def get_burndown_chart_metric(burndownChartRequest: BurndownChartRequest, token: Annotated[str | None, Header()] = None):
+    return get_burndown_chart_metric_detail(burndownChartRequest.milestoneId, token)
