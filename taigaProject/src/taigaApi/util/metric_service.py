@@ -1,5 +1,9 @@
+from datetime import datetime
+
 from ..task.getTaskHistory import get_task_lead_time, get_task_cycle_time
 from ..userStory.getUserStory import get_us_lead_time, get_us_cycle_time
+from ..milestone.get_milestone import get_milestone
+from ..task.getTasks import get_tasks_by_story_id
 
 
 def get_lead_time_details(project_details, auth_token):
@@ -58,3 +62,54 @@ def get_cycle_time_object(object_type, cycle_time, avg_lt):
         object_type: cycle_time,
         "avgCycleTime": avg_lt
     }
+
+
+def get_burndown_chart_metric_detail(milestone_id, auth_token):
+    milestone = get_milestone(milestone_id, auth_token)
+    
+    partial_burndown = list(calc_partial_story_points(auth_token, milestone).values())
+    partial_burndown.sort(key=lambda l: l["date"])
+    
+    return {"partial_burndown": partial_burndown}
+
+
+def calc_partial_story_points(auth_token, milestone):
+    days_data = {}
+    milestone_start = datetime.fromisoformat(milestone["estimated_start"]).date()
+    milestone_finish = datetime.fromisoformat(milestone["estimated_finish"]).date()
+    days_data[milestone_start] = {
+        "date": milestone_start,
+        "completed": 0,
+        "remaining": milestone["total_points"]
+    }
+    
+    for user_story in milestone["user_stories"]:
+        tasks = get_tasks_by_story_id(user_story["id"], auth_token)
+        extract_partial_burndown_data(user_story, tasks, milestone["total_points"], days_data)
+        
+    days_data[milestone_finish] = {
+        "date": milestone_finish,
+        "completed": milestone["closed_points"],
+        "remaining": milestone["total_points"] - milestone["closed_points"]
+    }
+
+    print(days_data)
+    return days_data
+
+
+def extract_partial_burndown_data(user_story, tasks, sprint_points, days_data):
+    for task in tasks:
+        if task["is_closed"]:
+            finished_date = datetime.fromisoformat(task["finished_date"]).date()
+            partial_story_points = round(user_story["total_points"]/len(tasks), 2)
+            
+            if finished_date in days_data:
+                days_data[finished_date]["completed"] = days_data[finished_date]["completed"] + partial_story_points
+                days_data[finished_date]["remaining"] = days_data[finished_date]["remaining"] - partial_story_points
+            else:
+                days_data[finished_date] = {}
+                days_data[finished_date]["date"] = finished_date
+                days_data[finished_date]["completed"] = partial_story_points
+                days_data[finished_date]["remaining"] = sprint_points - partial_story_points
+
+    # print(days_data)
