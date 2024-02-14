@@ -4,26 +4,20 @@ from typing import Annotated
 from taigaApi.model.projectRequest import ProjectRequest
 
 from taigaApi.project.getProjectBySlug import get_project_by_slug
+from taigaApi.util.SimpleCache import cache
 
+from taigaApi.util.sprint_service import get_sprints_and_custom_fields_for_project
 router = APIRouter()
 
 @router.post("/Sprints")
-def get_sprints_and_custom_fields_for_project(projectRequest: ProjectRequest, token: Annotated[str | None, Header()] = None):
-    project_info = get_project_by_slug(projectRequest.projectslug, token)
-    if project_info is None:
-        raise HTTPException(status_code=404, detail="Project Slug Not Found.")
-    custom_attributes = []
-    for custom_attribute in project_info["userstory_custom_attributes"]:
-        custom_attributes.append({"id": custom_attribute["id"], "name": custom_attribute["name"]})
-    sprints = []
-    for sprint in project_info["milestones"]:
-        sprints.append({"id": sprint["id"], "name": sprint["name"], "slug": sprint["slug"]})
-
-    sprint_details = {
-        "sprints": sprints,
-        "custom_attributes": custom_attributes,
-    }
-    return sprint_details
+def get_sprint_and_custom_field_details(projectRequest: ProjectRequest, token: Annotated[str | None, Header()] = None):
+    if cache.get(projectRequest.projectslug) is None:
+        project_info = get_project_by_slug(projectRequest.projectslug, token)
+        if project_info is None:
+            raise HTTPException(status_code=404, detail="Project Slug Not Found.")
+        cache.set(projectRequest.projectslug, project_info)
+        return get_sprints_and_custom_fields_for_project(project_info)
+    return get_sprints_and_custom_fields_for_project(cache.get(projectRequest.projectslug))
 
 
 
