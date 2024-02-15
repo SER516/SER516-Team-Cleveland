@@ -1,4 +1,6 @@
 import os
+from concurrent.futures import ThreadPoolExecutor
+import threading
 import requests
 from dotenv import load_dotenv
 from datetime import datetime
@@ -54,6 +56,32 @@ def get_task_history(tasks, auth_token):
     # Return a list containing cycle_time and closed_tasks count
     return [cycle_time, closed_tasks]
 
+def get_task_details(task, headers, taiga_url, cycle_time, closed_tasks, cycle_times):
+    task_history_url = f"{taiga_url}/history/task/{task['id']}"
+    finished_date = task["finished_date"]
+    try:
+        response = requests.get(task_history_url, headers=headers)
+        response.raise_for_status()
+        history_data = response.json()
+        in_progress_date = extract_new_to_in_progress_date(history_data)
+
+        finished_date = datetime.fromisoformat(finished_date[:-1])
+        if in_progress_date:
+            in_progress_date = datetime.fromisoformat(str(in_progress_date)[:-6])
+
+            cycle_time += (finished_date - in_progress_date).days
+            cycle_times.append({
+                "taskId": task["id"],
+                "startTime": task["created_date"],
+                "inProgressDate": in_progress_date.date(),
+                "endTime": task['finished_date'],
+                "endDate": finished_date.date(),
+                "timeTaken": (finished_date - in_progress_date).days
+            })
+            closed_tasks += 1
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching task by taskId: {e}")
 
 def get_task_lead_time(project_id, auth_token):
     tasks = get_closed_tasks(project_id, auth_token)
@@ -102,35 +130,9 @@ def get_task_cycle_time(project_id, auth_token):
     cycle_time = 0
     closed_tasks = 0
     cycle_times = []
-
-    for task in tasks:
-        task_history_url = f"{taiga_url}/history/task/{task['id']}"
-        finished_date = task["finished_date"]
-        try:
-            response = requests.get(task_history_url, headers=headers)
-            response.raise_for_status()
-            history_data = response.json()
-
-            in_progress_date = extract_new_to_in_progress_date(history_data)
-
-            finished_date = datetime.fromisoformat(finished_date[:-1])
-            if in_progress_date:
-                in_progress_date = datetime.fromisoformat(str(in_progress_date)[:-6])
-
-                cycle_time += (finished_date - in_progress_date).days
-                cycle_times.append({
-                    "taskId": task["id"],
-                    "startTime": task["created_date"],
-                    "inProgressDate": in_progress_date.date(),
-                    "endTime": task['finished_date'],
-                    "endDate": finished_date.date(),
-                    "timeTaken": (finished_date - in_progress_date).days
-                })
-                closed_tasks += 1
-
-        except requests.exceptions.RequestException as e:
-            print(f"Error fetching task by taskId: {e}")
-
+    with ThreadPoolExecutor(max_workers=15) as executor:
+        for task in tasks:
+            executor.submit(get_task_details, task, headers, taiga_url, cycle_time, closed_tasks, cycle_times)
     if closed_tasks == 0:
         return cycle_times, 0
     
