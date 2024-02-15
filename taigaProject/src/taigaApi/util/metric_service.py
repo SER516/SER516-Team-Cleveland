@@ -187,6 +187,17 @@ def extract_total_burndown_data(user_story, days_total_data):
         else:
             days_total_data[finished_date] = append_points_date_data(finished_date, user_story["total_points"], 0)
 
+def extract_bv_burndown_data(user_story, business_value, days_bv_data):
+    if user_story["is_closed"]:
+        finished_date = datetime.fromisoformat(user_story["finish_date"]).date()
+        if finished_date in days_bv_data:
+            days_bv_data[finished_date]["completed"] = days_bv_data[finished_date]["completed"] + business_value
+        else:
+            days_bv_data[finished_date] = {
+                "date": finished_date,
+                "completed": business_value
+            }
+
 def daterange(start_date, end_date):
     for n in range(int((end_date - start_date).days)):
         yield start_date + timedelta(n)
