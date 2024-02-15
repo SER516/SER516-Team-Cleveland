@@ -63,10 +63,10 @@ def get_cycle_time_object(object_type, cycle_time, avg_lt):
     }
 
 
-def get_burndown_chart_metric_detail(milestone_id, auth_token):
+def get_burndown_chart_metric_detail(milestone_id, attribute_key, auth_token):
     milestone = get_milestone(milestone_id, auth_token)
     
-    partial_burndown, bv_burndown = calc_burndown_day_data(auth_token, milestone)
+    partial_burndown, bv_burndown = calc_burndown_day_data(auth_token, milestone, attribute_key)
     partial_burndown = list(partial_burndown.values())
     partial_burndown.sort(key=lambda l: l["date"])
     bv_burndown = list(bv_burndown.values())
@@ -81,7 +81,7 @@ def get_burndown_chart_metric_detail(milestone_id, auth_token):
         }
     }
 
-def calc_burndown_day_data(auth_token, milestone):
+def calc_burndown_day_data(auth_token, milestone, attribute_key):
     days_data = {}
     days_bv_data = {}
     start = datetime.fromisoformat(milestone["estimated_start"])
@@ -102,7 +102,7 @@ def calc_burndown_day_data(auth_token, milestone):
         tasks = get_tasks_by_story_id(user_story["id"], auth_token)
         extract_partial_burndown_data(user_story, tasks, days_data)
         
-        business_value = get_business_value(user_story["id"], "40200", auth_token)
+        business_value = get_business_value(user_story["id"], attribute_key, auth_token)
         total_business_value = total_business_value + int(business_value)
         extract_bv_burndown_data(user_story, int(business_value), days_bv_data)
     

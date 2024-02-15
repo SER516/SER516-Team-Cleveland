@@ -32,9 +32,4 @@ def get_cycle_time_metric(projectRequest: ProjectRequest, token: Annotated[str |
 
 @router.post("/metric/Burndown")
 def get_burndown_chart_metric(burndownChartRequest: BurndownChartRequest, token: Annotated[str | None, Header()] = None):
-    return get_burndown_chart_metric_detail(burndownChartRequest.milestoneId, token)
-
-
-@router.post("/metric/Burndown")
-def get_burndown_chart_metric(burndownChartRequest: BurndownChartRequest, token: Annotated[str | None, Header()] = None):
     return get_burndown_chart_metric_detail(burndownChartRequest.milestoneId, burndownChartRequest.attributeKey, token)

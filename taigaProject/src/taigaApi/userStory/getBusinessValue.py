@@ -19,9 +19,11 @@ def get_business_value(user_story_id, attribute_key, auth_token):
 
         response.raise_for_status()
 
-        business_value = response.json().get('attributes_values', {})
-
-        return business_value.get(str(attribute_key))
+        attribute_values = response.json().get('attributes_values', {})
+        if attribute_key in attribute_values:
+            return attribute_values.get(attribute_key)
+        else:
+            return 0
     
     except requests.exceptions.RequestException as e:
         print("Error fetching Business Value")
