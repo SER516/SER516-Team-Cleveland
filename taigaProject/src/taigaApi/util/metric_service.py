@@ -1,5 +1,5 @@
-from ..task.getTaskHistory import get_task_lead_time, get_task_cycle_time
-from ..userStory.getUserStory import get_us_lead_time, get_us_cycle_time
+from ..task.get_task_history import get_task_lead_time, get_task_cycle_time
+from ..userStory.get_user_story_history import get_us_lead_time, get_us_cycle_time
 
 
 def get_lead_time_details(project_details, auth_token):
