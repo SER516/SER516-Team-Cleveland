@@ -117,6 +117,7 @@ def calc_burndown_day_data(auth_token, milestone, attribute_key):
         
         extract_total_burndown_data(user_story, days_total_data)
     
+    print(total_business_value, days_bv_data)
     expected_decrement = round(milestone["total_points"]/(finish - start).days, 2)
     update_points_days_data(days_data, milestone_start, milestone_finish, expected_decrement)
     update_points_days_data(days_total_data, milestone_start, milestone_finish, expected_decrement)
@@ -178,6 +179,17 @@ def extract_total_burndown_data(user_story, days_total_data):
             days_total_data[finished_date]["completed"] = days_total_data[finished_date]["completed"] + user_story["total_points"]
         else:
             days_total_data[finished_date] = append_points_date_data(finished_date, user_story["total_points"], 0)
+
+def extract_bv_burndown_data(user_story, business_value, days_bv_data):
+    if user_story["is_closed"]:
+        finished_date = datetime.fromisoformat(user_story["finish_date"]).date()
+        if finished_date in days_bv_data:
+            days_bv_data[finished_date]["completed"] = days_bv_data[finished_date]["completed"] + business_value
+        else:
+            days_bv_data[finished_date] = {
+                "date": finished_date,
+                "completed": business_value
+            }
 
 def daterange(start_date, end_date):
     for n in range(int((end_date - start_date).days)):
