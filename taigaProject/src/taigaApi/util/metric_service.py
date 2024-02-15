@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from ..task.getTaskHistory import get_task_lead_time, get_task_cycle_time
 from ..userStory.getUserStory import get_us_lead_time, get_us_cycle_time
@@ -38,7 +38,6 @@ def metric_object(metric, time_key, lead_time, project_details):
             "members": project_details["members"]
         }
     }
-    
 
 def get_cycle_time_details(project_details, auth_token):
     task_cycle_time, avg_task_ct = get_task_cycle_time(project_details["id"], auth_token)
@@ -67,37 +66,54 @@ def get_cycle_time_object(object_type, cycle_time, avg_lt):
 def get_burndown_chart_metric_detail(milestone_id, auth_token):
     milestone = get_milestone(milestone_id, auth_token)
     
-    partial_burndown = list(calc_partial_story_points(auth_token, milestone).values())
+    partial_burndown, expected_partial_burndown = calc_partial_story_points(auth_token, milestone)
+    partial_burndown = list(partial_burndown.values())
     partial_burndown.sort(key=lambda l: l["date"])
     
-    return {"partial_burndown": partial_burndown}
-
+    return {
+        "partial_burndown": {
+            "partial_burndown_data": partial_burndown,
+            "expected_partial_burndown": expected_partial_burndown
+        }
+    }
 
 def calc_partial_story_points(auth_token, milestone):
     days_data = {}
     milestone_start = datetime.fromisoformat(milestone["estimated_start"]).date()
     milestone_finish = datetime.fromisoformat(milestone["estimated_finish"]).date()
-    days_data[milestone_start] = {
-        "date": milestone_start,
-        "completed": 0,
-        "remaining": milestone["total_points"]
-    }
+    
+    days_data[milestone_start] = append_partial_date_data(milestone_start, 0, milestone["total_points"])
     
     for user_story in milestone["user_stories"]:
         tasks = get_tasks_by_story_id(user_story["id"], auth_token)
-        extract_partial_burndown_data(user_story, tasks, milestone["total_points"], days_data)
-        
-    days_data[milestone_finish] = {
-        "date": milestone_finish,
-        "completed": milestone["closed_points"],
-        "remaining": milestone["total_points"] - milestone["closed_points"]
-    }
+        extract_partial_burndown_data(user_story, tasks, days_data)
+    
+    update_partial_days_data(days_data, milestone_start, milestone_finish)
+    
+    expected_data = get_expected_data(milestone["total_points"], milestone_start, milestone_finish)
 
-    print(days_data)
-    return days_data
+    return days_data, expected_data
 
+def update_partial_days_data(days_data, milestone_start, milestone_finish):
+    for dt in daterange(milestone_start + timedelta(1), milestone_finish + timedelta(1)):
+        if dt not in days_data:
+            days_data[dt] = append_partial_date_data(datetime.fromisoformat(str(dt)).date(), 0, days_data[dt - timedelta(1)]["remaining"])
+        else:
+            days_data[dt]["remaining"] = round(days_data[dt - timedelta(1)]["remaining"] - days_data[dt]["completed"], 2)
 
-def extract_partial_burndown_data(user_story, tasks, sprint_points, days_data):
+def get_expected_data(total_points, milestone_start, milestone_finish):
+    return [
+        {
+            "date": milestone_start,
+            "remaining": total_points
+        },
+        {
+            "date": milestone_finish,
+            "remaining": 0
+        }
+    ]
+
+def extract_partial_burndown_data(user_story, tasks, days_data):
     for task in tasks:
         if task["is_closed"]:
             finished_date = datetime.fromisoformat(task["finished_date"]).date()
@@ -105,11 +121,16 @@ def extract_partial_burndown_data(user_story, tasks, sprint_points, days_data):
             
             if finished_date in days_data:
                 days_data[finished_date]["completed"] = days_data[finished_date]["completed"] + partial_story_points
-                days_data[finished_date]["remaining"] = days_data[finished_date]["remaining"] - partial_story_points
             else:
-                days_data[finished_date] = {}
-                days_data[finished_date]["date"] = finished_date
-                days_data[finished_date]["completed"] = partial_story_points
-                days_data[finished_date]["remaining"] = sprint_points - partial_story_points
+                days_data[finished_date] = append_partial_date_data(finished_date, partial_story_points, 0)
 
-    # print(days_data)
+def daterange(start_date, end_date):
+    for n in range(int((end_date - start_date).days)):
+        yield start_date + timedelta(n)
+
+def append_partial_date_data(date, completed_story_points, remaining_story_points):
+    return {
+        "date": date,
+        "completed": completed_story_points,
+        "remaining": remaining_story_points
+    }
