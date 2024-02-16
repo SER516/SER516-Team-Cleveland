@@ -65,10 +65,10 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const prNumber = context.payload.pull_request.number;
+            const prNumber = github.context.payload.pull_request.number;
             github.issues.createComment({
               issue_number: prNumber,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
+              owner: github.context.repo.owner,
+              repo: github.context.repo.repo,
               body: 'Coverage report: ${{ steps.coverage_artifact.outputs.url }}'
             })
