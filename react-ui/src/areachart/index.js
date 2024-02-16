@@ -37,8 +37,8 @@ const Areachart = ({ apiData, chartFor, title }) => {
                             <YAxis type="number" label={{ value: `${chartFor}`,
                                     angle: -90, position: 'insideLeft', style: {fontSize: '20px'}}} />
                             <Tooltip />
-                            <Area dataKey="remaining" stackId="1" stroke="#6895D2" fillOpacity={1} fill="url(#colorActual)" />
-                            <Area dataKey="expected_remaining" stackId="1" stroke="#D04848" fillOpacity={1} fill="url(#colorExpected)"/>
+                            <Area dataKey="remaining" stroke="#6895D2" fillOpacity={1} fill="url(#colorActual)" />
+                            <Area dataKey="expected_remaining" stroke="#D04848" fillOpacity={1} fill="url(#colorExpected)"/>
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>
