@@ -18,6 +18,10 @@ jobs:
         python-version: [3.12.2]
     runs-on: ubuntu-latest
 
+    permissions:
+      pages: write
+      id-token: write
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Checkout
@@ -52,9 +56,7 @@ jobs:
         with:
           name: coverage-report
           path: ./htmlcov
-
+          
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
-    
-      
