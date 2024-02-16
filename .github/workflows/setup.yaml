@@ -40,6 +40,9 @@ jobs:
           pip install -r requirements.txt
           pip install -e .
 
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      
       - name: Run unit tests and coverage
         run: |
           pytest --exitfirst --verbose --failed-first --cov=. --cov-report html 
