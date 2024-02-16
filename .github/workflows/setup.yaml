@@ -40,6 +40,7 @@ jobs:
           pip install -r requirements.txt
           pip install -e .
 
-      - name: Run unit tests
+      - name: Run unit tests and coverage
         run: |
-          pytest          
+          pytest --exitfirst --verbose --failed-first \
+          --cov=. --cov-report html          
