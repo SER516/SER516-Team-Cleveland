@@ -106,7 +106,6 @@ def calc_burndown_day_data(auth_token, milestone, attribute_key):
         total_business_value = total_business_value + int(business_value)
         extract_bv_burndown_data(user_story, int(business_value), days_bv_data)
     
-    print(total_business_value, days_bv_data)
     expected_decrement = round(milestone["total_points"]/(finish - start).days, 2)
     update_partial_days_data(days_data, milestone_start, milestone_finish, expected_decrement)
     
