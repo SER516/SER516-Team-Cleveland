@@ -52,4 +52,24 @@ jobs:
 
       - name: Print coverage report link
         run: |
-          echo "Coverage report: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/htmlcov/index.html"
+          echo "echo "Coverage report: ${{ github.server_url }}/${{ github.repository }}/actions/artifacts/${{ github.run_id }}/htmlcov/index.html"
+    
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Set coverage report status
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { data } = await github.rest.pulls.createReview({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              event: 'COMMENT',
+              body: 'Coverage report: ${{ steps.coverage_url.outputs.url }}'
+            })
+            console.log('Review created:', data.html_url)
