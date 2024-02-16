@@ -49,3 +49,7 @@ jobs:
         with:
           name: coverage-report
           path: ./htmlcov
+
+      - name: Print coverage report link
+        run: |
+          echo "Coverage report: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/htmlcov/index.html"
