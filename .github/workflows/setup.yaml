@@ -39,11 +39,7 @@ jobs:
           cd taigaProject
           pip install -r requirements.txt
           pip install -e .
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
+
       - name: Run unit tests and coverage
         run: |
           pytest --exitfirst --verbose --failed-first --cov=. --cov-report html 
@@ -53,9 +49,11 @@ jobs:
         with:
           name: coverage-report
           path: ./htmlcov
+    
   deploy-coverage:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    needs: test
+    needs: build
     
     permissions:
       pages: write
@@ -70,5 +68,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
-    
-  
