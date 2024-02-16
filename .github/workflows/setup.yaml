@@ -42,7 +42,7 @@ jobs:
 
       - name: Run unit tests and coverage
         run: |
-          pytest --cov=items --cov-report=html:htmlcov 
+          pytest --exitfirst --verbose --failed-first --cov=. --cov-report html 
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v2
