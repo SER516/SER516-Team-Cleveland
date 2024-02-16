@@ -19,6 +19,16 @@ const Areachart = ({ apiData, chartFor, title }) => {
                             margin={{top: 20, right: 40, bottom: 70, left: 30}}
                             data = {apiData}
                         >
+                            <defs>
+                                <linearGradient id="colorExpected" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#D04848" stopOpacity={0.8}/>
+                                <stop offset="95%" stopColor="#D04848" stopOpacity={0.1}/>
+                                </linearGradient>
+                                <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#6895D2" stopOpacity={0.8}/>
+                                <stop offset="95%" stopColor="#6895D2" stopOpacity={0.1}/>
+                                </linearGradient>
+                            </defs>
                             <CartesianGrid />
                             <XAxis type="category" dataKey="date" name="Date" label={{ value: 'Date',
                                     position: 'insideBottom', offset: -50, style: {fontSize: '20px'}}}
@@ -27,8 +37,8 @@ const Areachart = ({ apiData, chartFor, title }) => {
                             <YAxis type="number" label={{ value: `${chartFor}`,
                                     angle: -90, position: 'insideLeft', style: {fontSize: '20px'}}} />
                             <Tooltip />
-                            <Area dataKey="remaining" stackId="1" stroke="#CCFEFF" fill="#CCFEFF" />
-                            <Area dataKey="expected_remaining" stackId="1" stroke="#FFCCCB" fill="#FFCCCB"/>
+                            <Area dataKey="remaining" stackId="1" stroke="#6895D2" fillOpacity={1} fill="url(#colorActual)" />
+                            <Area dataKey="expected_remaining" stackId="1" stroke="#D04848" fillOpacity={1} fill="url(#colorExpected)"/>
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>
