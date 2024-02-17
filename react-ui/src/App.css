@@ -81,3 +81,8 @@
   align-items: center;
   font-size: 2vw;
 }
+
+.dropdown-menu {
+  height: 125px;
+  overflow-y: scroll;
+}
