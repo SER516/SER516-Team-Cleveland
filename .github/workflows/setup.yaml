@@ -67,7 +67,7 @@ jobs:
 
     environment:
       # environment created automatically by GitHub
-      name: github-pages
+      name: coverage-report
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
