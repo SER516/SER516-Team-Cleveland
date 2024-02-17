@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from taigaProject.src.taigaApi.task.getTaskHistory import get_task_history
+from taigaProject.src.taigaApi.task.get_task_history import get_task_history
 
 
 # content of test_sample.py
