@@ -52,11 +52,11 @@ jobs:
           pytest --exitfirst --verbose --failed-first --cov=. --cov-report html 
 
       - name: Upload coverage report
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
           name: github-pages
           path: ./htmlcov
           
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4
