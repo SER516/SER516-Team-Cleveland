@@ -83,3 +83,25 @@ def get_all_tasks(project_id, auth_token):
     else:
         return []
 
+
+def get_tasks_by_story_id(user_story_id, auth_token):
+    taiga_url = os.getenv('TAIGA_URL')
+    
+    user_story_id = f"{taiga_url}/tasks?user_story={user_story_id}"
+    
+    headers = {
+        'Authorization': f'Bearer {auth_token}',
+        'Content-Type': 'application/json',
+        "x-disable-pagination": "True"
+    }
+    
+    try:
+        response = requests.get(user_story_id, headers=headers)
+        
+        response.raise_for_status()
+        
+        return response.json()
+    
+    except requests.exceptions.RequestException as e:
+        print("Error fetching User Story with id {user_story_id}")
+        return None
