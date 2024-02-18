@@ -24,9 +24,6 @@ const Project = () => {
         else if (eventKey === "Cycle Time") {
             setMetric("CycleTime");
         }
-        else if (eventKey === "Burndown Chart") {
-            setMetric("Burndown");
-        }
     };
 
     useEffect(() => {
@@ -99,11 +96,10 @@ const Project = () => {
                                         <Dropdown.Menu>
                                             <Dropdown.Item eventKey="Lead Time">Lead Time</Dropdown.Item>
                                             <Dropdown.Item eventKey="Cycle Time">Cycle Time</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Burndown Chart">Burndown Chart</Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
                                 </InputGroup>
-                            </div><br/> 
+                            </div><br/>
 
                             <Button variant="info" type="submit" className="submitButton backgroundButton" onClick={handleSubmit}>
                                 Submit
