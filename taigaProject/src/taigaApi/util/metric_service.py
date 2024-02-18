@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
-from ..task.getTaskHistory import get_task_lead_time, get_task_cycle_time
-from ..userStory.getUserStory import get_us_lead_time, get_us_cycle_time
+from ..task.get_task_history import get_task_lead_time, get_task_cycle_time
+from ..userStory.get_user_story_history import get_us_lead_time, get_us_cycle_time
 from ..milestone.get_milestone import get_milestone
 from ..task.getTasks import get_tasks_by_story_id
 from ..userStory.getBusinessValue import get_business_value
