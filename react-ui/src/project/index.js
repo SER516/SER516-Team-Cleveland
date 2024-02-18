@@ -19,13 +19,13 @@ const Project = () => {
     const handleSelect = (eventKey) => {
         setSelectedValue(eventKey);
         if (eventKey === "Lead Time") {
-            setMetric("LeadTime");
+            setMetric("metric/LeadTime");
         }
         else if (eventKey === "Cycle Time") {
-            setMetric("CycleTime");
+            setMetric("metric/CycleTime");
         }
         else if (eventKey === "Burndown Chart") {
-            setMetric("Burndown");
+            setMetric("Sprints");
         }
     };
 
@@ -40,7 +40,7 @@ const Project = () => {
 
         axios({
             method: "post",
-            url: `http://localhost:8000/metric/${metric}`,
+            url: `http://localhost:8000/${metric}`,
             data: {
                 projectslug: project
             },
