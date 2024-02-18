@@ -1,6 +1,6 @@
 import pytest
 
-from taigaProject.src.taigaApi.util.metric_service import metric_object, get_lead_time_object, get_cycle_time_object, append_partial_date_data
+from taigaProject.src.taigaApi.util.metric_service import metric_object, get_lead_time_object, get_cycle_time_object, append_points_date_data
 
 def test_metric_object():
     sample_object = metric_object("LEAD", "leadTime", 1, {"name": "project", "members": []})
@@ -24,8 +24,8 @@ def test_cycle_time_object():
     assert "story" in lead_time and lead_time["story"] == 4
     assert lead_time["avgCycleTime"] == 2
 
-def test_append_partial_date_data():
-    partial_date_data = append_partial_date_data("2024-02-14", 5, 15)
+def test_append_points_date_data():
+    partial_date_data = append_points_date_data("2024-02-14", 5, 15)
     
     assert "date" in partial_date_data and partial_date_data["date"] == "2024-02-14"
     assert "completed" in partial_date_data and partial_date_data["completed"] == 5
