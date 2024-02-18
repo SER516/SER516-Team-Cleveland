@@ -8,6 +8,7 @@ import {
   CartesianGrid,
   Tooltip,
 } from "recharts";
+
 const Areachart = ({ apiData, chartFor, title }) => {
     return (
         <div style={{ textAlign: 'center' }}>
