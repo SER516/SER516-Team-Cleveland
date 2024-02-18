@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Dropdown, Spinner, Stack } from "react-bootstrap";
 import Areachart from "../areachart";
 
-const SprintDetail = ({ sprintDetails, attributes, token }) => {
+const SprintDetail = ({ sprintDetails, attributes, token, projectName }) => {
     const [selectedValue, setSelectedValue] = useState(null);
     const [bvAttribute, setBvAttribute] = useState(null);
     const [data, setData] = useState(null);
@@ -60,11 +60,11 @@ const SprintDetail = ({ sprintDetails, attributes, token }) => {
     }
 
     return (
-        <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <div style={{ height: '80%', width: '90%', maxHeight: '90vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Stack gap={4} className="col-md-5 mx-auto">
-                    <div className="d-flex align-items-center justify-content-center vh-100 backgroundWhite">
-
+        <div style={{ justifyContent: "center", alignItems: "center", display:"flex" }}>
+            <div style={{ height: '80%', width: '90%', maxHeight: '90vh', display: 'flex'}}>
+                <Stack gap={4}>
+                    <h3 className="projectName">{projectName}</h3>
+                    <div className="d-flex justify-content-center backgroundWhite">
                         <br />
                         <Dropdown onSelect={handleSelect}>
                             <Dropdown.Toggle variant="outline-secondary" className="backgroundButton">
@@ -76,9 +76,13 @@ const SprintDetail = ({ sprintDetails, attributes, token }) => {
                                 }
                             </Dropdown.Menu>
                         </Dropdown>
-
-                        {spinner ? <Spinner variant="primary" animation="border" style={{ justifyContent: "center", alignItems: "center", display:"flex", marginLeft: "49%" }} /> : null}
                     </div>
+
+                    {spinner ? (
+                        <div>
+                            <Spinner variant="primary" animation="border" style={{ justifyContent: "center", alignItems: "center", display:"flex", marginLeft: "49%" }} />
+                        </div>
+                    ) : null}
 
                     {error ? (
                         <p className="errorMessage">Unable to fetch Sprint Detail</p>
@@ -87,9 +91,9 @@ const SprintDetail = ({ sprintDetails, attributes, token }) => {
                     {data ? (
                         <div>
                             <br />
-                            <Areachart apiData={data.total_burndown.total_burndown_data} chartFor={"Total Burndown Chart"} title={"Total Burndown Chart"} />
-                            <Areachart apiData={data.partial_burndown.partial_burndown_data} chartFor={"Partial Burndown Chart"} title={"Partial Burndown Chart"} />
-                            <Areachart apiData={data.bv_burndown.bv_burndown_data} chartFor={"Business Value Burndown Chart"} title={"Business Value Burndown Chart"} />
+                            <Areachart apiData={data.total_burndown.total_burndown_data} chartFor={"Story Points"} title={"Total Burndown Chart"} />
+                            <Areachart apiData={data.partial_burndown.partial_burndown_data} chartFor={"Story Points"} title={"Partial Burndown Chart"} />
+                            <Areachart apiData={data.bv_burndown.bv_burndown_data} chartFor={"Business Value"} title={"Business Value Burndown Chart"} />
                         </div>
                     ) : null}
                 </Stack>
