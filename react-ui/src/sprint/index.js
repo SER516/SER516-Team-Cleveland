@@ -12,32 +12,34 @@ const SprintDetail = ({ sprintDetails, attributes, token }) => {
 
     useEffect(() => {
         const attribute = attributes.map(attribute => {
-            console.log(attribute.id);
             if (attribute.name.toLowerCase() === "bv" || attribute.name.toLowerCase()=== "business value") {
-                // setBvAttribute(attribute.id);
                 return attribute.id;
             }
             else {
                 return null;
             }
         });
-        setBvAttribute(attribute);
+        setBvAttribute(attribute.length !== 0 ? attribute[0].toString() : null);
     }, [attributes]);
 
     const handleSelect = (eventKey) => {
-        console.log(bvAttribute);
         const splitEventKey = eventKey.split(',');
         setSelectedValue(splitEventKey[1]);
         setError(false);
         setSpinner(true);
 
+        const formData = {
+            milestoneId: splitEventKey[0]
+        }
+
+        if (bvAttribute !== null) {
+            formData.attributeKey = bvAttribute
+        }
+
         axios({
             url: "http://localhost:8000/metric/Burndown",
             method: "post",
-            data: {
-                milestoneId: splitEventKey[0],
-                attributeKey: bvAttribute[0].toString()
-            },
+            data: formData,
             headers: {
                 "token": token,
                 "Content-Type": "application/json",
