@@ -1,9 +1,5 @@
 import os
-<<<<<<< HEAD
 from concurrent.futures import ThreadPoolExecutor
-=======
->>>>>>> 2075cd2 (US5 Revert commit and rebase)
-import requests
 from dotenv import load_dotenv
 from datetime import datetime
 
