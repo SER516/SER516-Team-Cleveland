@@ -1,5 +1,6 @@
 import os
 from concurrent.futures import ThreadPoolExecutor
+import requests
 from dotenv import load_dotenv
 from datetime import datetime
 
