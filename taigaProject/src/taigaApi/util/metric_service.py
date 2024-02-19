@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
 
 from ..task.get_task_history import get_task_lead_time, get_task_cycle_time
@@ -106,27 +107,34 @@ def calc_burndown_day_data(auth_token, milestone, attribute_key):
         "completed": 0
     }
     
-    total_business_value = 0
-    for user_story in milestone["user_stories"]:
-        tasks = get_tasks_by_story_id(user_story["id"], auth_token)
-        extract_partial_burndown_data(user_story, tasks, days_data)
-        
-        business_value = get_business_value(user_story["id"], attribute_key, auth_token)
-        total_business_value = total_business_value + int(business_value)
-        extract_bv_burndown_data(user_story, int(business_value), days_bv_data)
-        
-        extract_total_burndown_data(user_story, days_total_data)
-    
-    expected_decrement = round(milestone["total_points"]/(finish - start).days, 2)
+    total_business_value = { "bv": 0 }
+    with ThreadPoolExecutor(max_workers=15) as executor:
+        for user_story in milestone["user_stories"]:
+            executor.submit(process_burndown_details, user_story, auth_token, total_business_value, days_data,
+                            attribute_key, days_bv_data, days_total_data)
+
+    expected_decrement = round(milestone["total_points"] / (finish - start).days, 2)
     update_points_days_data(days_data, milestone_start, milestone_finish, expected_decrement)
     update_points_days_data(days_total_data, milestone_start, milestone_finish, expected_decrement)
-    
-    days_bv_data[milestone_start]["remaining"] = total_business_value
-    days_bv_data[milestone_start]["expected_remaining"] = total_business_value
-    expected_bv_decrement = round((total_business_value)/(finish - start).days, 2)
+
+    days_bv_data[milestone_start]["remaining"] = total_business_value["bv"]
+    days_bv_data[milestone_start]["expected_remaining"] = total_business_value["bv"]
+    expected_bv_decrement = round((total_business_value["bv"])/(finish - start).days, 2)
     update_bv_days_data(days_bv_data, milestone_start, milestone_finish, expected_bv_decrement)
 
     return days_data, days_bv_data, days_total_data
+
+
+def process_burndown_details(user_story, auth_token, total_business_value, days_data, attribute_key, days_bv_data, days_total_data):
+    tasks = get_tasks_by_story_id(user_story["id"], auth_token)
+    extract_partial_burndown_data(user_story, tasks, days_data)
+
+    business_value = get_business_value(user_story["id"], attribute_key, auth_token)
+    total_business_value["bv"] = total_business_value["bv"] + int(business_value)
+    extract_bv_burndown_data(user_story, int(business_value), days_bv_data)
+
+    extract_total_burndown_data(user_story, days_total_data)
+
 
 def update_points_days_data(days_data, milestone_start, milestone_finish, expected_decrement):
     for dt in daterange(milestone_start + timedelta(1), milestone_finish + timedelta(1)):
