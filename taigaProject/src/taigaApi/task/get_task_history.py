@@ -69,8 +69,6 @@ def get_task_details(task, headers, taiga_url, cycle_times, cycle_time_data):
         if in_progress_date:
             in_progress_date = datetime.fromisoformat(str(in_progress_date)[:-6])
 
-            cycle_time_data["closed_tasks"] += 1
-            cycle_time_data["cycle_time"] += (finished_date - in_progress_date).days
             cycle_times.append({
                 "taskId": task["id"],
                 "startTime": task["created_date"],
