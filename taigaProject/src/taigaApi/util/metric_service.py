@@ -116,7 +116,6 @@ def calc_burndown_day_data(auth_token, milestone, attribute_key):
     expected_decrement = round(milestone["total_points"] / (finish - start).days, 2)
     update_points_days_data(days_data, milestone_start, milestone_finish, expected_decrement)
     update_points_days_data(days_total_data, milestone_start, milestone_finish, expected_decrement)
-    print(f"Outside the function: {total_business_value}")
 
     days_bv_data[milestone_start]["remaining"] = total_business_value["bv"]
     days_bv_data[milestone_start]["expected_remaining"] = total_business_value["bv"]
@@ -132,7 +131,6 @@ def process_burndown_details(user_story, auth_token, total_business_value, days_
 
     business_value = get_business_value(user_story["id"], attribute_key, auth_token)
     total_business_value["bv"] = total_business_value["bv"] + int(business_value)
-    print(f"Inside the function: {total_business_value}")
     extract_bv_burndown_data(user_story, int(business_value), days_bv_data)
 
     extract_total_burndown_data(user_story, days_total_data)
