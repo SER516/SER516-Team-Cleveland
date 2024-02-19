@@ -5,6 +5,7 @@ import CustomModal from "../modal";
 import axios from "axios";
 import Cleveland from "./Cleveland.png"
 import Graph from "../graph";
+import SprintDetail from "../sprint";
 
 const Project = () => {
     const location = useLocation();
@@ -15,14 +16,20 @@ const Project = () => {
     const [selectedValue, setSelectedValue] = useState(null);
     const [metric, setMetric] = useState(null);
     const [spinnerFlag, setSpinnerFlag] = useState(false);
+    const [isBurndown, setIsBurndown] = useState(false);
 
     const handleSelect = (eventKey) => {
         setSelectedValue(eventKey);
         if (eventKey === "Lead Time") {
-            setMetric("LeadTime");
+            setMetric("metric/LeadTime");
+            setIsBurndown(false);
         }
         else if (eventKey === "Cycle Time") {
-            setMetric("CycleTime");
+            setMetric("metric/CycleTime");
+            setIsBurndown(false);
+        }
+        else if (eventKey === "Burndown Chart") {
+            setMetric("Sprints");
         }
     };
 
@@ -37,7 +44,7 @@ const Project = () => {
 
         axios({
             method: "post",
-            url: `http://localhost:8000/metric/${metric}`,
+            url: `http://localhost:8000/${metric}`,
             data: {
                 projectslug: project
             },
@@ -51,10 +58,12 @@ const Project = () => {
             console.log(data);
             setSpinnerFlag(false);
             setError(false);
+            selectedValue === "Burndown Chart" ? setIsBurndown(true) : setIsBurndown(false);
         })
         .catch(ex => {
             setError(true);
             setSpinnerFlag(false);
+            setIsBurndown(false);
         });
     }
 
@@ -96,6 +105,7 @@ const Project = () => {
                                         <Dropdown.Menu>
                                             <Dropdown.Item eventKey="Lead Time">Lead Time</Dropdown.Item>
                                             <Dropdown.Item eventKey="Cycle Time">Cycle Time</Dropdown.Item>
+                                            <Dropdown.Item eventKey="Burndown Chart">Burndown Chart</Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
                                 </InputGroup>
@@ -132,6 +142,9 @@ const Project = () => {
                             <br />
                             <Graph apiData={data.cycleTime.taskCycleTime.task} avg={data.cycleTime.taskCycleTime.avgCycleTime} chartFor={"Task"} title={`Task ${selectedValue}`} />
                         </div>
+                    ) : null}
+                    {selectedValue === "Burndown Chart" && isBurndown ? (
+                        <SprintDetail sprintDetails={data.sprints} attributes={data.custom_attributes} token={auth} projectName={data.name} />
                     ) : null}
                 </Stack>
             </div>
