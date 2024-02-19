@@ -56,7 +56,7 @@ def get_task_history(tasks, auth_token):
     return [cycle_time, closed_tasks]
 
 
-def get_task_details(task, headers, taiga_url, cycle_time, closed_tasks, cycle_times):
+def get_task_details(task, headers, taiga_url, cycle_times, cycle_time_data):
     task_history_url = f"{taiga_url}/history/task/{task['id']}"
     finished_date = task["finished_date"]
     try:
@@ -69,7 +69,8 @@ def get_task_details(task, headers, taiga_url, cycle_time, closed_tasks, cycle_t
         if in_progress_date:
             in_progress_date = datetime.fromisoformat(str(in_progress_date)[:-6])
 
-            cycle_time += (finished_date - in_progress_date).days
+            cycle_time_data["closed_tasks"] += 1
+            cycle_time_data["cycle_time"] += (finished_date - in_progress_date).days
             cycle_times.append({
                 "taskId": task["id"],
                 "startTime": task["created_date"],
@@ -78,7 +79,8 @@ def get_task_details(task, headers, taiga_url, cycle_time, closed_tasks, cycle_t
                 "endDate": finished_date.date(),
                 "timeTaken": (finished_date - in_progress_date).days
             })
-            closed_tasks += 1
+            cycle_time_data["closed_tasks"] += 1
+            cycle_time_data["cycle_time"] += (finished_date - in_progress_date).days
 
     except requests.exceptions.RequestException as e:
         print(f"Error fetching task by taskId: {e}")
@@ -128,14 +130,16 @@ def get_task_cycle_time(project_id, auth_token):
         'Content-Type': 'application/json'
     }
 
-    cycle_time = 0
-    closed_tasks = 0
     cycle_times = []
+    cycle_time_data = {
+        "closed_tasks": 0,
+        "cycle_time": 0
+    }
     with ThreadPoolExecutor(max_workers=15) as executor:
         for task in tasks:
-            executor.submit(get_task_details, task, headers, taiga_url, cycle_time, closed_tasks, cycle_times)
-    if closed_tasks == 0:
+            executor.submit(get_task_details, task, headers, taiga_url, cycle_times, cycle_time_data)
+    if cycle_time_data["closed_tasks"] == 0:
         return cycle_times, 0
 
-    avg_cycle_time = round((cycle_time / closed_tasks), 2)
+    avg_cycle_time = round((cycle_time_data["cycle_time"] / cycle_time_data["closed_tasks"]), 2)
     return cycle_times, avg_cycle_time
