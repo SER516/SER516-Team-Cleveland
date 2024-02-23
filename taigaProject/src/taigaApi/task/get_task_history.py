@@ -71,6 +71,8 @@ def get_task_details(task, headers, taiga_url, cycle_times, cycle_time_data):
 
             cycle_times.append({
                 "taskId": task["id"],
+                "taskDesc": task["subject"],
+                "taskRef": task["ref"],
                 "startTime": task["created_date"],
                 "inProgressDate": in_progress_date.date(),
                 "endTime": task['finished_date'],
@@ -94,6 +96,9 @@ def get_task_lead_time(project_id, auth_token):
         finished_date = datetime.fromisoformat(task['finished_date'])
         lead_time += (finished_date - created_date).days
         lead_times.append({
+            "taskDesc": task["subject"],
+            "sprintURL": task["sprintURL"],
+            "taskRef": task["ref"],
             "taskId": task["id"],
             "startTime": task["created_date"],
             "startTime": created_date.date(),

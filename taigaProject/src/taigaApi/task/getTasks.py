@@ -52,7 +52,9 @@ def get_closed_tasks(project_id, auth_token):
                 "id": task["id"],
                 "subject": task["subject"],
                 "created_date": task["created_date"],
-                "finished_date": task["finished_date"]
+                "finished_date": task["finished_date"],
+                "ref": task["ref"],
+                "sprintURL": task["project_extra_info"]["slug"]
             }
             for task in tasks if task.get("is_closed")
         ]
