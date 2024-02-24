@@ -6,6 +6,7 @@ import axios from "axios";
 import Cleveland from "./Cleveland.png"
 import Graph from "../graph";
 import SprintDetail from "../sprint";
+import DateSelector from '../date';
 
 const Project = () => {
     const location = useLocation();
@@ -17,19 +18,26 @@ const Project = () => {
     const [metric, setMetric] = useState(null);
     const [spinnerFlag, setSpinnerFlag] = useState(false);
     const [isBurndown, setIsBurndown] = useState(false);
+    const [isDevFocus, setIsDevFocus] = useState(false);
 
     const handleSelect = (eventKey) => {
         setSelectedValue(eventKey);
         if (eventKey === "Lead Time") {
             setMetric("metric/LeadTime");
             setIsBurndown(false);
+            setIsDevFocus(false);
         }
         else if (eventKey === "Cycle Time") {
             setMetric("metric/CycleTime");
             setIsBurndown(false);
+            setIsDevFocus(false);
         }
         else if (eventKey === "Burndown Chart") {
             setMetric("Sprints");
+            setIsDevFocus(false);
+        }
+        else if (eventKey === "Dev Focus") {
+            setIsDevFocus(true);
         }
     };
 
@@ -80,48 +88,52 @@ const Project = () => {
     }
 
     return (
-        <div className="background" style={{ display: 'flex', width: "100%", minHeight: "100vh", overflow: "auto", justifyContent: 'center', alignItems: 'center' }}>
-            <div className="backgroundWhite" style={{ width: '90%', display: 'flex', minHeight: "80vh", maxheight: "100vh", margin: "5%", justifyContent: 'center', alignItems: 'center' }}>
-                <Stack>
-                    <br />
-                    <Form style={{ width: "100%" }}>
-                        <Image src={Cleveland} className='col-sm-2 offset-sm-5' /><br /><br /><br /><br />
-                        <div className="mb-3 col-sm-6 offset-sm-2">Welcome to our project! <br /><br />Please input your Project Slug
-                            <br /></div>
-                        <div className="d-flex justify-content-center col-sm-8 offset-sm-2">
-                            <InputGroup>
-                                <FloatingLabel
-                                    controlId="formProjectSlug"
-                                    label="Project Slug"
-                                >
-                                    <Form.Control type="text" placeholder="Project Slug" onChange={handleProjectSlugField} />
-                                </FloatingLabel>
-                                <Dropdown onSelect={handleSelect}>
-                                    <Dropdown.Toggle variant="outline-secondary" className="backgroundButton">
-                                        {selectedValue ? selectedValue : 'Select Metric'}
-                                    </Dropdown.Toggle>
-                                    <Dropdown.Menu>
-                                        <Dropdown.Item eventKey="Lead Time">Lead Time</Dropdown.Item>
-                                        <Dropdown.Item eventKey="Cycle Time">Cycle Time</Dropdown.Item>
-                                        <Dropdown.Item eventKey="Burndown Chart">Burndown Chart</Dropdown.Item>
-                                    </Dropdown.Menu>
-                                </Dropdown>
-                            </InputGroup>
-                        </div><br />
-
-                        <Button variant="info" type="submit" className="submitButton backgroundButton" onClick={handleSubmit}>
-                            Submit
-                        </Button>
+        <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ height: '80%', width: '90%', maxHeight: '90vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Stack gap={4} className="col-md-5 mx-auto">
+                    <div className="d-flex align-items-center justify-content-center vh-100 backgroundWhite">
 
                         <br />
+                        <Form style={{ width: "100%" }}>
+                            <Image src={Cleveland} className='col-sm-2 offset-sm-5' /><br /><br /><br /><br />
+                            <div className="mb-3 col-sm-6 offset-sm-2">Welcome to our project! <br /><br />Please input your Project Slug 
+                                <br /></div>
+                            <div className="d-flex justify-content-center col-sm-8 offset-sm-2">
+                                <InputGroup>
+                                    <FloatingLabel
+                                        controlId="formProjectSlug"
+                                        label="Project Slug"
+                                    >
+                                        <Form.Control type="text" placeholder="Project Slug" onChange={handleProjectSlugField} />
+                                    </FloatingLabel>
+                                    <Dropdown onSelect={handleSelect}>
+                                        <Dropdown.Toggle variant="outline-secondary" className="backgroundButton">
+                                            {selectedValue ? selectedValue : 'Select Metric'}
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item eventKey="Lead Time">Lead Time</Dropdown.Item>
+                                            <Dropdown.Item eventKey="Cycle Time">Cycle Time</Dropdown.Item>
+                                            <Dropdown.Item eventKey="Burndown Chart">Burndown Chart</Dropdown.Item>
+                                            <Dropdown.Item eventKey="Dev Focus">Dev Focus</Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                </InputGroup>
+                            </div><br/>
 
-                        {error ? (
-                            <p className="errorMessage">Unable to fetch project detail</p>
-                        ) : null}
+                            <Button variant="info" type="submit" className="submitButton backgroundButton" onClick={handleSubmit}>
+                                Submit
+                            </Button>
 
-                        {spinnerFlag ? <Spinner variant="primary" animation="border" style={{ justifyContent: "center", alignItems: "center", display: "flex", marginLeft: "49%" }} /> : null}
-                    </Form>
-                    <br/>
+                            <br />
+
+                            {error ? (
+                                <p className="errorMessage">Unable to fetch project detail</p>
+                            ) : null}
+
+                            {spinnerFlag ? <Spinner variant="primary" animation="border" style={{ justifyContent: "center", alignItems: "center", display:"flex", marginLeft: "49%" }} /> : null}
+                        </Form>
+                    </div>
+
                     {data?.metric === "LEAD" ? (
                         <div>
                             <br />
@@ -142,6 +154,10 @@ const Project = () => {
                     ) : null}
                     {selectedValue === "Burndown Chart" && isBurndown ? (
                         <SprintDetail sprintDetails={data.sprints} attributes={data.custom_attributes} token={auth} projectName={data.name} />
+                    ) : null}
+                    {selectedValue === "Dev Focus" && isDevFocus ? (
+                        <DateSelector onDateSubmit={(startDate, endDate) => {
+                            console.log("Date range submitted:", startDate, "to", endDate);}} />
                     ) : null}
                 </Stack>
             </div>
