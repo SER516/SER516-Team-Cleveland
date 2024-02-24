@@ -6,7 +6,7 @@ import axios from "axios";
 import Cleveland from "./Cleveland.png"
 import Graph from "../graph";
 import SprintDetail from "../sprint";
-import DateSelector from '../date';
+import DateSelector from '../devfocus';
 
 const Project = () => {
     const location = useLocation();
