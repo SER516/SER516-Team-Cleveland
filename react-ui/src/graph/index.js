@@ -37,8 +37,8 @@ const Graph = ({ apiData, avg, chartFor, title }) => {
                         }} />
                         <Tooltip content={<CustomToolTip />} />
                         <Scatter name={title} data={apiData} fill="#8884d8" />
-                        <ReferenceLine y={avg} stroke="red" strokeDasharray="3 3" strokeWidth={2}
-                                            label={{ value: `Average ${avg} Days`, position: 'above', fontSize: 15, offset: 10, fill: "black", fontWeight: "bold" }} />
+                        <ReferenceLine y={avg} stroke="orange" strokeWidth={2}
+                            label={{ value: `${avg}`, position: 'left', fontSize: 15, offset: 5, fill: "#FF8989", fontWeight: "bold" }} />
                     </ScatterChart>
                 </ResponsiveContainer>
             </div>
