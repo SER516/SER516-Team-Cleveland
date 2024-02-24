@@ -60,8 +60,8 @@ const SprintDetail = ({ sprintDetails, attributes, token, projectName }) => {
     }
 
     return (
-        <div style={{ justifyContent: "center", alignItems: "center", display:"flex" }}>
-            <div style={{ height: '80%', width: '90%', maxHeight: '90vh', display: 'flex'}}>
+        <div>
+            <div>
                 <Stack gap={4}>
                     <h3 className="projectName">{projectName}</h3>
                     <div className="d-flex justify-content-center backgroundWhite">

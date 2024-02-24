@@ -6,6 +6,7 @@ import axios from "axios";
 import Cleveland from "./Cleveland.png"
 import Graph from "../graph";
 import SprintDetail from "../sprint";
+import DateSelector from '../devfocus';
 
 const Project = () => {
     const location = useLocation();
@@ -17,19 +18,26 @@ const Project = () => {
     const [metric, setMetric] = useState(null);
     const [spinnerFlag, setSpinnerFlag] = useState(false);
     const [isBurndown, setIsBurndown] = useState(false);
+    const [isDevFocus, setIsDevFocus] = useState(false);
 
     const handleSelect = (eventKey) => {
         setSelectedValue(eventKey);
         if (eventKey === "Lead Time") {
             setMetric("metric/LeadTime");
             setIsBurndown(false);
+            setIsDevFocus(false);
         }
         else if (eventKey === "Cycle Time") {
             setMetric("metric/CycleTime");
             setIsBurndown(false);
+            setIsDevFocus(false);
         }
         else if (eventKey === "Burndown Chart") {
             setMetric("Sprints");
+            setIsDevFocus(false);
+        }
+        else if (eventKey === "Dev Focus") {
+            setIsDevFocus(true);
         }
     };
 
@@ -80,11 +88,10 @@ const Project = () => {
     }
 
     return (
-        <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <div style={{ height: '80%', width: '90%', maxHeight: '90vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Stack gap={4} className="col-md-5 mx-auto">
-                    <div className="d-flex align-items-center justify-content-center vh-100 backgroundWhite">
-
+        <div className="background" style={{ display: 'flex', width: "100%", minHeight: "100vh", overflow: "auto", justifyContent: 'center', alignItems: 'center' }}>
+            <div className="backgroundWhite" style={{ width: '90%', display: 'flex', minHeight: "80vh", maxheight: "100vh", margin: "5%", justifyContent: 'center', alignItems: 'center' }}>
+                <Stack>
+                    <div>
                         <br />
                         <Form style={{ width: "100%" }}>
                             <Image src={Cleveland} className='col-sm-2 offset-sm-5' /><br /><br /><br /><br />
@@ -106,6 +113,7 @@ const Project = () => {
                                             <Dropdown.Item eventKey="Lead Time">Lead Time</Dropdown.Item>
                                             <Dropdown.Item eventKey="Cycle Time">Cycle Time</Dropdown.Item>
                                             <Dropdown.Item eventKey="Burndown Chart">Burndown Chart</Dropdown.Item>
+                                            <Dropdown.Item eventKey="Dev Focus">Dev Focus</Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
                                 </InputGroup>
@@ -129,23 +137,28 @@ const Project = () => {
                         <div>
                             <br />
                             <h3 className="projectName">{data.projectInfo.name}</h3>
-                            <Graph apiData={data.leadTime.storiesLeadTime.userStory} avg={data.leadTime.storiesLeadTime.avgLeadTime} chartFor={"User Story"} title={`User Story ${selectedValue}`} />
+                            <Graph apiData={data.leadTime.storiesLeadTime.userStory} avg={data.leadTime.storiesLeadTime.avgLeadTime} chartFor={"User Story"} title={'User Story ${selectedValue}'} />
                             <br />
-                            <Graph apiData={data.leadTime.tasksLeadTime.task} avg={data.leadTime.tasksLeadTime.avgLeadTime} chartFor={"Task"} title={`Task ${selectedValue}`} />
+                            <Graph apiData={data.leadTime.tasksLeadTime.task} avg={data.leadTime.tasksLeadTime.avgLeadTime} chartFor={"Task"} title={'Task ${selectedValue}'} />
                         </div>
                     ) : null}
                     {data?.metric === "CYCLE" ? (
                         <div>
                             <br />
                             <h3 className="projectName">{data.projectInfo.name}</h3>
-                            <Graph apiData={data.cycleTime.storyCycleTime.story} avg={data.cycleTime.storyCycleTime.avgCycleTime} chartFor={"User Story"} title={`User Story ${selectedValue}`} />
+                            <Graph apiData={data.cycleTime.storyCycleTime.story} avg={data.cycleTime.storyCycleTime.avgCycleTime} chartFor={"User Story"} title={'User Story ${selectedValue}'} />
                             <br />
-                            <Graph apiData={data.cycleTime.taskCycleTime.task} avg={data.cycleTime.taskCycleTime.avgCycleTime} chartFor={"Task"} title={`Task ${selectedValue}`} />
+                            <Graph apiData={data.cycleTime.taskCycleTime.task} avg={data.cycleTime.taskCycleTime.avgCycleTime} chartFor={"Task"} title={'Task ${selectedValue}'} />
                         </div>
                     ) : null}
                     {selectedValue === "Burndown Chart" && isBurndown ? (
                         <SprintDetail sprintDetails={data.sprints} attributes={data.custom_attributes} token={auth} projectName={data.name} />
                     ) : null}
+                    {selectedValue === "Dev Focus" && isDevFocus ? (
+                        <DateSelector onDateSubmit={(startDate, endDate) => {
+                            console.log("Date range submitted:", startDate, "to", endDate);}} />
+                    ) : null}
+                    <br/>
                 </Stack>
             </div>
         </div>
