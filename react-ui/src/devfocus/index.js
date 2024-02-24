@@ -28,7 +28,7 @@ const DateSelector = ({ onDateSubmit }) => {
                     </div>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <Button variant="primary" type="submit" className="submitButton backgroundButton">Select Date</Button>
+                    <Button variant="primary" type="submit" className="submitButton backgroundButton">Submit</Button>
                 </div>
             </Form>
         </div>
