@@ -5,6 +5,7 @@ const DateSelector = ({ onDateSubmit }) => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [selectedValue, setSelectedValue] = useState(null);
+    const [threshold, setThreshold] = useState(null);
 
     const handleSelect = (eventKey) => {
         console.log(eventKey);
@@ -14,13 +15,13 @@ const DateSelector = ({ onDateSubmit }) => {
     // Temporary code for submit button
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("Selected Start Date: ", startDate, "Selected End Date: ", endDate);
+        console.log("Selected Start Date: ", startDate, "Selected End Date: ", endDate, threshold);
         onDateSubmit(startDate, endDate);
     };
 
     const handleThresholdChange = (event) => {
         event.preventDefault();
-        console.log(event.target.value);
+        setThreshold(event.target.value);
     };
     
     return (
