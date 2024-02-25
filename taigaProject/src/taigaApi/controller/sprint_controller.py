@@ -1,12 +1,12 @@
 from fastapi import FastAPI, Request, APIRouter, HTTPException, Header
 from typing import Annotated
 
-from taigaApi.model.projectRequest import ProjectRequest
+from ..model.projectRequest import ProjectRequest
 
-from taigaApi.project.getProjectBySlug import get_project_by_slug
-from taigaApi.util.SimpleCache import cache
+from ..project.getProjectBySlug import get_project_by_slug
+from ..util.SimpleCache import cache
 
-from taigaApi.util.sprint_service import get_sprints_and_custom_fields_for_project
+from ..util.sprint_service import get_sprints_and_custom_fields_for_project
 router = APIRouter()
 
 @router.post("/Sprints")

@@ -1,9 +1,9 @@
 from fastapi import FastAPI, Request, APIRouter, HTTPException
 
-from taigaApi.auth.authenticate import authenticate
-from taigaApi.model.authRequest import AuthRequest
+from ..auth.authenticate import authenticate
+from ..model.authRequest import AuthRequest
 
-from taigaApi.util.SimpleCache import cache
+from ..util.SimpleCache import cache
 
 router = APIRouter()
 

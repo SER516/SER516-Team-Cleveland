@@ -10,14 +10,12 @@ router = APIRouter()
 
 @router.post("/Project")
 def auth(projectRequest: ProjectRequest, token: Annotated[str | None, Header()] = None):
-    print(projectRequest)
     project_info = get_project_by_slug(projectRequest.projectslug, token)
-    print(project_info)
     if project_info is None:
         raise HTTPException(status_code=404, detail="Project Slug Not Found.")
 
     project_details = {
         "name": project_info["name"],
-        "team_members": get_project_members(project_info)
+        "members": get_project_members(project_info)
     }
     return project_details
