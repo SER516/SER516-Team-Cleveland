@@ -5,9 +5,8 @@ import warnings
 from fastapi.testclient import TestClient
 
 from unittest.mock import patch, MagicMock
-from taigaProject.src.taigaApi.controller.project_controller import auth
 
-from ...src.main import app
+from ..test_main import app
 
 client = TestClient(app=app)
 
