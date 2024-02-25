@@ -137,18 +137,18 @@ const Project = () => {
                         <div>
                             <br />
                             <h3 className="projectName">{data.projectInfo.name}</h3>
-                            <Graph apiData={data.leadTime.storiesLeadTime.userStory} avg={data.leadTime.storiesLeadTime.avgLeadTime} chartFor={"User Story"} title={'User Story ${selectedValue}'} />
+                            <Graph apiData={data.leadTime.storiesLeadTime.userStory} avg={data.leadTime.storiesLeadTime.avgLeadTime} chartFor={"User Story"} title={`User Story ${selectedValue}`} />
                             <br />
-                            <Graph apiData={data.leadTime.tasksLeadTime.task} avg={data.leadTime.tasksLeadTime.avgLeadTime} chartFor={"Task"} title={'Task ${selectedValue}'} />
+                            <Graph apiData={data.leadTime.tasksLeadTime.task} avg={data.leadTime.tasksLeadTime.avgLeadTime} chartFor={"Task"} title={`Task ${selectedValue}`} />
                         </div>
                     ) : null}
                     {data?.metric === "CYCLE" ? (
                         <div>
                             <br />
                             <h3 className="projectName">{data.projectInfo.name}</h3>
-                            <Graph apiData={data.cycleTime.storyCycleTime.story} avg={data.cycleTime.storyCycleTime.avgCycleTime} chartFor={"User Story"} title={'User Story ${selectedValue}'} />
+                            <Graph apiData={data.cycleTime.storyCycleTime.story} avg={data.cycleTime.storyCycleTime.avgCycleTime} chartFor={"User Story"} title={`User Story ${selectedValue}`} />
                             <br />
-                            <Graph apiData={data.cycleTime.taskCycleTime.task} avg={data.cycleTime.taskCycleTime.avgCycleTime} chartFor={"Task"} title={'Task ${selectedValue}'} />
+                            <Graph apiData={data.cycleTime.taskCycleTime.task} avg={data.cycleTime.taskCycleTime.avgCycleTime} chartFor={"Task"} title={`Task ${selectedValue}`} />
                         </div>
                     ) : null}
                     {selectedValue === "Burndown Chart" && isBurndown ? (
