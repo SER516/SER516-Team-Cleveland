@@ -6,6 +6,7 @@ import axios from "axios";
 import Cleveland from "./Cleveland.png"
 import Graph from "../graph";
 import SprintDetail from "../sprint";
+import CustomBarChart from "../graph";
 
 const Project = () => {
     const location = useLocation();
@@ -30,6 +31,10 @@ const Project = () => {
         }
         else if (eventKey === "Burndown Chart") {
             setMetric("Sprints");
+        }
+        /* For testing */
+        else if (eventKey === "Dev Focus") {
+            setIsBurndown(false);            
         }
     };
 
@@ -104,6 +109,7 @@ const Project = () => {
                                         <Dropdown.Item eventKey="Lead Time">Lead Time</Dropdown.Item>
                                         <Dropdown.Item eventKey="Cycle Time">Cycle Time</Dropdown.Item>
                                         <Dropdown.Item eventKey="Burndown Chart">Burndown Chart</Dropdown.Item>
+                                        <Dropdown.Item eventKey="Dev Focus">Dev Focus</Dropdown.Item>  {/* For testing */}
                                     </Dropdown.Menu>
                                 </Dropdown>
                             </InputGroup>
@@ -126,22 +132,26 @@ const Project = () => {
                         <div>
                             <br />
                             <h3 className="projectName">{data.projectInfo.name}</h3>
-                            <Graph apiData={data.leadTime.storiesLeadTime.userStory} avg={data.leadTime.storiesLeadTime.avgLeadTime} chartFor={"User Story"} title={`User Story ${selectedValue}`} />
+                            <Graph type="Lead Time" apiData={data.leadTime.storiesLeadTime.userStory} avg={data.leadTime.storiesLeadTime.avgLeadTime} chartFor={"User Story"} title={`User Story ${selectedValue}`} />
                             <br />
-                            <Graph apiData={data.leadTime.tasksLeadTime.task} avg={data.leadTime.tasksLeadTime.avgLeadTime} chartFor={"Task"} title={`Task ${selectedValue}`} />
+                            <Graph type="Lead Time" apiData={data.leadTime.tasksLeadTime.task} avg={data.leadTime.tasksLeadTime.avgLeadTime} chartFor={"Task"} title={`Task ${selectedValue}`} />
                         </div>
                     ) : null}
                     {data?.metric === "CYCLE" ? (
                         <div>
                             <br />
                             <h3 className="projectName">{data.projectInfo.name}</h3>
-                            <Graph apiData={data.cycleTime.storyCycleTime.story} avg={data.cycleTime.storyCycleTime.avgCycleTime} chartFor={"User Story"} title={`User Story ${selectedValue}`} />
+                            <Graph type="Cycle Time" apiData={data.cycleTime.storyCycleTime.story} avg={data.cycleTime.storyCycleTime.avgCycleTime} chartFor={"User Story"} title={`User Story ${selectedValue}`} />
                             <br />
-                            <Graph apiData={data.cycleTime.taskCycleTime.task} avg={data.cycleTime.taskCycleTime.avgCycleTime} chartFor={"Task"} title={`Task ${selectedValue}`} />
+                            <Graph type="Cycle Time" apiData={data.cycleTime.taskCycleTime.task} avg={data.cycleTime.taskCycleTime.avgCycleTime} chartFor={"Task"} title={`Task ${selectedValue}`} />
                         </div>
                     ) : null}
                     {selectedValue === "Burndown Chart" && isBurndown ? (
                         <SprintDetail sprintDetails={data.sprints} attributes={data.custom_attributes} token={auth} projectName={data.name} />
+                    ) : null}
+                    {/* For testing */}
+                    {selectedValue === "Dev Focus" ? (
+                        <Graph type="Dev Focus" title="Dev Focus" />
                     ) : null}
                 </Stack>
             </div>
