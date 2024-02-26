@@ -18,6 +18,8 @@ const Project = () => {
     const [metric, setMetric] = useState(null);
     const [spinnerFlag, setSpinnerFlag] = useState(false);
     const [isBurndown, setIsBurndown] = useState(false);
+    const [isLeadTime, setIsLeadTime] = useState(false);
+    const [isCycleTime, setIsCycleTime] = useState(false);
     const [isDevFocus, setIsDevFocus] = useState(false);
 
     const handleSelect = (eventKey) => {
@@ -25,19 +27,28 @@ const Project = () => {
         if (eventKey === "Lead Time") {
             setMetric("metric/LeadTime");
             setIsBurndown(false);
+            setIsCycleTime(false);
             setIsDevFocus(false);
+            setIsLeadTime(true);
         }
         else if (eventKey === "Cycle Time") {
             setMetric("metric/CycleTime");
             setIsBurndown(false);
+            setIsCycleTime(true);
             setIsDevFocus(false);
+            setIsLeadTime(false);
         }
         else if (eventKey === "Burndown Chart") {
             setMetric("Sprints");
+            setIsCycleTime(false);
             setIsDevFocus(false);
+            setIsLeadTime(false);
         }
         else if (eventKey === "Dev Focus") {
+            setIsBurndown(false);
+            setIsCycleTime(false);
             setIsDevFocus(true);
+            setIsLeadTime(false);
         }
     };
 
@@ -95,7 +106,7 @@ const Project = () => {
                         <br />
                         <Form style={{ width: "100%" }}>
                             <Image src={Cleveland} className='col-sm-2 offset-sm-5' /><br /><br /><br /><br />
-                            <div className="mb-3 col-sm-6 offset-sm-2">Welcome to our project! <br /><br />Please input your Project Slug 
+                            <div className="mb-3 col-sm-6 offset-sm-2">Welcome to our project! <br /><br />Please input your Project Slug
                                 <br /></div>
                             <div className="d-flex justify-content-center col-sm-8 offset-sm-2">
                                 <InputGroup>
@@ -133,7 +144,7 @@ const Project = () => {
                         </Form>
                     </div>
 
-                    {data?.metric === "LEAD" ? (
+                    {data?.metric === "LEAD" && isLeadTime ? (
                         <div>
                             <br />
                             <h3 className="projectName">{data.projectInfo.name}</h3>
@@ -142,7 +153,7 @@ const Project = () => {
                             <Graph apiData={data.leadTime.tasksLeadTime.task} avg={data.leadTime.tasksLeadTime.avgLeadTime} chartFor={"Task"} title={`Task ${selectedValue}`} />
                         </div>
                     ) : null}
-                    {data?.metric === "CYCLE" ? (
+                    {data?.metric === "CYCLE" && isCycleTime ? (
                         <div>
                             <br />
                             <h3 className="projectName">{data.projectInfo.name}</h3>
