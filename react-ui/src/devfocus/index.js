@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { Button, Dropdown, FloatingLabel, Form, InputGroup } from "react-bootstrap";
 
-const DateSelector = ({ onDateSubmit }) => {
+const DateSelector = ({ onDateSubmit, memberDetails }) => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [selectedValue, setSelectedValue] = useState(null);
     const [threshold, setThreshold] = useState(null);
 
     const handleSelect = (eventKey) => {
-        console.log(eventKey);
-        setSelectedValue(eventKey);
+        const splitEventKey = eventKey.split(',');
+        setSelectedValue(splitEventKey[1]);
     };
 
     // Temporary code for submit button
@@ -51,9 +51,10 @@ const DateSelector = ({ onDateSubmit }) => {
                                     {selectedValue ? selectedValue : 'Select Member'}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
-                                    <Dropdown.Item eventKey="Member 1">Member 1</Dropdown.Item>
-                                    <Dropdown.Item eventKey="Member 2">Member 2</Dropdown.Item>
-                                    <Dropdown.Item eventKey="Member 3">Member 3</Dropdown.Item>
+                                    {
+                                        memberDetails.map((item) => <Dropdown.Item key={item.id} eventKey={[item.id,
+                                        item.name]}>{item.name}</Dropdown.Item>)
+                                    }
                                 </Dropdown.Menu>
                             </Dropdown>
                         </InputGroup>
