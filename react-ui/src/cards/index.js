@@ -1,4 +1,16 @@
-const CustomCard = ({ num, title, from, to }) => {
+import { useEffect, useState } from "react";
+
+const CustomCard = ({ num, title, from, to, members }) => {
+    const [membersName, setMembersName] = useState('');
+
+    useEffect(() => {
+        let names = [];
+        for (let v in members) {
+            names.push(members[v].name);
+        }
+        setMembersName(names.join(", "));
+    }, [members]);
+
     return (
         <div className="d-flex justify-content-center col-sm-8 offset-sm-3 cards">
             <div>
@@ -7,6 +19,11 @@ const CustomCard = ({ num, title, from, to }) => {
                 <h6 style={{ alignItems: "center", justifyContent: "center", textAlign: "center" }}>
                     {
                         `Date: ${from} to ${to}`
+                    }
+                </h6>
+                <h6 style={{ alignItems: "center", justifyContent: "center", textAlign: "center" }}>
+                    {
+                        membersName && `Violations by - ${membersName}`
                     }
                 </h6>
             </div>
