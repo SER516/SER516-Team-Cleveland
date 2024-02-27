@@ -46,9 +46,8 @@ const Project = () => {
         }
         else if (eventKey === "Dev Focus") {
             setIsBurndown(false);
-            setIsCycleTime(false);
-            setIsDevFocus(true);
             setIsLeadTime(false);
+            setIsCycleTime(false);
             setMetric("Project");
         }
     };
