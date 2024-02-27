@@ -49,6 +49,7 @@ const Project = () => {
             setIsCycleTime(false);
             setIsDevFocus(true);
             setIsLeadTime(false);
+            setMetric("Project");
         }
     };
 
@@ -77,12 +78,14 @@ const Project = () => {
             console.log(data);
             setSpinnerFlag(false);
             setError(false);
+            selectedValue === "Dev Focus" ? setIsDevFocus(true) : setIsDevFocus(false);
             selectedValue === "Burndown Chart" ? setIsBurndown(true) : setIsBurndown(false);
         })
         .catch(ex => {
             setError(true);
             setSpinnerFlag(false);
             setIsBurndown(false);
+            setIsDevFocus(false);
         });
     }
 
@@ -166,7 +169,7 @@ const Project = () => {
                         <SprintDetail sprintDetails={data.sprints} attributes={data.custom_attributes} token={auth} projectName={data.name} />
                     ) : null}
                     {selectedValue === "Dev Focus" && isDevFocus ? (
-                        <DateSelector onDateSubmit={(startDate, endDate) => {
+                        <DateSelector memberDetails={data.members} onDateSubmit={(startDate, endDate) => {
                             console.log("Date range submitted:", startDate, "to", endDate);}} />
                     ) : null}
                     <br/>
