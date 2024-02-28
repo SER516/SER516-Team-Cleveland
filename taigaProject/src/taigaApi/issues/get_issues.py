@@ -43,9 +43,9 @@ def get_closed_issues_by_project(project_id, auth_token):
 def get_issues(project_id, from_date, to_date, auth_token):
 
     issues = get_closed_issues_by_project(project_id, auth_token)
+    final_issues = []
+    total_time = 0
     if issues and len(issues) > 0:
-        total_time = 0
-        final_issues = []
         for issue in issues:
             created_date = datetime.fromisoformat(issue["created_date"])
             finished_date = datetime.fromisoformat(issue['finished_date'])
@@ -59,11 +59,10 @@ def get_issues(project_id, from_date, to_date, auth_token):
                 total_time += (finished_date - created_date).days
         if len(final_issues) > 0:
             total_time /= len(final_issues)
-        return {
-            "issues": final_issues,
-            "avg_fix_time": total_time
-        }
-    else:
-        return []
+    return {
+        "issues": final_issues,
+        "avg_fix_time": total_time
+    }
+
 
 
