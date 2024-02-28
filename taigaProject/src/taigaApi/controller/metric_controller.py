@@ -37,5 +37,4 @@ def get_burndown_chart_metric(burndownChartRequest: BurndownChartRequest, token:
 
 @router.post("/metric/Cruft")
 def get_zero_business_value(cruftRequest: CruftRequest, token: Annotated[str | None, Header()] = None):
-    project_info = get_project_by_slug(cruftRequest.projectSlug, token)
-    return get_zero_business_value_user_stories(project_info, cruftRequest.startDate, cruftRequest.endDate, cruftRequest.attributeKey, token)
+    return get_zero_business_value_user_stories(cruftRequest.projectId, cruftRequest.startDate, cruftRequest.endDate, cruftRequest.attributeKey, token)
