@@ -212,8 +212,8 @@ def append_points_date_data(date, completed_story_points, remaining_story_points
     }
 
 
-def get_zero_business_value_user_stories(project_details, start_range, end_range, attribute_key, auth_token):
-    user_stories = get_zero_bv_us(project_details["id"], start_range, end_range, auth_token)
+def get_zero_business_value_user_stories(project_id, start_range, end_range, attribute_key, auth_token):
+    user_stories = get_zero_bv_us(project_id, start_range, end_range, auth_token)
     zero_bv_user_stories = []
     total_story_points = 0
     zero_bv_story_points = 0
