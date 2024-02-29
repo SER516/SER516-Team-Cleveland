@@ -143,7 +143,6 @@ const Project = () => {
                     {selectedValue === "Burndown Chart" && isBurndown ? (
                         <SprintDetail sprintDetails={data.sprints} attributes={data.custom_attributes} token={auth} projectName={data.name} />
                     ) : null}
-                    <br/>
                 </Stack>
             </div>
         </div>
