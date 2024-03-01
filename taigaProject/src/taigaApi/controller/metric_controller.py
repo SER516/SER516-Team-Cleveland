@@ -42,6 +42,6 @@ def get_zero_business_value(cruftRequest: CruftRequest, token: Annotated[str | N
     zero_bv_stories = get_zero_business_value_user_stories(cruftRequest.projectId, cruftRequest.startDate, cruftRequest.endDate, cruftRequest.attributeKey, token)
     issues = get_issues(cruftRequest.projectId, date.fromisoformat(cruftRequest.startDate), date.fromisoformat(cruftRequest.endDate), token)
     return {
-    "zero_bv_us": zero_bv_stories,
-    "issues": issues
+        "zero_bv_us": zero_bv_stories,
+        "issues": issues
     }
