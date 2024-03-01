@@ -373,7 +373,8 @@ def dev_focus_data_map(key, tasks, date_map, from_date, to_date):
         for task in tasks:
             from_date_date, to_date_date = datetime.fromisoformat(from_date), datetime.fromisoformat(to_date)
             from_date_date = from_date_date if task['inProgressDate'] is None else max(task['inProgressDate'], from_date_date)
-            to_date_date = to_date_date if task['closed_date'] is None else min(task['closed_date'], to_date_date)
+            to_date_date = min(to_date_date, datetime.now()) if task['closed_date'] is None else min([task['closed_date'], to_date_date,
+                                                                                datetime.now()])
             for single_date in daterange(from_date_date, to_date_date + timedelta(days=1)):
                 single_date_str = single_date.strftime("%m-%d-%Y")
                 if single_date_str not in date_map[key]:
@@ -395,16 +396,6 @@ def check_dates_overlap(task_1_inprogress_date, task_2_inprogress_date, task_1_f
     # print(latest_start, earliest_end, overlap)
     if overlap == 0:
         return 0, 0
-    # elif overlap == 1:
-    #     time_1 = datetime.strptime(str(earliest_end.time()).split(".")[0], "%H:%M:%S")
-    #     time_2 = datetime.strptime(str(latest_start.time()).split(".")[0], "%H:%M:%S")
-    #     time_diff = time_1 - time_2
-    #     print(time_diff.total_seconds())
-    #     if time_diff.total_seconds() < 0:
-    #         return 0, latest_start.date()
-    #     else:
-    #         return overlap, latest_start.date()
-
     else:
         return overlap, latest_start.date()
 
