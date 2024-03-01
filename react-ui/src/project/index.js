@@ -104,6 +104,7 @@ const Project = () => {
                                         <Dropdown.Item eventKey="Lead Time">Lead Time</Dropdown.Item>
                                         <Dropdown.Item eventKey="Cycle Time">Cycle Time</Dropdown.Item>
                                         <Dropdown.Item eventKey="Burndown Chart">Burndown Chart</Dropdown.Item>
+                                        <Dropdown.Item eventKey="Cruft">Cruft</Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>
                             </InputGroup>
