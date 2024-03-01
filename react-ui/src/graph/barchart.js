@@ -5,7 +5,6 @@ import { BarChart, Bar, XAxis, YAxis, Legend, CartesianGrid, ResponsiveContainer
 const CustomBarChart = ({ title, data, threshold }) => {
     console.log("Hello", data);
     const [memberData, setMemberData] = useState([]);
-    const [totalViolations, setTotalViolations] = useState(0);
     const [dateData, setDateData] = useState({});
     const [members, setMembers] = useState([]);
 
@@ -20,7 +19,6 @@ const CustomBarChart = ({ title, data, threshold }) => {
 
     useEffect(() => {
         let temp_arr = [];
-        console.log(data);
         let members = [];
 
         let tempDateMap = {};
@@ -28,7 +26,8 @@ const CustomBarChart = ({ title, data, threshold }) => {
             let count = 0;
             let obj = {}
             for (const date in data[name]) {
-                if (data[name][date].length >= threshold) {
+                let list = data[name][date].filter(task => task["inProgressDate"] !== null);
+                if (list.length >= threshold) {
                     obj["name"] = name;
                     obj["date"] = date;
                     count = count + 1;
@@ -45,13 +44,14 @@ const CustomBarChart = ({ title, data, threshold }) => {
                 }
             }
             obj["violations"] = count;
-            temp_arr.push(obj);
-            members.push(name);
+            if (obj["violations"] !== 0) {
+                temp_arr.push(obj);
+                members.push(name);
+            }
         }
         console.log(temp_arr);
         console.log(tempDateMap);
         setMemberData(temp_arr);
-        setTotalViolations(temp_arr.length);
         setDateData(Object.values(tempDateMap));
         setMembers(members);
     }, [data, threshold]); 

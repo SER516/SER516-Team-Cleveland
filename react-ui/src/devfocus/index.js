@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, Dropdown, FloatingLabel, Form, InputGroup } from "react-bootstrap";
+import { Button, Dropdown, FloatingLabel, Form, InputGroup, Spinner } from "react-bootstrap";
 import CustomBarChart from "../graph/barchart";
 import CustomCard from "../cards";
 
@@ -16,6 +16,7 @@ const DateSelector = ({ onDateSubmit, memberDetails, token, projectId }) => {
     const [teamMembers, setTeamMembers] = useState([]);
     const [title, setTitle] = useState(null);
     const [isDevFocus, setIsDevFocus] = useState(false);
+    const [spinnerFlag, setSpinnerFlag] = useState(false);
 
     useEffect(() => {
         let allMembers = [];
@@ -41,12 +42,12 @@ const DateSelector = ({ onDateSubmit, memberDetails, token, projectId }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("Selected Start Date: ", startDate, "Selected End Date: ", endDate, projectId, threshold, selectedMemeberId);
         onDateSubmit(startDate, endDate);
+        setSpinnerFlag(true);
 
         axios({
             method: "post",
-            url: `http://localhost:8000/metric/Devfocus2`,
+            url: `http://localhost:8000/metric/Devfocus`,
             data: {
                 members: selectedMemeberId,
                 from_date: startDate,
@@ -61,16 +62,29 @@ const DateSelector = ({ onDateSubmit, memberDetails, token, projectId }) => {
         })
         .then(res => {
             setData(res.data);
+            let violationMembers = []
             let totalViolations = 0;
             for (let name in res.data) {
-                totalViolations += Object.values(res.data[name]).length
+                let count = 0;
+                for (let date in res.data[name]) {
+                    let list = res.data[name][date].filter(task => task["inProgressDate"] !== null);
+                    if (list.length >= threshold) {
+                        totalViolations += 1;
+                        count += 1;
+                    }
+                }
+                if (count !== 0) {
+                    violationMembers.push(name);
+                }
             }
             setTotalViolations(totalViolations);
-            setMembers(Object.keys(res.data));
+            setMembers(violationMembers);
             setIsDevFocus(true);
+            setSpinnerFlag(false);
         })
         .catch(ex => {
             setIsDevFocus(false);
+            setSpinnerFlag(false);
         });
     }
 
@@ -121,6 +135,8 @@ const DateSelector = ({ onDateSubmit, memberDetails, token, projectId }) => {
                     <Button variant="primary" type="submit" className="submitButton backgroundButton">Submit</Button>
                 </div>
             </Form>
+            <br />
+            {spinnerFlag ? <Spinner variant="primary" animation="border" style={{ justifyContent: "center", alignItems: "center", display:"flex", marginLeft: "49%" }} /> : null}
 
             {isDevFocus ? (
                 <div>
