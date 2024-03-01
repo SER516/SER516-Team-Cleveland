@@ -186,7 +186,7 @@ const Project = () => {
                             console.log("Date range submitted:", startDate, "to", endDate);}} />
                     ) : null}
                     {selectedValue === "Cruft" && isCruft ? (
-                        <DateSelectorCruft onDateSubmit={(startDate, endDate) => {
+                        <DateSelectorCruft attributes={data.custom_attributes} token={auth} projectName={data.id} onDateSubmit={(startDate, endDate) => {
                             console.log("Date range submitted:", startDate, "to", endDate);}} />
                     ) : null}
                     <br/>
