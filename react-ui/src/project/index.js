@@ -50,10 +50,6 @@ const Project = () => {
             setIsCycleTime(false);
             setMetric("Project");
         }
-        /* For testing */
-        else if (eventKey === "Dev Focus") {
-            setIsBurndown(false);            
-        }
     };
 
     useEffect(() => {
@@ -172,7 +168,7 @@ const Project = () => {
                         <SprintDetail sprintDetails={data.sprints} attributes={data.custom_attributes} token={auth} projectName={data.name} />
                     ) : null}
                     {selectedValue === "Dev Focus" && isDevFocus ? (
-                        <DateSelector memberDetails={data.members} onDateSubmit={(startDate, endDate) => {
+                        <DateSelector memberDetails={data.members} token={auth} projectId={data.id} onDateSubmit={(startDate, endDate) => {
                             console.log("Date range submitted:", startDate, "to", endDate);}} />
                     ) : null}
                     <br/>
