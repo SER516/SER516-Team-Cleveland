@@ -130,7 +130,8 @@ def extract_state_change_dates(history_data):
         if "status" in values_diff:
             if values_diff["status"] == ["New", "In progress"]:
                 in_progress_date = datetime.fromisoformat(event["created_at"])
-            if values_diff["status"] == ['In progress', 'DONE']:
+            if (values_diff["status"] == ['In progress', 'DONE'] or
+                    values_diff["status"] == ['Ready For test', 'DONE']):
                 closed_at = datetime.fromisoformat(event["created_at"])
     return in_progress_date, closed_at
 
