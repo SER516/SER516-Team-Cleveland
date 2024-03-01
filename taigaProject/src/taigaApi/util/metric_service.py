@@ -341,8 +341,19 @@ def fetch_member_tasks(project_id, from_date, to_date, members, token):
         for key in member_tasks_map:
             executor.submit(dev_focus_data_map, key, member_tasks_map[key], date_map, from_date,
                             to_date)
+    for key in date_map:
+        for date_key in date_map[key]:
+            tasks_to_remove = []
+            for task1, task2 in itertools.combinations(date_map[key][date_key], 2):
+                if task1["inProgressDate"] < task2["closed_date"]:
+                    tasks_to_remove.append(task1)
+
+            # Remove tasks that need to be removed
+            for task in tasks_to_remove:
+                date_map[key][date_key].remove(task)
 
     return date_map
+
 
 
 def dev_focus_data_map(key, tasks, date_map, from_date, to_date):
