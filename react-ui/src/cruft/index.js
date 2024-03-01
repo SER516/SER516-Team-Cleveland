@@ -1,9 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 
-const DateSelector = ({ onDateSubmit }) => {
+const DateSelectorCruft = ({ attributes, token, projectId, onDateSubmit }) => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+    const [bvAttribute, setBvAttribute] = useState(null);
+
+    useEffect(() => {
+        const attribute = attributes.map(attribute => {
+            if (attribute.name.toLowerCase() === "bv" || attribute.name.toLowerCase()=== "business value") {
+                return attribute.id;
+            }
+            else {
+                return null;
+            }
+        });
+        setBvAttribute(attribute.length !== 0 ? attribute[0].toString() : null);
+    }, [attributes]);
 
     // Temporary code for submit button
     const handleSubmit = (e) => {
@@ -36,4 +49,4 @@ const DateSelector = ({ onDateSubmit }) => {
 };
 
 
-export default DateSelector;
+export default DateSelectorCruft;
