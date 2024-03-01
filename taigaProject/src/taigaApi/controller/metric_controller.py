@@ -8,6 +8,8 @@ from taigaApi.project.getProjectBySlug import get_project_by_slug
 from taigaApi.util.metric_service import get_lead_time_details, get_cycle_time_details, get_burndown_chart_metric_detail, get_zero_business_value_user_stories
 from taigaApi.milestone.get_milestone import get_milestone
 from taigaApi.util.SimpleCache import cache
+from taigaApi.issues.get_issues import get_issues
+from datetime import date
 
 router = APIRouter()
 
@@ -37,4 +39,9 @@ def get_burndown_chart_metric(burndownChartRequest: BurndownChartRequest, token:
 
 @router.post("/metric/Cruft")
 def get_zero_business_value(cruftRequest: CruftRequest, token: Annotated[str | None, Header()] = None):
-    return get_zero_business_value_user_stories(cruftRequest.projectId, cruftRequest.startDate, cruftRequest.endDate, cruftRequest.attributeKey, token)
+    zero_bv_stories = get_zero_business_value_user_stories(cruftRequest.projectId, cruftRequest.startDate, cruftRequest.endDate, cruftRequest.attributeKey, token)
+    issues = get_issues(cruftRequest.projectId, date.fromisoformat(cruftRequest.startDate), date.fromisoformat(cruftRequest.endDate), token)
+    return {
+        "zero_bv_us": zero_bv_stories,
+        "issues": issues
+    }
