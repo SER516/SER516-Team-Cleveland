@@ -136,9 +136,7 @@ def task_by_member_in_date_range(project_id, member_id, from_date, to_date, auth
     for task in tasks:
         start_date = datetime.fromisoformat(task["created_date"]).date()
 
-        if start_date > datetime.fromisoformat(from_date).date() and start_date < datetime.fromisoformat(
-                to_date).date():
-            all_tasks.append({
+        all_tasks.append({
                 "id": task["id"],
                 "subject": task["subject"],
                 "created_date": task["created_date"],
