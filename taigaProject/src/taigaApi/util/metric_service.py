@@ -223,6 +223,11 @@ def daterange(start_date, end_date):
     for n in range(int((end_date - start_date).days)):
         yield start_date + timedelta(n)
 
+def daterangefloor(start_date, end_date):
+    floor_date = datetime(start_date.year, start_date.month, start_date.day)
+    for n in range(int((end_date - start_date).days)):
+        yield floor_date + timedelta(n)
+
 
 def append_points_date_data(date, completed_story_points, remaining_story_points):
     return {
@@ -345,12 +350,18 @@ def fetch_member_tasks(project_id, from_date, to_date, members, token):
         for date_key in date_map[key]:
             tasks_to_remove = []
             for task1, task2 in itertools.combinations(date_map[key][date_key], 2):
+                if None in [task1["inProgressDate"], task2["closed_date"],
+                            task2["inProgressDate"], task1["closed_date"]]:
+                    continue
                 if task1["inProgressDate"] < task2["closed_date"]:
                     tasks_to_remove.append(task1)
+                elif task2["inProgressDate"] < task1["closed_date"]:
+                    tasks_to_remove.append(task2)
 
             # Remove tasks that need to be removed
             for task in tasks_to_remove:
-                date_map[key][date_key].remove(task)
+                if task in date_map[key][date_key]:
+                    date_map[key][date_key].remove(task)
 
     return date_map
 
