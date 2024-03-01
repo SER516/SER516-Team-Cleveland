@@ -7,6 +7,7 @@ import Cleveland from "./Cleveland.png"
 import Graph from "../graph";
 import SprintDetail from "../sprint";
 import DateSelector from '../devfocus';
+import DateSelectorCruft from '../cruft';
 
 const Project = () => {
     const location = useLocation();
@@ -21,6 +22,7 @@ const Project = () => {
     const [isLeadTime, setIsLeadTime] = useState(false);
     const [isCycleTime, setIsCycleTime] = useState(false);
     const [isDevFocus, setIsDevFocus] = useState(false);
+    const [isCruft, setIsCruft] = useState(false);
 
     const handleSelect = (eventKey) => {
         setSelectedValue(eventKey);
@@ -29,6 +31,7 @@ const Project = () => {
             setIsBurndown(false);
             setIsCycleTime(false);
             setIsDevFocus(false);
+            setIsCruft(false);
             setIsLeadTime(true);
         }
         else if (eventKey === "Cycle Time") {
@@ -36,6 +39,7 @@ const Project = () => {
             setIsBurndown(false);
             setIsCycleTime(true);
             setIsDevFocus(false);
+            setIsCruft(false);
             setIsLeadTime(false);
         }
         else if (eventKey === "Burndown Chart") {
@@ -43,12 +47,20 @@ const Project = () => {
             setIsCycleTime(false);
             setIsDevFocus(false);
             setIsLeadTime(false);
+            setIsCruft(false);
         }
         else if (eventKey === "Dev Focus") {
             setIsBurndown(false);
             setIsLeadTime(false);
             setIsCycleTime(false);
+            setIsCruft(false);
             setMetric("Project");
+        }
+        else if(eventKey == "Cruft") {
+            setMetric("Sprints");
+            setIsCycleTime(false);
+            setIsDevFocus(false);
+            setIsLeadTime(false);
         }
     };
 
@@ -79,6 +91,7 @@ const Project = () => {
             setError(false);
             selectedValue === "Dev Focus" ? setIsDevFocus(true) : setIsDevFocus(false);
             selectedValue === "Burndown Chart" ? setIsBurndown(true) : setIsBurndown(false);
+            selectedValue === "Cruft" ? setIsCruft(true) : setIsCruft(false);
         })
         .catch(ex => {
             setError(true);
@@ -170,6 +183,10 @@ const Project = () => {
                     ) : null}
                     {selectedValue === "Dev Focus" && isDevFocus ? (
                         <DateSelector memberDetails={data.members} onDateSubmit={(startDate, endDate) => {
+                            console.log("Date range submitted:", startDate, "to", endDate);}} />
+                    ) : null}
+                    {selectedValue === "Cruft" && isCruft ? (
+                        <DateSelectorCruft onDateSubmit={(startDate, endDate) => {
                             console.log("Date range submitted:", startDate, "to", endDate);}} />
                     ) : null}
                     <br/>

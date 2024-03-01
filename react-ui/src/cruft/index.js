@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 
-const DateSelector = ({ onDateSubmit }) => {
+const DateSelectorCruft = ({ onDateSubmit }) => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
 
@@ -36,4 +36,4 @@ const DateSelector = ({ onDateSubmit }) => {
 };
 
 
-export default DateSelector;
+export default DateSelectorCruft;
