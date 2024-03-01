@@ -68,7 +68,8 @@ const DateSelector = ({ onDateSubmit, memberDetails, token, projectId }) => {
                 let count = 0;
                 for (let date in res.data[name]) {
                     let list = res.data[name][date].filter(task => task["inProgressDate"] !== null);
-                    if (list.length >= threshold) {
+                    let filteredTasks = filterTasks(list);
+                    if (filteredTasks.length >= threshold) {
                         totalViolations += 1;
                         count += 1;
                     }
@@ -86,6 +87,22 @@ const DateSelector = ({ onDateSubmit, memberDetails, token, projectId }) => {
             setIsDevFocus(false);
             setSpinnerFlag(false);
         });
+    }
+
+    const filterTasks = (tasks) => {
+        let removeTasks = [];
+        for (let t1 of tasks) {
+            for (let t2 of tasks) {
+                if (t1["taskId"] !== t2["taskId"]) {
+                    let date1 = new Date(t1["inProgressDate"]);
+                    let date2 = new Date(t2["finished_date"]);
+                    if (date1.getUTCDate() === date2.getUTCDate() && date1.getUTCSeconds() > date2.getUTCSeconds()) {
+                        removeTasks.push(t2["taskId"]);
+                    }
+                }
+            }
+        }
+        return tasks.filter(task => !removeTasks.includes(task["taskId"]));
     }
 
     const handleThresholdChange = (event) => {

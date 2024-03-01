@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Legend, CartesianGrid, ResponsiveContainer } from 'recharts';
 
-// For dummy Test
-const CustomBarChart = ({ title, data, threshold }) => {
-    console.log("Hello", data);
+const CustomBarChart = ({ title, data, threshold, endDate }) => {
     const [memberData, setMemberData] = useState([]);
     const [dateData, setDateData] = useState({});
     const [members, setMembers] = useState([]);
@@ -27,7 +25,8 @@ const CustomBarChart = ({ title, data, threshold }) => {
             let obj = {}
             for (const date in data[name]) {
                 let list = data[name][date].filter(task => task["inProgressDate"] !== null);
-                if (list.length >= threshold) {
+                let filteredTasks = filterTasks(list);
+                if (filteredTasks.length >= threshold) {
                     obj["name"] = name;
                     obj["date"] = date;
                     count = count + 1;
@@ -49,12 +48,26 @@ const CustomBarChart = ({ title, data, threshold }) => {
                 members.push(name);
             }
         }
-        console.log(temp_arr);
-        console.log(tempDateMap);
         setMemberData(temp_arr);
         setDateData(Object.values(tempDateMap));
         setMembers(members);
-    }, [data, threshold]); 
+    }, [data, threshold]);
+
+    const filterTasks = (tasks) => {
+        let removeTasks = [];
+        for (let t1 of tasks) {
+            for (let t2 of tasks) {
+                if (t1["taskId"] !== t2["taskId"]) {
+                    let date1 = new Date(t1["inProgressDate"]);
+                    let date2 = new Date(t2["finished_date"]);
+                    if (date1.getUTCDate() === date2.getUTCDate() && date1.getUTCSeconds() > date2.getUTCSeconds()) {
+                        removeTasks.push(t2["taskId"]);
+                    }
+                }
+            }
+        }
+        return tasks.filter(task => !removeTasks.includes(task["taskId"]));
+    }
 
     return (
         <div>
