@@ -2,10 +2,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
 
 from ..task.get_task_history import get_task_lead_time, get_task_cycle_time
-from ..userStory.get_user_story_history import (
-    get_us_lead_time,
-    get_us_cycle_time
-)
+from ..userStory.get_user_story_history import get_us_lead_time, get_us_cycle_time, get_zero_bv_us
 from ..milestone.get_milestone import get_milestone
 from ..task.getTasks import get_tasks_by_story_id
 from ..userStory.getBusinessValue import get_business_value
@@ -304,3 +301,24 @@ def append_points_date_data(
         "completed": completed_story_points,
         "remaining": remaining_story_points
     }
+
+
+def get_zero_business_value_user_stories(project_id, start_range, end_range, attribute_key, auth_token):
+    user_stories = get_zero_bv_us(project_id, start_range, end_range, auth_token)
+    zero_bv_user_stories = []
+    total_story_points = 0
+    zero_bv_story_points = 0
+    for user_story in user_stories:
+        total_story_points += int(user_story["story_points"])
+        business_value = get_business_value(user_story["id"], attribute_key, auth_token)
+        if business_value == "0":
+            zero_bv_story_points += int(user_story["story_points"])
+            zero_bv_user_stories.append(user_story)
+    
+    cruft_details = {"zero_bv_user_stories": zero_bv_user_stories,
+                     "total_user_stories": len(user_stories),
+                     "total_zero_bv_user_stories": len(zero_bv_user_stories),
+                     "total_story_points": total_story_points,
+                     "total_zero_bv_story_points": zero_bv_story_points}
+    
+    return cruft_details
