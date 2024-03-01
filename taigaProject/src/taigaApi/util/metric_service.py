@@ -350,12 +350,11 @@ def fetch_member_tasks(project_id, from_date, to_date, members, token):
         for date_key in date_map[key]:
             tasks_to_remove = []
             for task1, task2 in itertools.combinations(date_map[key][date_key], 2):
-                if None in [task1["inProgressDate"], task2["closed_date"],
-                            task2["inProgressDate"], task1["closed_date"]]:
-                    continue
-                if task1["inProgressDate"] < task2["closed_date"]:
+                if (all(value is not None for value in [task1["inProgressDate"], task2["closed_date"]])
+                        and task1["inProgressDate"] < task2["closed_date"]):
                     tasks_to_remove.append(task1)
-                elif task2["inProgressDate"] < task1["closed_date"]:
+                elif (all(value is not None for value in [task2["inProgressDate"], task1["closed_date"]]) and
+                      task2["inProgressDate"] < task1["closed_date"]):
                     tasks_to_remove.append(task2)
 
             # Remove tasks that need to be removed
@@ -373,8 +372,9 @@ def dev_focus_data_map(key, tasks, date_map, from_date, to_date):
         for task in tasks:
             from_date_date, to_date_date = datetime.fromisoformat(from_date), datetime.fromisoformat(to_date)
             from_date_date = from_date_date if task['inProgressDate'] is None else max(task['inProgressDate'], from_date_date)
+            print("issue is here")
             to_date_date = min(to_date_date, datetime.now()) if task['closed_date'] is None else min([task['closed_date'], to_date_date,
-                                                                                datetime.now()])
+                                                                                datetime.now().utcnow()])
             for single_date in daterange(from_date_date, to_date_date + timedelta(days=1)):
                 single_date_str = single_date.strftime("%m-%d-%Y")
                 if single_date_str not in date_map[key]:
