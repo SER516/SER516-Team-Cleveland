@@ -15,5 +15,6 @@ class SimpleCache:
     def clear(self):
         self.cache.clear()
 
+
 # Create an instance of SimpleCache that can be imported in other files
 cache = SimpleCache()
