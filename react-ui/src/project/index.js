@@ -56,8 +56,9 @@ const Project = () => {
             setIsCruft(false);
             setMetric("Project");
         }
-        else if(eventKey == "Cruft") {
+        else if(eventKey === "Cruft") {
             setMetric("Sprints");
+            setIsBurndown(false);
             setIsCycleTime(false);
             setIsDevFocus(false);
             setIsLeadTime(false);
@@ -186,7 +187,7 @@ const Project = () => {
                             console.log("Date range submitted:", startDate, "to", endDate);}} />
                     ) : null}
                     {selectedValue === "Cruft" && isCruft ? (
-                        <DateSelectorCruft attributes={data.custom_attributes} token={auth} projectName={data.id} onDateSubmit={(startDate, endDate) => {
+                        <DateSelectorCruft attributes={data.custom_attributes} token={auth} projectId={data.id} onDateSubmit={(startDate, endDate) => {
                             console.log("Date range submitted:", startDate, "to", endDate);}} />
                     ) : null}
                     <br/>

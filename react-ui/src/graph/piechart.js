@@ -1,29 +1,55 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { PieChart, Pie, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
-// For dummy Test
-const CustomPieChart = ({ title }) => {
-    const firstPieData = [
-        { name: 'Total stories with BV', value: 120 },
-        { name: 'Number of 0 BV stories', value: 30 },
-        { name: 'Number of Issues', value: 20 },
-    ];  
 
-const secondPieData = [
-    { name: 'Story points with BV', value: 200 },
-    { name: 'Story points without BV', value: 50 },
-];
+const CustomPieChart = ({ title, apidata}) => {
+    const [countChartData, setCountChartData] = useState([]);
+    const [storyPointData, setstoryPointData] = useState([]);
+    useEffect(() => {
+        let tempList = [];
+        let obj = {
+            "name": "Stories with Zero BV",
+            "value": apidata.zero_bv_us.total_zero_bv_user_stories
+        };
+        tempList.push(obj);
+        obj = {
+            "name": "Stories with Non Zero BV",
+            "value": apidata.zero_bv_us.total_user_stories - apidata.zero_bv_us.total_zero_bv_user_stories
+        }
+        tempList.push(obj);
+        obj = {
+            "name": "Issues",
+            "value": apidata.issues.issues.length
+        }
+        tempList.push(obj);
+        setCountChartData(tempList);
+        
+    }, [apidata]);
+    useEffect(() => {
+        let tempList2 = [];
+        let obj = {
+            "name": "Story Points without Business Value",
+            "value": apidata.zero_bv_us.total_zero_bv_story_points
+        };
+        tempList2.push(obj);
+        obj = {
+            "name": "Story Points With Business Value",
+            "value": apidata.zero_bv_us.total_story_points
+        }
+        tempList2.push(obj);
+        setstoryPointData(tempList2);
+        
+    }, [apidata]);
 
-const firstPieColors = ['#A7C7E7', '#F3A683', '#B8B5FF'];
-const secondPieColors = ['#63CDD7', '#C3BED4'];
+const pieColors = ['#A7C7E7', '#F3A683', '#B8B5FF'];
 
 return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div>
         <h4 style={{ textAlign: 'center' }}>{title}</h4>
-            <ResponsiveContainer width="50%" height={300}>
+            <ResponsiveContainer height={400}>
                 <PieChart>
                     <Pie
-                        data={firstPieData}
+                        data={countChartData}
                         cx="50%"
                         cy="50%"
                         outerRadius={130}
@@ -31,18 +57,18 @@ return (
                         nameKey="name"
                         label={({ name }) => name}
                     >
-                        {firstPieData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={firstPieColors[index % firstPieColors.length]} />
+                        {countChartData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
                         ))}
                     </Pie>
                     <Tooltip />
                 </PieChart>
             </ResponsiveContainer>
-            <div style={{ textAlign: 'center', marginBottom: '50px' }}>Counts</div>
-            <ResponsiveContainer width="50%" height={300}>
+            <div style={{ textAlign: 'center', marginBottom: '50px' }}>Zero Business Value Comparison</div>
+            <ResponsiveContainer height={400}>
                 <PieChart>
                     <Pie
-                        data={secondPieData}
+                        data={storyPointData}
                         cx="50%"
                         cy="50%"
                         outerRadius={130}
@@ -50,14 +76,15 @@ return (
                         nameKey="name"
                         label={({ name }) => name}
                     >
-                        {secondPieData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={secondPieColors[index % firstPieColors.length]} />
+                        {storyPointData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
                         ))}
+                        
                     </Pie>
                     <Tooltip />
                 </PieChart>
             </ResponsiveContainer>
-            <div style={{ textAlign: 'center' }}>Counts</div>
+            <div style={{ textAlign: 'center' }}>Zero BV Story Points Comparison</div>
         </div>
     );
 }          
