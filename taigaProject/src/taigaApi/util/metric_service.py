@@ -390,10 +390,8 @@ def dev_focus_data_map(key, tasks, date_map, from_date, to_date):
 def check_dates_overlap(task_1_inprogress_date, task_2_inprogress_date, task_1_finish_date, task_2_finish_date):
     latest_start = max(task_1_inprogress_date, task_2_inprogress_date)
     earliest_end = min(task_1_finish_date, task_2_finish_date)
-    # print("hello", earliest_end.time() - latest_start.time())
     delta = (earliest_end.date() - latest_start.date()).days + 1
     overlap = max(0, delta)
-    # print(latest_start, earliest_end, overlap)
     if overlap == 0:
         return 0, 0
     else:

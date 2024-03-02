@@ -218,14 +218,9 @@ def get_dev_focus(project_id, from_date, to_date, threshold, members, auth_token
 
 def member_tasks(project_id, from_date, to_date, members, auth_token):
     member_tasks = {}
-    # for member in members:
-    # member_map(project_id, from_date, to_date, member, auth_token, member_tasks)
     with ThreadPoolExecutor(max_workers=15) as executor:
         for member in members:
             executor.submit(member_map, project_id, from_date, to_date, member, auth_token, member_tasks)
-
-    #for key in member_tasks:
-        #member_tasks[key].sort(key=lambda l: l["inProgressDate"])
     return member_tasks
 
 
