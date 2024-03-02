@@ -11,5 +11,6 @@ def get_sprints_and_custom_fields_for_project(project_details):
         "name": project_details["name"],
         "sprints": sprints,
         "custom_attributes": custom_attributes,
+        "id": str(project_details["id"])
     }
     return sprint_details
