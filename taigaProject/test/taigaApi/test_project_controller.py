@@ -1,6 +1,4 @@
 import pytest
-import httpx
-import warnings
 
 from fastapi.testclient import TestClient
 
