@@ -1,10 +1,12 @@
 from fastapi import APIRouter, Header
 from typing import Annotated
 
+from ..model.dev_focus_request import DevFocusRequest
 from ..model.projectRequest import ProjectRequest
 from ..model.burndownChartRequest import BurndownChartRequest
 from ..project.getProjectBySlug import get_project_by_slug
-from ..util.metric_service import get_lead_time_details, get_cycle_time_details, get_burndown_chart_metric_detail
+from ..util.metric_service import get_lead_time_details, get_cycle_time_details, get_burndown_chart_metric_detail, \
+    fetch_member_tasks
 from ..milestone.get_milestone import get_milestone
 from ..util.SimpleCache import cache
 
@@ -33,3 +35,8 @@ def get_cycle_time_metric(projectRequest: ProjectRequest, token: Annotated[str |
 @router.post("/metric/Burndown")
 def get_burndown_chart_metric(burndownChartRequest: BurndownChartRequest, token: Annotated[str | None, Header()] = None):
     return get_burndown_chart_metric_detail(burndownChartRequest.milestoneId, burndownChartRequest.attributeKey, token)
+
+@router.post("/metric/Devfocus")
+def get_dev_focus_metrics(dev_focus_request: DevFocusRequest, token: Annotated[str | None, Header()] = None):
+    return fetch_member_tasks(dev_focus_request.project_id, dev_focus_request.from_date, dev_focus_request.to_date, dev_focus_request.members, token)
+
