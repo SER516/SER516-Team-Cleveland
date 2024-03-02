@@ -10,6 +10,7 @@ from taigaApi.util.metric_service import (
     get_cycle_time_details,
     get_burndown_chart_metric_detail,
     get_zero_business_value_user_stories
+)
 from taigaApi.milestone.get_milestone import get_milestone
 from taigaApi.util.SimpleCache import cache
 from taigaApi.issues.get_issues import get_issues
