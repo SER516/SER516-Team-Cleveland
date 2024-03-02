@@ -19,6 +19,7 @@ def project_request():
 @pytest.fixture
 def project_info():
     return {
+        "id": 550011,
         "name": "project",
         "members": [
             {
