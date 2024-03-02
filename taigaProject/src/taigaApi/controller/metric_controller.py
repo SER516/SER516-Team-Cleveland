@@ -1,21 +1,21 @@
 from fastapi import APIRouter, Header
 from typing import Annotated
 
-from taigaApi.model.dev_focus_request import DevFocusRequest
-from taigaApi.model.projectRequest import ProjectRequest
-from taigaApi.model.cruft import CruftRequest
-from taigaApi.model.burndownChartRequest import BurndownChartRequest
-from taigaApi.project.getProjectBySlug import get_project_by_slug
-from taigaApi.util.metric_service import (
+from ..model.dev_focus_request import DevFocusRequest
+from ..model.projectRequest import ProjectRequest
+from ..model.cruft import CruftRequest
+from ..model.burndownChartRequest import BurndownChartRequest
+from ..project.getProjectBySlug import get_project_by_slug
+from ..util.metric_service import (
     get_lead_time_details, 
     get_cycle_time_details,
     get_burndown_chart_metric_detail,
     get_zero_business_value_user_stories,
     fetch_member_tasks
 )
-from taigaApi.milestone.get_milestone import get_milestone
-from taigaApi.util.SimpleCache import cache
-from taigaApi.issues.get_issues import get_issues
+from ..milestone.get_milestone import get_milestone
+from ..util.SimpleCache import cache
+from ..issues.get_issues import get_issues
 from datetime import date
 
 router = APIRouter()

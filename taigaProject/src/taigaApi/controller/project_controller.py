@@ -3,7 +3,7 @@ from typing import Annotated
 
 from ..model.projectRequest import ProjectRequest
 
-from taigaApi.project.getProjectBySlug import get_project_by_slug
+from ..project.getProjectBySlug import get_project_by_slug
 from ..util.project_service import get_project_members
 
 router = APIRouter()
