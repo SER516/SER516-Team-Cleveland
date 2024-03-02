@@ -351,10 +351,10 @@ def fetch_member_tasks(project_id, from_date, to_date, members, token):
             tasks_to_remove = []
             for task1, task2 in itertools.combinations(date_map[key][date_key], 2):
                 if (all(value is not None for value in [task1["inProgressDate"], task2["closed_date"]])
-                        and task1["inProgressDate"] < task2["closed_date"]):
+                        and task1["inProgressDate"] > task2["closed_date"]):
                     tasks_to_remove.append(task1)
                 elif (all(value is not None for value in [task2["inProgressDate"], task1["closed_date"]]) and
-                      task2["inProgressDate"] < task1["closed_date"]):
+                    task2["inProgressDate"] > task1["closed_date"]):
                     tasks_to_remove.append(task2)
 
             # Remove tasks that need to be removed

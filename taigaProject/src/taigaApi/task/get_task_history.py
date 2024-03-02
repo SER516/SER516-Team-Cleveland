@@ -264,7 +264,8 @@ def sorted_tasks_data(task, headers, taiga_url, from_date, to_date, member_tasks
                     "taskDesc": task["subject"],
                     "taskRef": task["ref"],
                     "created_date": task["created_date"],
-                    "inProgressDate": in_progress_date,
+                    "inProgressDate": in_progress_date if in_progress_date is not None
+                    else datetime.fromisoformat(task["created_date"]).replace(tzinfo=None),
                     "closed_date": closed_date,
                     "finished_date": task["finished_date"],
                     "username": task["username"],
