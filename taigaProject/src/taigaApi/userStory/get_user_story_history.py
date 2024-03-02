@@ -51,7 +51,10 @@ def get_closed_user_stories(project_id, auth_token):
                 "id": user_story["id"],
                 "subject": user_story["subject"],
                 "created_date": user_story["created_date"],
-                "finished_date": user_story["finish_date"]
+                "finished_date": user_story["finish_date"],
+                "ref": user_story["ref"],
+                "sprintURL": user_story["project_extra_info"]["slug"],
+                "story_points": user_story["total_points"]
             }
             for user_story in user_stories if user_story.get("is_closed")
         ]
@@ -71,6 +74,9 @@ def get_us_lead_time(project_id, auth_token):
         finished_date = datetime.fromisoformat(user_story['finished_date'])
         lead_time += (finished_date - created_date).days
         lead_times.append({
+            "taskDesc": user_story["subject"],
+            "sprintURL": user_story["sprintURL"],
+            "taskRef": user_story["ref"],
             "taskId": user_story["id"],
             "startTime": user_story["created_date"],
             "startDate": created_date.date(),
@@ -136,9 +142,26 @@ def get_user_story_details(story, headers, taiga_url, cycle_times, cycle_time_da
                 "inProgressDate": in_progress_date.date(),
                 "endTime": story['finished_date'],
                 "endDate": finished_date.date(),
-                "timeTaken": (finished_date - in_progress_date).days
+                "timeTaken": (finished_date - in_progress_date).days,
+                "taskDesc": story["subject"],
+                "sprintURL": story["sprintURL"],
+                "taskRef": story["ref"]
             })
             cycle_time_data["closed_tasks"] += 1
             cycle_time_data["cycle_time"] += (finished_date - in_progress_date).days
     except requests.exceptions.RequestException as e:
         print(f"Error fetching task by taskId: {e}")
+
+def get_zero_bv_us(project_id, start_range, end_range, auth_token):
+    user_stories = get_closed_user_stories(project_id, auth_token)
+    user_stories_in_range = []
+    start_range_date = datetime.strptime(start_range, '%Y-%m-%d')
+    start_range_date = start_range_date.date()
+    end_range_date = datetime.strptime(end_range, "%Y-%m-%d")
+    end_range_date = end_range_date.date()
+    for user_story in user_stories:
+        endTime = datetime.fromisoformat(user_story["finished_date"]).date()
+        if endTime >= start_range_date and endTime <= end_range_date:
+            user_stories_in_range.append(user_story)
+        
+    return user_stories_in_range

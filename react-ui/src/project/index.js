@@ -6,6 +6,8 @@ import axios from "axios";
 import Cleveland from "./Cleveland.png"
 import Graph from "../graph";
 import SprintDetail from "../sprint";
+import DateSelector from '../devfocus';
+import DateSelectorCruft from '../cruft';
 
 const Project = () => {
     const location = useLocation();
@@ -17,19 +19,49 @@ const Project = () => {
     const [metric, setMetric] = useState(null);
     const [spinnerFlag, setSpinnerFlag] = useState(false);
     const [isBurndown, setIsBurndown] = useState(false);
+    const [isLeadTime, setIsLeadTime] = useState(false);
+    const [isCycleTime, setIsCycleTime] = useState(false);
+    const [isDevFocus, setIsDevFocus] = useState(false);
+    const [isCruft, setIsCruft] = useState(false);
 
     const handleSelect = (eventKey) => {
         setSelectedValue(eventKey);
         if (eventKey === "Lead Time") {
             setMetric("metric/LeadTime");
             setIsBurndown(false);
+            setIsCycleTime(false);
+            setIsDevFocus(false);
+            setIsCruft(false);
+            setIsLeadTime(true);
         }
         else if (eventKey === "Cycle Time") {
             setMetric("metric/CycleTime");
             setIsBurndown(false);
+            setIsCycleTime(true);
+            setIsDevFocus(false);
+            setIsCruft(false);
+            setIsLeadTime(false);
         }
         else if (eventKey === "Burndown Chart") {
             setMetric("Sprints");
+            setIsCycleTime(false);
+            setIsDevFocus(false);
+            setIsLeadTime(false);
+            setIsCruft(false);
+        }
+        else if (eventKey === "Dev Focus") {
+            setIsBurndown(false);
+            setIsLeadTime(false);
+            setIsCycleTime(false);
+            setIsCruft(false);
+            setMetric("Project");
+        }
+        else if(eventKey === "Cruft") {
+            setMetric("Sprints");
+            setIsBurndown(false);
+            setIsCycleTime(false);
+            setIsDevFocus(false);
+            setIsLeadTime(false);
         }
     };
 
@@ -58,12 +90,15 @@ const Project = () => {
             console.log(data);
             setSpinnerFlag(false);
             setError(false);
+            selectedValue === "Dev Focus" ? setIsDevFocus(true) : setIsDevFocus(false);
             selectedValue === "Burndown Chart" ? setIsBurndown(true) : setIsBurndown(false);
+            selectedValue === "Cruft" ? setIsCruft(true) : setIsCruft(false);
         })
         .catch(ex => {
             setError(true);
             setSpinnerFlag(false);
             setIsBurndown(false);
+            setIsDevFocus(false);
         });
     }
 
@@ -80,15 +115,14 @@ const Project = () => {
     }
 
     return (
-        <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <div style={{ height: '80%', width: '90%', maxHeight: '90vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Stack gap={4} className="col-md-5 mx-auto">
-                    <div className="d-flex align-items-center justify-content-center vh-100 backgroundWhite">
-
+        <div className="background" style={{ display: 'flex', width: "100%", minHeight: "100vh", overflow: "auto", justifyContent: 'center', alignItems: 'center' }}>
+            <div className="backgroundWhite" style={{ width: '90%', display: 'flex', minHeight: "80vh", maxheight: "100vh", margin: "5%", justifyContent: 'center', alignItems: 'center' }}>
+                <Stack>
+                    <div>
                         <br />
                         <Form style={{ width: "100%" }}>
                             <Image src={Cleveland} className='col-sm-2 offset-sm-5' /><br /><br /><br /><br />
-                            <div className="mb-3 col-sm-6 offset-sm-2">Welcome to our project! <br /><br />Please input your Project Slug 
+                            <div className="mb-3 col-sm-6 offset-sm-2">Welcome to our project! <br /><br />Please input your Project Slug
                                 <br /></div>
                             <div className="d-flex justify-content-center col-sm-8 offset-sm-2">
                                 <InputGroup>
@@ -107,6 +141,7 @@ const Project = () => {
                                             <Dropdown.Item eventKey="Cycle Time">Cycle Time</Dropdown.Item>
                                             <Dropdown.Item eventKey="Burndown Chart">Burndown Chart</Dropdown.Item>
                                             <Dropdown.Item eventKey="Dev Focus">Dev Focus</Dropdown.Item>
+                                            <Dropdown.Item eventKey="Cruft">Cruft</Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
                                 </InputGroup>
@@ -126,27 +161,36 @@ const Project = () => {
                         </Form>
                     </div>
 
-                    {data?.metric === "LEAD" ? (
+                    {data?.metric === "LEAD" && isLeadTime ? (
                         <div>
                             <br />
                             <h3 className="projectName">{data.projectInfo.name}</h3>
-                            <Graph apiData={data.leadTime.storiesLeadTime.userStory} avg={data.leadTime.storiesLeadTime.avgLeadTime} chartFor={"User Story"} title={`User Story ${selectedValue}`} />
+                            <Graph type="Lead Time" apiData={data.leadTime.storiesLeadTime.userStory} avg={data.leadTime.storiesLeadTime.avgLeadTime} chartFor={"User Story"} title={`User Story ${selectedValue}`} />
                             <br />
-                            <Graph apiData={data.leadTime.tasksLeadTime.task} avg={data.leadTime.tasksLeadTime.avgLeadTime} chartFor={"Task"} title={`Task ${selectedValue}`} />
+                            <Graph type="Lead Time" apiData={data.leadTime.tasksLeadTime.task} avg={data.leadTime.tasksLeadTime.avgLeadTime} chartFor={"Task"} title={`Task ${selectedValue}`} />
                         </div>
                     ) : null}
-                    {data?.metric === "CYCLE" ? (
+                    {data?.metric === "CYCLE" && isCycleTime ? (
                         <div>
                             <br />
                             <h3 className="projectName">{data.projectInfo.name}</h3>
-                            <Graph apiData={data.cycleTime.storyCycleTime.story} avg={data.cycleTime.storyCycleTime.avgCycleTime} chartFor={"User Story"} title={`User Story ${selectedValue}`} />
+                            <Graph type="Cycle Time" apiData={data.cycleTime.storyCycleTime.story} avg={data.cycleTime.storyCycleTime.avgCycleTime} chartFor={"User Story"} title={`User Story ${selectedValue}`} />
                             <br />
-                            <Graph apiData={data.cycleTime.taskCycleTime.task} avg={data.cycleTime.taskCycleTime.avgCycleTime} chartFor={"Task"} title={`Task ${selectedValue}`} />
+                            <Graph type="Cycle Time" apiData={data.cycleTime.taskCycleTime.task} avg={data.cycleTime.taskCycleTime.avgCycleTime} chartFor={"Task"} title={`Task ${selectedValue}`} />
                         </div>
                     ) : null}
                     {selectedValue === "Burndown Chart" && isBurndown ? (
                         <SprintDetail sprintDetails={data.sprints} attributes={data.custom_attributes} token={auth} projectName={data.name} />
                     ) : null}
+                    {selectedValue === "Dev Focus" && isDevFocus ? (
+                        <DateSelector memberDetails={data.members} token={auth} projectId={data.id} onDateSubmit={(startDate, endDate) => {
+                            console.log("Date range submitted:", startDate, "to", endDate);}} />
+                    ) : null}
+                    {selectedValue === "Cruft" && isCruft ? (
+                        <DateSelectorCruft attributes={data.custom_attributes} token={auth} projectId={data.id} onDateSubmit={(startDate, endDate) => {
+                            console.log("Date range submitted:", startDate, "to", endDate);}} />
+                    ) : null}
+                    <br/>
                 </Stack>
             </div>
         </div>
