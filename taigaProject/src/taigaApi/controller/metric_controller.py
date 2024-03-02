@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Header
 from typing import Annotated
 
-from taigaApi.model.cruft import DevFocusRequest
+from taigaApi.model.dev_focus_request import DevFocusRequest
 from taigaApi.model.projectRequest import ProjectRequest
 from taigaApi.model.cruft import CruftRequest
 from taigaApi.model.burndownChartRequest import BurndownChartRequest

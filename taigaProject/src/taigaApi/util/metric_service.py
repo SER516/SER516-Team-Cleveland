@@ -447,7 +447,6 @@ def dev_focus_data_map(key, tasks, date_map, from_date, to_date):
         for task in tasks:
             from_date_date, to_date_date = datetime.fromisoformat(from_date), datetime.fromisoformat(to_date)
             from_date_date = from_date_date if task['inProgressDate'] is None else max(task['inProgressDate'], from_date_date)
-            print("issue is here")
             to_date_date = min(to_date_date, datetime.now()) if task['closed_date'] is None else min([task['closed_date'], to_date_date,
                                                                                 datetime.now().utcnow()])
             for single_date in daterange(from_date_date, to_date_date + timedelta(days=1)):
