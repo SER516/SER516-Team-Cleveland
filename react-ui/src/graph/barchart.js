@@ -99,7 +99,7 @@ const CustomBarChart = ({ title, data, threshold, endDate }) => {
                     }}
                         tick={{ fontSize: 12 }} allowDuplicatedCategory={false} />
                     <YAxis type="number" dataKey="" label={{
-                        value: 'Violations', angle: -90, position: 'insideLeft', style: { fontSize: '20px' }
+                        value: 'In Progress Tasks Count', angle: -90, position: 'insideLeft', style: { fontSize: '20px' }
                     }} />
                     <Legend align="right" verticalAlign="top" layout="horizontal" iconType="square"/>
 
