@@ -1,30 +1,80 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Legend, CartesianGrid, ResponsiveContainer } from 'recharts';
 
-// For dummy Test
-const CustomBarChart = ({ title }) => {
-    const dummyData = [
-        { name: 'User 1', counts: 5},
-        { name: 'User 2', counts: 3},
-        { name: 'User 3', counts: 2},
-        { name: 'User 4', counts: 1},
-        { name: 'User 5', counts: 2},
-    ];  
-    
-    const stackedData = [
-        { date: '2024-02-01', User1: 3, User2: 4, User3: 5, User4: 2, User5: 3 },
-        { date: '2024-02-02', User1: 2, User2: 3, User3: 4, User4: 5, User5: 2  },
-        { date: '2024-02-03', User1: 5, User2: 1, User3: 2, User4: 3, User5: 4  },
-        { date: '2024-02-04', User1: 4, User2: 2, User3: 4, User4: 1, User5: 1  },
-        { date: '2024-02-05', User1: 2, User2: 3, User3: 3, User4: 2, User5: 2  },
-    ];
+const CustomBarChart = ({ title, data, threshold, endDate }) => {
+    const [memberData, setMemberData] = useState([]);
+    const [dateData, setDateData] = useState({});
+    const [members, setMembers] = useState([]);
+
+    const colorGenerator = () => {
+        let letters = "0123456789ABCDEF";
+        let color = "#";
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    useEffect(() => {
+        let temp_arr = [];
+        let members = [];
+
+        let tempDateMap = {};
+        for (const name in data) {
+            let count = 0;
+            let obj = {}
+            for (const date in data[name]) {
+                let list = data[name][date].filter(task => task["inProgressDate"] !== null);
+                let filteredTasks = filterTasks(list);
+                if (filteredTasks.length >= threshold) {
+                    obj["name"] = name;
+                    obj["date"] = date;
+                    count = count + 1;
+                    obj["tasks_size"] = data[name][date].length
+
+                    if (date in tempDateMap) {
+                        tempDateMap[date][name] = data[name][date].length;
+                    }
+                    else {
+                        tempDateMap[date] = {}
+                        tempDateMap[date]["date"] = date;
+                        tempDateMap[date][name] = data[name][date].length;
+                    }
+                }
+            }
+            obj["violations"] = count;
+            if (obj["violations"] !== 0) {
+                temp_arr.push(obj);
+                members.push(name);
+            }
+        }
+        setMemberData(temp_arr);
+        setDateData(Object.values(tempDateMap));
+        setMembers(members);
+    }, [data, threshold]);
+
+    const filterTasks = (tasks) => {
+        let removeTasks = [];
+        for (let t1 of tasks) {
+            for (let t2 of tasks) {
+                if (t1["taskId"] !== t2["taskId"]) {
+                    let date1 = new Date(t1["inProgressDate"]);
+                    let date2 = new Date(t2["finished_date"]);
+                    if (date1.getUTCDate() === date2.getUTCDate() && date1.getUTCSeconds() > date2.getUTCSeconds()) {
+                        removeTasks.push(t2["taskId"]);
+                    }
+                }
+            }
+        }
+        return tasks.filter(task => !removeTasks.includes(task["taskId"]));
+    }
 
     return (
         <div>
             <h4 style={{ textAlign: 'center' }}>{title}</h4>
             <ResponsiveContainer width="100%" height={600}>
                 <BarChart
-                    data={dummyData}  // For dummy Test
+                    data={memberData}  // For dummy Test
                     margin={{ top: 20, right: 40, bottom: 70, left: 30 }}
                 >    
                     <CartesianGrid strokeDasharray="3 3" />
@@ -33,14 +83,14 @@ const CustomBarChart = ({ title }) => {
                     }}
                         tick={{ fontSize: 12 }} allowDuplicatedCategory={false} />
                     <YAxis type="number" dataKey="" label={{
-                        value: 'Counts', angle: -90, position: 'insideLeft', style: { fontSize: '20px' }
+                        value: 'Violations', angle: -90, position: 'insideLeft', style: { fontSize: '20px' }
                     }} />
-                    <Bar dataKey="counts" fill="#8884d8" />
+                    <Bar dataKey="violations" fill="#8884d8" />
                 </BarChart>
             </ResponsiveContainer>
             <ResponsiveContainer width="100%" height={600}>
                 <BarChart
-                    data={stackedData}
+                    data={dateData}
                     margin={{ top: 20, right: 40, bottom: 70, left: 30 }}
                 >
                     <CartesianGrid strokeDasharray="3 3" />
@@ -49,14 +99,15 @@ const CustomBarChart = ({ title }) => {
                     }}
                         tick={{ fontSize: 12 }} allowDuplicatedCategory={false} />
                     <YAxis type="number" dataKey="" label={{
-                        value: 'Counts', angle: -90, position: 'insideLeft', style: { fontSize: '20px' }
+                        value: 'In Progress Tasks Count', angle: -90, position: 'insideLeft', style: { fontSize: '20px' }
                     }} />
                     <Legend align="right" verticalAlign="top" layout="horizontal" iconType="square"/>
-                    <Bar dataKey="User1" stackId="a" fill="#8884d8" />
-                    <Bar dataKey="User2" stackId="a" fill="#82ca9d" />
-                    <Bar dataKey="User3" stackId="a" fill="#ffc658" />
-                    <Bar dataKey="User4" stackId="a" fill="#d45087" />
-                    <Bar dataKey="User5" stackId="a" fill="#8e7cc3" />
+
+                    {
+                        members.map(member => {
+                            return <Bar key={member} dataKey={member} stackId="a" fill={colorGenerator()} />
+                        })
+                    }
                 </BarChart>
             </ResponsiveContainer>
         </div>

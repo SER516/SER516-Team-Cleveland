@@ -4,11 +4,7 @@ const CustomCard = ({ num, title, from, to, members }) => {
     const [membersName, setMembersName] = useState('');
 
     useEffect(() => {
-        let names = [];
-        for (let v in members) {
-            names.push(members[v].name);
-        }
-        setMembersName(names.join(", "));
+        setMembersName(members.join(", "));
     }, [members]);
 
     return (
