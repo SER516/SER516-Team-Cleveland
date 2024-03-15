@@ -2,9 +2,10 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 import itertools
 
-from ..task.get_task_history import get_task_lead_time, get_task_cycle_time, get_all_dev_focus, get_dev_focus, \
-    member_tasks
-from ..userStory.get_user_story_history import get_us_lead_time, get_us_cycle_time, get_zero_bv_us
+from ..task.get_task_history import get_task_lead_time, get_task_cycle_time, \
+    get_all_dev_focus, member_tasks
+from ..userStory.get_user_story_history import get_us_lead_time, \
+    get_us_cycle_time, get_zero_bv_us
 from ..milestone.get_milestone import get_milestone
 from ..task.getTasks import get_tasks_by_story_id
 from ..userStory.getBusinessValue import get_business_value
@@ -257,7 +258,6 @@ def extract_partial_burndown_data(user_story, tasks, days_data):
                 )
 
 
-
 def extract_bv_burndown_data(user_story, business_value, days_bv_data):
     if user_story["is_closed"]:
         finished_date = datetime.fromisoformat(
@@ -291,10 +291,10 @@ def extract_total_burndown_data(user_story, days_total_data):
             )
 
 
-
 def daterange(start_date, end_date):
     for n in range(int((end_date - start_date).days)):
         yield start_date + timedelta(n)
+
 
 def daterangefloor(start_date, end_date):
     floor_date = datetime(start_date.year, start_date.month, start_date.day)
@@ -312,8 +312,22 @@ def append_points_date_data(
     }
 
 
-def get_dev_focus_metric(project_id, from_date, to_date, threshold, members, auth_token):
-    dev_focus_data = get_all_dev_focus(project_id, from_date, to_date, threshold, members, auth_token)
+def get_dev_focus_metric(
+    project_id,
+    from_date,
+    to_date,
+    threshold,
+    members,
+    auth_token
+):
+    dev_focus_data = get_all_dev_focus(
+        project_id,
+        from_date,
+        to_date,
+        threshold,
+        members,
+        auth_token
+    )
     dev_focus = extract_dev_focus(dev_focus_data)
 
     output = {
@@ -333,16 +347,22 @@ def extract_dev_focus(dev_focus_data):
     dev_focus["members"] = []
 
     for task in dev_focus_data:
-        in_progress_date = datetime.fromisoformat(str(task["inProgressDate"])).date()
+        in_progress_date = datetime.fromisoformat(
+            str(task["inProgressDate"])
+        ).date()
         if in_progress_date in dev_focus["date_data"]:
             dev_focus["date_data"][in_progress_date]["total_violations"] += 1
 
-            member = check_member_exist(dev_focus["date_data"][in_progress_date]["members"], task["username"])
+            member = check_member_exist(
+                dev_focus["date_data"][in_progress_date]["members"],
+                task["username"]
+            )
             if member:
                 violations = member["violations"] + 1
                 tasks = member["tasks"]
                 tasks.append(task["taskId"])
-                dev_focus["date_data"][in_progress_date]["members"].remove(member)
+                dev_focus["date_data"]
+                [in_progress_date]["members"].remove(member)
 
                 dev_focus["date_data"][in_progress_date]["members"].append({
                     "name": task["full_name"],
@@ -380,18 +400,17 @@ def get_member_violations(dev_focus, threshold):
     total_violations = 0
     members = []
     for date in list(dev_focus["date_data"]):
-        total_violations = total_violations + len(dev_focus["date_data"][date]["members"])
+        total_violations += len(dev_focus["date_data"][date]["members"])
         for member in dev_focus["date_data"][date]["members"]:
             if member["violations"] < threshold:
-                dev_focus["date_data"][date]["total_violations"] -= member["violations"]
+                dev_focus["date_data"][date]["total_violations"] -= (
+                    member["violations"])
                 dev_focus["date_data"][date]["members"].remove(member)
             else:
                 member_2 = check_member_exist(members, member["username"])
                 if not member_2:
                     members.append(member)
                 else:
-                    violations = member["violations"] + member_2["violations"]
-                    tasks = member["tasks"] + member_2["tasks"]
                     members.remove(member_2)
 
                     member.append(member)
@@ -414,22 +433,44 @@ def check_member_exist(members, username):
 
 
 def fetch_member_tasks(project_id, from_date, to_date, members, token):
-    member_tasks_map = member_tasks(project_id, from_date, to_date, members, token)
+    member_tasks_map = member_tasks(
+        project_id,
+        from_date,
+        to_date,
+        members,
+        token
+    )
 
     date_map = {}
     with ThreadPoolExecutor(max_workers=15) as executor:
         for key in member_tasks_map:
-            executor.submit(dev_focus_data_map, key, member_tasks_map[key], date_map, from_date,
-                            to_date)
+            executor.submit(
+                dev_focus_data_map,
+                key,
+                member_tasks_map[key],
+                date_map,
+                from_date,
+                to_date
+            )
     for key in date_map:
         for date_key in date_map[key]:
             tasks_to_remove = []
-            for task1, task2 in itertools.combinations(date_map[key][date_key], 2):
-                if (all(value is not None for value in [task1["inProgressDate"], task2["closed_date"]])
-                        and task1["inProgressDate"] > task2["closed_date"]):
+            for task1, task2 in itertools.combinations(
+                date_map[key][date_key], 2
+            ):
+                if (
+                    all(value is not None for value in [
+                        task1["inProgressDate"], task2["closed_date"]
+                    ])
+                    and task1["inProgressDate"] > task2["closed_date"]
+                ):
                     tasks_to_remove.append(task1)
-                elif (all(value is not None for value in [task2["inProgressDate"], task1["closed_date"]]) and
-                    task2["inProgressDate"] > task1["closed_date"]):
+                elif (
+                    all(value is not None for value in [
+                        task2["inProgressDate"], task1["closed_date"]
+                    ])
+                    and task2["inProgressDate"] > task1["closed_date"]
+                ):
                     tasks_to_remove.append(task2)
 
             # Remove tasks that need to be removed
@@ -440,28 +481,46 @@ def fetch_member_tasks(project_id, from_date, to_date, members, token):
     return date_map
 
 
-
 def dev_focus_data_map(key, tasks, date_map, from_date, to_date):
     date_map[key] = {}
     try:
         for task in tasks:
-            from_date_date, to_date_date = datetime.fromisoformat(from_date), datetime.fromisoformat(to_date)
-            from_date_date = from_date_date if task['inProgressDate'] is None else max(task['inProgressDate'], from_date_date)
-            to_date_date = min(to_date_date, datetime.now()) if task['closed_date'] is None else min([task['closed_date'], to_date_date,
-                                                                                datetime.now().utcnow()])
-            for single_date in daterange(from_date_date, to_date_date + timedelta(days=1)):
+            from_date_date, to_date_date = \
+                datetime.fromisoformat(from_date), \
+                datetime.fromisoformat(to_date)
+            from_date_date = \
+                from_date_date if task['inProgressDate'] is None \
+                else max(task['inProgressDate'], from_date_date)
+            to_date_date = min(to_date_date, datetime.now()) \
+                if task['closed_date'] is None else min(
+                    [task['closed_date'],
+                     to_date_date,
+                     datetime.now(datetime.UTC)]
+                )
+            for single_date in daterange(
+                from_date_date,
+                to_date_date + timedelta(days=1)
+            ):
                 single_date_str = single_date.strftime("%m-%d-%Y")
                 if single_date_str not in date_map[key]:
                     date_map[key][single_date_str] = []
                 date_map[key][single_date_str].append(task)
-        date_map[key] = {date_key: date_map[key][date_key] for date_key in sorted(date_map[key].keys())}
+        date_map[key] = {
+            date_key: date_map[key][date_key]
+            for date_key in sorted(date_map[key].keys())
+        }
 
     except Exception as e:
         print(e)
         return date_map
 
 
-def check_dates_overlap(task_1_inprogress_date, task_2_inprogress_date, task_1_finish_date, task_2_finish_date):
+def check_dates_overlap(
+    task_1_inprogress_date,
+    task_2_inprogress_date,
+    task_1_finish_date,
+    task_2_finish_date
+):
     latest_start = max(task_1_inprogress_date, task_2_inprogress_date)
     earliest_end = min(task_1_finish_date, task_2_finish_date)
     delta = (earliest_end.date() - latest_start.date()).days + 1
@@ -479,23 +538,37 @@ def check_still_in_progress(finished_date):
         return datetime.now(timezone.utc)
 
 
-def get_zero_business_value_user_stories(project_id, start_range, end_range, attribute_key, auth_token):
-    user_stories = get_zero_bv_us(project_id, start_range, end_range, auth_token)
+def get_zero_business_value_user_stories(
+    project_id,
+    start_range,
+    end_range,
+    attribute_key,
+    auth_token
+):
+    user_stories = get_zero_bv_us(
+        project_id,
+        start_range,
+        end_range,
+        auth_token
+    )
     zero_bv_user_stories = []
     total_story_points = 0
     zero_bv_story_points = 0
     for user_story in user_stories:
         total_story_points += int(user_story["story_points"])
-        business_value = get_business_value(user_story["id"], attribute_key, auth_token)
+        business_value = get_business_value(
+            user_story["id"],
+            attribute_key,
+            auth_token
+        )
         if business_value == "0":
             zero_bv_story_points += int(user_story["story_points"])
             zero_bv_user_stories.append(user_story)
-    
+
     cruft_details = {"zero_bv_user_stories": zero_bv_user_stories,
                      "total_user_stories": len(user_stories),
                      "total_zero_bv_user_stories": len(zero_bv_user_stories),
                      "total_story_points": total_story_points,
                      "total_zero_bv_story_points": zero_bv_story_points}
-    
-    return cruft_details
 
+    return cruft_details

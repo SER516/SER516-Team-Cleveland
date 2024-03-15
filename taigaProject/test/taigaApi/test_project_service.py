@@ -1,14 +1,14 @@
-import pytest
-
 from taigaProject.src.taigaApi.util.project_service import get_project_members
+
 
 def test_empty_members_list():
     project_details = {
         "members": []
     }
     members = get_project_members(project_details)
-    
+
     assert not members
+
 
 def test_members_list():
     project_details = {
@@ -25,9 +25,8 @@ def test_members_list():
             }
         ]
     }
-    
+
     members = get_project_members(project_details)
-    
+
     assert members
     assert len(members) == 2
-    

@@ -1,7 +1,6 @@
 import os
 import requests
 from dotenv import load_dotenv
-from datetime import datetime
 
 # Load environment variables from a .env file
 load_dotenv()
@@ -26,7 +25,8 @@ def get_tasks(project_id, auth_token):
 
         # Make a GET request to Taiga API to retrieve tasks
         response = requests.get(task_api_url, headers=headers)
-        response.raise_for_status()  # Raise an exception for HTTP errors (4xx or 5xx)
+        # Raise an exception for HTTP errors (4xx or 5xx)
+        response.raise_for_status()
 
         # Extract and return the tasks information from the response
         project_info = response.json()
@@ -103,14 +103,16 @@ def get_tasks_by_story_id(user_story_id, auth_token):
         return response.json()
 
     except requests.exceptions.RequestException as e:
-        print("Error fetching User Story with id {user_story_id}")
+        print("Error fetching User Story with id {user_story_id}", e)
         return None
 
 
 def get_task_for_member(project_id, member_id, auth_token):
     taiga_url = os.getenv('TAIGA_URL')
 
-    task_by_member = f"{taiga_url}/tasks?assigned_to={member_id}&project={project_id}"
+    task_by_member = f"""
+        {taiga_url}/tasks?assigned_to={member_id}&project={project_id}
+    """
 
     headers = {
         'Authorization': f'Bearer {auth_token}',
@@ -125,17 +127,21 @@ def get_task_for_member(project_id, member_id, auth_token):
 
         return response.json()
     except requests.exceptions.RequestException as e:
-        print(f"Error fetching tasks with member id {member_id}")
+        print(f"Error fetching tasks with member id {member_id}", e)
         return None
 
 
-def task_by_member_in_date_range(project_id, member_id, from_date, to_date, auth_token):
+def task_by_member_in_date_range(
+    project_id,
+    member_id,
+    from_date,
+    to_date,
+    auth_token
+):
     tasks = get_task_for_member(project_id, member_id, auth_token)
-    #filtering on the basis of when the task is created, IS_WRONG
+    # filtering on the basis of when the task is created, IS_WRONG
     all_tasks = []
     for task in tasks:
-        start_date = datetime.fromisoformat(task["created_date"]).date()
-
         all_tasks.append({
                 "id": task["id"],
                 "subject": task["subject"],
@@ -143,7 +149,9 @@ def task_by_member_in_date_range(project_id, member_id, from_date, to_date, auth
                 "finished_date": task["finished_date"],
                 "ref": task["ref"],
                 "username": task["assigned_to_extra_info"]["username"],
-                "full_name": task["assigned_to_extra_info"]["full_name_display"]
+                "full_name": (
+                    task["assigned_to_extra_info"]["full_name_display"]
+                )
             })
 
     return all_tasks
