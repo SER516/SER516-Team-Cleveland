@@ -47,7 +47,7 @@ jobs:
         uses: facebook/pysa-action@0.0.1
         with:
           repo-directory: 'taigaProject/'
-          requirements-path: 'taigaProject/requirements.txt'
+          requirements-path: 'requirements.txt'
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
