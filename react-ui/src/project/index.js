@@ -23,6 +23,8 @@ const Project = () => {
     const [isCycleTime, setIsCycleTime] = useState(false);
     const [isDevFocus, setIsDevFocus] = useState(false);
     const [isCruft, setIsCruft] = useState(false);
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
 
     const handleSelect = (eventKey) => {
         setSelectedValue(eventKey);
@@ -56,7 +58,7 @@ const Project = () => {
             setIsCruft(false);
             setMetric("Project");
         }
-        else if(eventKey === "Cruft") {
+        else if (eventKey === "Cruft") {
             setMetric("Sprints");
             setIsBurndown(false);
             setIsCycleTime(false);
@@ -78,28 +80,30 @@ const Project = () => {
             method: "post",
             url: `http://localhost:8000/${metric}`,
             data: {
-                projectslug: project
+                projectslug: project,
+                from_date: startDate,
+                to_date: endDate
             },
             headers: {
                 "Content-Type": "application/json",
                 "token": auth
             }
         })
-        .then(res => {
-            setData(res.data);
-            console.log(data);
-            setSpinnerFlag(false);
-            setError(false);
-            selectedValue === "Dev Focus" ? setIsDevFocus(true) : setIsDevFocus(false);
-            selectedValue === "Burndown Chart" ? setIsBurndown(true) : setIsBurndown(false);
-            selectedValue === "Cruft" ? setIsCruft(true) : setIsCruft(false);
-        })
-        .catch(ex => {
-            setError(true);
-            setSpinnerFlag(false);
-            setIsBurndown(false);
-            setIsDevFocus(false);
-        });
+            .then(res => {
+                setData(res.data);
+                console.log(data);
+                setSpinnerFlag(false);
+                setError(false);
+                selectedValue === "Dev Focus" ? setIsDevFocus(true) : setIsDevFocus(false);
+                selectedValue === "Burndown Chart" ? setIsBurndown(true) : setIsBurndown(false);
+                selectedValue === "Cruft" ? setIsCruft(true) : setIsCruft(false);
+            })
+            .catch(ex => {
+                setError(true);
+                setSpinnerFlag(false);
+                setIsBurndown(false);
+                setIsDevFocus(false);
+            });
     }
 
     const handleProjectSlugField = (event) => {
@@ -145,7 +149,20 @@ const Project = () => {
                                         </Dropdown.Menu>
                                     </Dropdown>
                                 </InputGroup>
-                            </div><br/>
+                            </div><br />
+
+                            {isLeadTime ? (<div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '20px' }}>
+                                <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
+                                    <Form.Group controlId="dateFrom" style={{ width: '15%' }}>
+                                        <Form.Label>From</Form.Label>
+                                        <Form.Control type="date" value={startDate} onChange={e => setStartDate(e.target.value)} />
+                                    </Form.Group>
+                                    <Form.Group controlId="dateTo" style={{ width: '15%' }}>
+                                        <Form.Label>To</Form.Label>
+                                        <Form.Control type="date" value={endDate} onChange={e => setEndDate(e.target.value)} />
+                                    </Form.Group>
+                                </div>
+                            </div>) : null}
 
                             <Button variant="info" type="submit" className="submitButton backgroundButton" onClick={handleSubmit}>
                                 Submit
@@ -157,7 +174,7 @@ const Project = () => {
                                 <p className="errorMessage">Unable to fetch project detail</p>
                             ) : null}
 
-                            {spinnerFlag ? <Spinner variant="primary" animation="border" style={{ justifyContent: "center", alignItems: "center", display:"flex", marginLeft: "49%" }} /> : null}
+                            {spinnerFlag ? <Spinner variant="primary" animation="border" style={{ justifyContent: "center", alignItems: "center", display: "flex", marginLeft: "49%" }} /> : null}
                         </Form>
                     </div>
 
@@ -184,13 +201,15 @@ const Project = () => {
                     ) : null}
                     {selectedValue === "Dev Focus" && isDevFocus ? (
                         <DateSelector memberDetails={data.members} token={auth} projectId={data.id} onDateSubmit={(startDate, endDate) => {
-                            console.log("Date range submitted:", startDate, "to", endDate);}} />
+                            console.log("Date range submitted:", startDate, "to", endDate);
+                        }} />
                     ) : null}
                     {selectedValue === "Cruft" && isCruft ? (
                         <DateSelectorCruft attributes={data.custom_attributes} token={auth} projectId={data.id} onDateSubmit={(startDate, endDate) => {
-                            console.log("Date range submitted:", startDate, "to", endDate);}} />
+                            console.log("Date range submitted:", startDate, "to", endDate);
+                        }} />
                     ) : null}
-                    <br/>
+                    <br />
                 </Stack>
             </div>
         </div>
