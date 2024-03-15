@@ -111,8 +111,7 @@ def get_task_for_member(project_id, member_id, auth_token):
     taiga_url = os.getenv('TAIGA_URL')
 
     task_by_member = f"""
-        {taiga_url}/tasks?assigned_to={member_id}&project={project_id}
-    """
+        {taiga_url}/tasks?assigned_to={member_id}&project={project_id}"""
 
     headers = {
         'Authorization': f'Bearer {auth_token}',

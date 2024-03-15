@@ -14,8 +14,7 @@ def get_closed_issues_by_project(project_id, auth_token):
 
     # Construct the URL for the tasks API endpoint for the specified project
     task_api_url = f"""
-        {taiga_url}/issues?project={project_id}&status__is_closed=true
-    """
+        {taiga_url}/issues?project={project_id}&status__is_closed=true"""
 
     # Define headers including the authorization token and content type
     headers = {

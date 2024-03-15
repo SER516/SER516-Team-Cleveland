@@ -361,8 +361,9 @@ def extract_dev_focus(dev_focus_data):
                 violations = member["violations"] + 1
                 tasks = member["tasks"]
                 tasks.append(task["taskId"])
-                dev_focus["date_data"]
-                [in_progress_date]["members"].remove(member)
+                (
+                    dev_focus["date_data"][in_progress_date]["members"]
+                ).remove(member)
 
                 dev_focus["date_data"][in_progress_date]["members"].append({
                     "name": task["full_name"],
@@ -495,7 +496,7 @@ def dev_focus_data_map(key, tasks, date_map, from_date, to_date):
                 if task['closed_date'] is None else min(
                     [task['closed_date'],
                      to_date_date,
-                     datetime.now(datetime.UTC)]
+                     datetime.now().utcnow()]
                 )
             for single_date in daterange(
                 from_date_date,
@@ -555,6 +556,8 @@ def get_zero_business_value_user_stories(
     total_story_points = 0
     zero_bv_story_points = 0
     for user_story in user_stories:
+        if user_story["story_points"] is None:
+            continue
         total_story_points += int(user_story["story_points"])
         business_value = get_business_value(
             user_story["id"],
