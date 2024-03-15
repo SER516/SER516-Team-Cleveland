@@ -7,13 +7,12 @@ from ..model.cruft import CruftRequest
 from ..model.burndownChartRequest import BurndownChartRequest
 from ..project.getProjectBySlug import get_project_by_slug
 from ..util.metric_service import (
-    get_lead_time_details, 
+    get_lead_time_details,
     get_cycle_time_details,
     get_burndown_chart_metric_detail,
     get_zero_business_value_user_stories,
     fetch_member_tasks
 )
-from ..milestone.get_milestone import get_milestone
 from ..util.SimpleCache import cache
 from ..issues.get_issues import get_issues
 from datetime import date
@@ -52,28 +51,38 @@ def get_cycle_time_metric(
 
 
 @router.post("/metric/Burndown")
-
 def get_burndown_chart_metric(
     burndownChartRequest: BurndownChartRequest,
     token: Annotated[str | None, Header()] = None
 ):
     return get_burndown_chart_metric_detail(
-        burndownChartRequest.milestoneId, 
-        burndownChartRequest.attributeKey, token
+        burndownChartRequest.milestoneId,
+        burndownChartRequest.attributeKey,
+        token
     )
 
+
 @router.post("/metric/Devfocus")
-def get_dev_focus_metrics(dev_focus_request: DevFocusRequest, token: Annotated[str | None, Header()] = None):
-    return fetch_member_tasks(dev_focus_request.project_id, dev_focus_request.from_date, dev_focus_request.to_date, dev_focus_request.members, token)
+def get_dev_focus_metrics(
+    dev_focus_request: DevFocusRequest,
+    token: Annotated[str | None, Header()] = None
+):
+    return fetch_member_tasks(
+        dev_focus_request.project_id,
+        dev_focus_request.from_date,
+        dev_focus_request.to_date,
+        dev_focus_request.members,
+        token
+    )
 
 
 @router.post("/metric/Cruft")
 def get_zero_business_value(
-    cruftRequest: CruftRequest, 
+    cruftRequest: CruftRequest,
     token: Annotated[str | None, Header()] = None
 ):
     zero_bv_stories = get_zero_business_value_user_stories(
-        cruftRequest.projectId, 
+        cruftRequest.projectId,
         cruftRequest.startDate,
         cruftRequest.endDate,
         cruftRequest.attributeKey,

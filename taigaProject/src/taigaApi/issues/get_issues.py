@@ -13,7 +13,9 @@ def get_closed_issues_by_project(project_id, auth_token):
     taiga_url = os.getenv('TAIGA_URL')
 
     # Construct the URL for the tasks API endpoint for the specified project
-    task_api_url = f"{taiga_url}/issues?project={project_id}&status__is_closed=true"
+    task_api_url = f"""
+        {taiga_url}/issues?project={project_id}&status__is_closed=true
+    """
 
     # Define headers including the authorization token and content type
     headers = {
@@ -26,7 +28,8 @@ def get_closed_issues_by_project(project_id, auth_token):
 
         # Make a GET request to Taiga API to retrieve tasks
         response = requests.get(task_api_url, headers=headers)
-        response.raise_for_status()  # Raise an exception for HTTP errors (4xx or 5xx)
+        # Raise an exception for HTTP errors (4xx or 5xx)
+        response.raise_for_status()
 
         # return the issues information from the response
         issues = response.json()
@@ -39,7 +42,8 @@ def get_closed_issues_by_project(project_id, auth_token):
         return None
 
 
-# Function to retrieve closed issues for a specific project and date range from the Taiga API
+# Function to retrieve closed issues for a specific project
+# and date range from the Taiga API
 def get_issues(project_id, from_date, to_date, auth_token):
 
     issues = get_closed_issues_by_project(project_id, auth_token)
@@ -63,6 +67,3 @@ def get_issues(project_id, from_date, to_date, auth_token):
         "issues": final_issues,
         "avg_fix_time": total_time
     }
-
-
-
