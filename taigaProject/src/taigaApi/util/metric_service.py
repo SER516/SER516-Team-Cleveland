@@ -55,7 +55,11 @@ def metric_object(metric, time_key, lead_time, project_details):
     }
 
 
-def get_cycle_time_details(project_details, auth_token):
+def get_cycle_time_details(project_details, auth_token, from_date=None, to_date=None):
+    if from_date is not None and len(from_date) > 0:
+        from_date = date.fromisoformat(from_date)
+    if to_date is not None and len(to_date) > 0:
+        to_date = date.fromisoformat(to_date)
     task_cycle_time, avg_task_ct = get_task_cycle_time(
         project_details["id"], auth_token
     )

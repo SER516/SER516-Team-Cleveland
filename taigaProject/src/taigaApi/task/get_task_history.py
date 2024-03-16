@@ -140,7 +140,7 @@ def extract_state_change_dates(history_data):
     return in_progress_date, closed_at
 
 
-def get_task_cycle_time(project_id, auth_token):
+def get_task_cycle_time(project_id, auth_token, from_date=None, to_date=None):
     tasks = get_closed_tasks(project_id, auth_token)
     taiga_url = os.getenv('TAIGA_URL')
 
@@ -156,6 +156,11 @@ def get_task_cycle_time(project_id, auth_token):
     }
     with ThreadPoolExecutor(max_workers=15) as executor:
         for task in tasks:
+            finished_date = datetime.fromisoformat(task['finished_date'])
+            if type(from_date) == date and from_date > finished_date.date():
+                continue
+            if type(to_date) == date and to_date < finished_date.date():
+                continue
             executor.submit(get_task_details, task, headers, taiga_url, cycle_times, cycle_time_data)
     if cycle_time_data["closed_tasks"] == 0:
         return cycle_times, 0
