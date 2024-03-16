@@ -1,5 +1,5 @@
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, date
 import itertools
 
 from ..task.get_task_history import get_task_lead_time, get_task_cycle_time, get_all_dev_focus, get_dev_focus, \
@@ -10,12 +10,16 @@ from ..task.getTasks import get_tasks_by_story_id
 from ..userStory.getBusinessValue import get_business_value
 
 
-def get_lead_time_details(project_details, auth_token):
+def get_lead_time_details(project_details, auth_token, from_date=None, to_date=None):
+    if from_date is not None and len(from_date) > 0:
+        from_date = date.fromisoformat(from_date)
+    if to_date is not None and len(to_date) > 0:
+        to_date = date.fromisoformat(to_date)
     us_lead_time, avg_us_lt = get_us_lead_time(
-        project_details["id"], auth_token
+        project_details["id"], auth_token, from_date, to_date
     )
     task_lead_time, avg_task_lt = get_task_lead_time(
-        project_details["id"], auth_token
+        project_details["id"], auth_token, from_date, to_date
     )
 
     us_lead_time.sort(key=lambda item: item["endDate"])
