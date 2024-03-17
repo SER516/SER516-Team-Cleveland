@@ -48,6 +48,7 @@ jobs:
         with:
           repo-directory: 'taigaProject/'
           requirements-path: 'requirements.txt'
+          infer-types: true
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
