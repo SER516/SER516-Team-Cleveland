@@ -151,18 +151,20 @@ const Project = () => {
                                 </InputGroup>
                             </div><br />
 
-                            {isLeadTime ? (<div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '20px' }}>
-                                <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
-                                    <Form.Group controlId="dateFrom" style={{ width: '15%' }}>
-                                        <Form.Label>From</Form.Label>
-                                        <Form.Control type="date" value={startDate} onChange={e => setStartDate(e.target.value)} />
-                                    </Form.Group>
-                                    <Form.Group controlId="dateTo" style={{ width: '15%' }}>
-                                        <Form.Label>To</Form.Label>
-                                        <Form.Control type="date" value={endDate} onChange={e => setEndDate(e.target.value)} />
-                                    </Form.Group>
+                            {isLeadTime || isCycleTime ? (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '20px' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
+                                        <Form.Group controlId="dateFrom" style={{ width: '15%' }}>
+                                            <Form.Label>From</Form.Label>
+                                            <Form.Control type="date" value={startDate} onChange={e => setStartDate(e.target.value)} />
+                                        </Form.Group>
+                                        <Form.Group controlId="dateTo" style={{ width: '15%' }}>
+                                            <Form.Label>To</Form.Label>
+                                            <Form.Control type="date" value={endDate} onChange={e => setEndDate(e.target.value)} />
+                                        </Form.Group>
+                                    </div>
                                 </div>
-                            </div>) : null}
+                            ) : null}
 
                             <Button variant="info" type="submit" className="submitButton backgroundButton" onClick={handleSubmit}>
                                 Submit
