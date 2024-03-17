@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, Legend, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Legend, CartesianGrid, ResponsiveContainer, Tooltip, Rectangle } from 'recharts';
 
 const CustomBarChart = ({ title, data, threshold, endDate }) => {
     const [memberData, setMemberData] = useState([]);
@@ -74,18 +74,20 @@ const CustomBarChart = ({ title, data, threshold, endDate }) => {
             <h4 style={{ textAlign: 'center' }}>{title}</h4>
             <ResponsiveContainer width="100%" height={600}>
                 <BarChart
-                    data={memberData}  // For dummy Test
+                    data={memberData}
                     margin={{ top: 20, right: 40, bottom: 70, left: 30 }}
                 >    
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis type="category" dataKey="name" label={{
                         value: 'User', position: 'insideBottom', offset: -50, style: { fontSize: '20px' }
                     }}
-                        tick={{ fontSize: 12 }} allowDuplicatedCategory={false} />
+                        tick={{ fontSize: 12 }} allowDuplicatedCategory={true} />
                     <YAxis type="number" dataKey="" label={{
                         value: 'Violations', angle: -90, position: 'insideLeft', style: { fontSize: '20px' }
                     }} />
-                    <Bar dataKey="violations" fill="#8884d8" />
+
+                    <Tooltip />
+                    <Bar dataKey="violations" fill="#8884d8" activeBar={<Rectangle fill="orange" stroke="purple" />} />
                 </BarChart>
             </ResponsiveContainer>
             <ResponsiveContainer width="100%" height={600}>
@@ -97,10 +99,13 @@ const CustomBarChart = ({ title, data, threshold, endDate }) => {
                     <XAxis type="category" dataKey="date" label={{value: 'Date',
                         position: 'insideBottom', offset: -50, style: { fontSize: '20px' }
                     }}
-                        tick={{ fontSize: 12 }} allowDuplicatedCategory={false} />
+                        tick={{ fontSize: 12 }} allowDuplicatedCategory={true} />
                     <YAxis type="number" dataKey="" label={{
                         value: 'In Progress Tasks Count', angle: -90, position: 'insideLeft', style: { fontSize: '20px' }
                     }} />
+
+                    <Tooltip />
+
                     <Legend align="right" verticalAlign="top" layout="horizontal" iconType="square"/>
 
                     {
