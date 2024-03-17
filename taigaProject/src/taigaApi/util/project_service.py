@@ -6,5 +6,5 @@ def get_project_members(project_details):
             "username": member["username"],
             "id": member["id"]
         })
-    
+
     return members

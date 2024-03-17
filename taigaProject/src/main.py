@@ -18,6 +18,6 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],  # You might want to restrict this to specific HTTP methods
-    allow_headers=["*"],  # You might want to restrict this to specific headers
+    allow_methods=["*"],
+    allow_headers=["*"]
 )
