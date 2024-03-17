@@ -61,10 +61,10 @@ def get_cycle_time_details(project_details, auth_token, from_date=None, to_date=
     if to_date is not None and len(to_date) > 0:
         to_date = date.fromisoformat(to_date)
     task_cycle_time, avg_task_ct = get_task_cycle_time(
-        project_details["id"], auth_token
+        project_details["id"], auth_token, from_date, to_date
     )
     us_cycle_time, avg_us_ct = get_us_cycle_time(
-        project_details["id"], auth_token
+        project_details["id"], auth_token, from_date, to_date
     )
 
     task_cycle_time.sort(key=lambda item: item["endDate"])
