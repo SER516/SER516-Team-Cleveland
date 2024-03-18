@@ -199,7 +199,8 @@ const Project = () => {
                         </div>
                     ) : null}
                     {selectedValue === "Burndown Chart" && isBurndown ? (
-                        <SprintDetail sprintDetails={data.sprints} attributes={data.custom_attributes} token={auth} projectName={data.name} />
+                        // <SprintDetail sprintDetails={data.sprints} attributes={data.custom_attributes} token={auth} projectName={data.name} />
+                        <Graph type="Burndown Chart" />
                     ) : null}
                     {selectedValue === "Dev Focus" && isDevFocus ? (
                         <DateSelector memberDetails={data.members} token={auth} projectId={data.id} onDateSubmit={(startDate, endDate) => {
