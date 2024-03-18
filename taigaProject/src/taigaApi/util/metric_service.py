@@ -94,15 +94,18 @@ def get_cycle_time_object(object_type, cycle_time, avg_lt):
 def get_burndown_chart_metric_detail(milestone_id, attribute_key, auth_token):
     milestone = get_milestone(milestone_id, auth_token)
 
-    partial_burndown, bv_burndown, total_burndown = calc_burndown_day_data(
-        auth_token, milestone, attribute_key
-    )
+    partial_burndown, bv_burndown, total_burndown, combined_burndown = \
+        calc_burndown_day_data(
+            auth_token, milestone, attribute_key
+        )
     partial_burndown = list(partial_burndown.values())
     partial_burndown.sort(key=lambda item: item["date"])
     bv_burndown = list(bv_burndown.values())
     bv_burndown.sort(key=lambda item: item["date"])
     total_burndown = list(total_burndown.values())
     total_burndown.sort(key=lambda item: item["date"])
+    # combined_burndown["data"] = list(combined_burndown.values())
+    # combined_burndown["data"].sort(key=lambda item: item["date"])
 
     return {
         "partial_burndown": {
@@ -113,7 +116,8 @@ def get_burndown_chart_metric_detail(milestone_id, attribute_key, auth_token):
         },
         "total_burndown": {
             "total_burndown_data": total_burndown
-        }
+        },
+        "combined_burndown": combined_burndown
     }
 
 
@@ -121,6 +125,7 @@ def calc_burndown_day_data(auth_token, milestone, attribute_key):
     days_data = {}
     days_bv_data = {}
     days_total_data = {}
+    combined_data = {}
     start = datetime.fromisoformat(milestone["estimated_start"])
     finish = datetime.fromisoformat(milestone["estimated_finish"])
     milestone_start = start.date()
@@ -147,6 +152,13 @@ def calc_burndown_day_data(auth_token, milestone, attribute_key):
         "date": milestone_start,
         "completed": 0
     }
+    
+    # combined_data[milestone_start] = {
+    #     "date": milestone_start,
+    #     "partial": 0,
+    #     "total": 0,
+    #     "bv": 0
+    # }
 
     total_business_value = {"bv": 0}
     with ThreadPoolExecutor(max_workers=15) as executor:
@@ -175,8 +187,45 @@ def calc_burndown_day_data(auth_token, milestone, attribute_key):
     update_bv_days_data(
         days_bv_data, milestone_start, milestone_finish, expected_bv_decrement
     )
+    
+    combined_data = {
+        "total_story_points": milestone["total_points"],
+        "total_business_value": total_business_value["bv"],
+        "data": {}
+    }
+    
+    extract_combined_data(
+        combined_data,
+        days_data,
+        days_bv_data,
+        days_total_data
+    )
 
-    return days_data, days_bv_data, days_total_data
+    return days_data, days_bv_data, days_total_data, combined_data
+
+
+def extract_combined_data(
+    combined_data,
+    days_data,
+    days_bv_data,
+    days_total_data
+):
+    for date in days_total_data:
+        combined_data["data"][date] = {
+            "date": date,
+            "partial": (
+                (days_data[date]["completed"] * 100)
+                / combined_data["total_story_points"]
+            ),
+            "total": (
+                (days_total_data[date]["completed"] * 100)
+                / combined_data["total_story_points"]
+            ),
+            "bv": (
+                (days_bv_data[date]["completed"] * 100)
+                / combined_data["total_business_value"]
+            )
+        }
 
 
 def process_burndown_details(
