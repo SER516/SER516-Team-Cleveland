@@ -104,8 +104,8 @@ def get_burndown_chart_metric_detail(milestone_id, attribute_key, auth_token):
     bv_burndown.sort(key=lambda item: item["date"])
     total_burndown = list(total_burndown.values())
     total_burndown.sort(key=lambda item: item["date"])
-    # combined_burndown["data"] = list(combined_burndown.values())
-    # combined_burndown["data"].sort(key=lambda item: item["date"])
+    combined_burndown["data"] = list(combined_burndown["data"].values())
+    combined_burndown["data"].sort(key=lambda item: item["date"])
 
     return {
         "partial_burndown": {
@@ -152,13 +152,6 @@ def calc_burndown_day_data(auth_token, milestone, attribute_key):
         "date": milestone_start,
         "completed": 0
     }
-    
-    # combined_data[milestone_start] = {
-    #     "date": milestone_start,
-    #     "partial": 0,
-    #     "total": 0,
-    #     "bv": 0
-    # }
 
     total_business_value = {"bv": 0}
     with ThreadPoolExecutor(max_workers=15) as executor:
@@ -210,21 +203,23 @@ def extract_combined_data(
     days_bv_data,
     days_total_data
 ):
+    total_sp = combined_data["total_story_points"]
+    total_bv = combined_data["total_business_value"]
     for date in days_total_data:
         combined_data["data"][date] = {
             "date": date,
-            "partial": (
-                (days_data[date]["completed"] * 100)
-                / combined_data["total_story_points"]
-            ),
-            "total": (
-                (days_total_data[date]["completed"] * 100)
-                / combined_data["total_story_points"]
-            ),
-            "bv": (
-                (days_bv_data[date]["completed"] * 100)
-                / combined_data["total_business_value"]
-            )
+            "partial": round((
+                ((total_sp - days_data[date]["remaining"]) * 100)
+                / total_sp
+            ), 2),
+            "total": round((
+                ((total_sp - days_total_data[date]["remaining"]) * 100)
+                / total_sp
+            ), 2),
+            "bv": round((
+                ((total_bv - days_bv_data[date]["remaining"]) * 100)
+                / total_bv
+            ), 2)
         }
 
 
