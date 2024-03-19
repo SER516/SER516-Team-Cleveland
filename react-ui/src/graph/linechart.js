@@ -3,6 +3,19 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 
 const CustomLineChart = ({ data }) => {
 
+    const CustomToolTip = ({ active, payload }) => {
+        if (active && payload && payload.length) {
+            return (
+                <div className="custom-tooltip" style={{ backgroundColor: '#ffd7b5', padding: '5px', border: '2px solid black', borderRadius: "10px"}}>
+                    <b>Total Story Points Burndown:</b> {payload[0].value}%<br/>
+                    <b>Partial Story Points Burndown:</b> {payload[1].value}%<br/>
+                    <b>Business Value Burndown:</b> {payload[2].value}%<br/>
+                </div>
+            );
+        }
+        return null;
+    };
+
     return (
         <div style={{ textAlign: 'center' }}>
             <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
@@ -21,7 +34,7 @@ const CustomLineChart = ({ data }) => {
                                     tick={{ angle: -45, textAnchor: 'end', fontSize: 12}} allowDuplicatedCategory={false} />
                             <YAxis type="number" dateKey="" name="Percent" label={{ value: `Percent`, 
                                     angle: -90, position: 'insideLeft', style: {fontSize: '20px'}}} />
-                            <Tooltip />
+                            <Tooltip content={<CustomToolTip />} />
                             <Legend align="right" verticalAlign="top" wrapperStyle={{ top: 0, right: 0, marginTop: '20px' }} />
                             <Line dataKey="total" stroke="#8884d8" strokeWidth={2} />
                             <Line dataKey="partial" stroke="#82ca9d" strokeWidth={2} />
