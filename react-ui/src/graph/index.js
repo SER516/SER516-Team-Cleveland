@@ -7,7 +7,7 @@ const Graph = ({ type, apiData, avg, chartFor, title }) => {
     const renderChart = () => {
         switch (type) {
             case 'Burndown Chart':
-                return <CustomLineChart />;
+                return <CustomLineChart data={apiData}/>;
             case 'Dev Focus':
                 return <CustomBarChart title={title} />;
             case 'Lead Time':
