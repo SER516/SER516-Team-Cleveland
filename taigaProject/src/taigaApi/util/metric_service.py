@@ -205,21 +205,21 @@ def extract_combined_data(
 ):
     total_sp = combined_data["total_story_points"]
     total_bv = combined_data["total_business_value"]
-    for date in days_total_data:
+    for date in days_data:
         combined_data["data"][date] = {
             "date": date,
             "partial": round((
                 ((total_sp - days_data[date]["remaining"]) * 100)
                 / total_sp
-            ), 2),
+            ), 2) if total_sp is not 0 else 0,
             "total": round((
                 ((total_sp - days_total_data[date]["remaining"]) * 100)
                 / total_sp
-            ), 2),
+            ), 2) if total_sp is not 0 else 0,
             "bv": round((
                 ((total_bv - days_bv_data[date]["remaining"]) * 100)
                 / total_bv
-            ), 2)
+            ), 2) if total_bv is not 0 else 0
         }
 
 
