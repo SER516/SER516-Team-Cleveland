@@ -44,13 +44,24 @@ jobs:
           pip install -r requirements.txt
           pip install -e .
 
+      - name: Flake8 Installation
+        run: pip install flake8
+      - name: Run Flake8
+        run: cd ./taigaProject && flake8 --max-complexity 10 . --exit-zero
+
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS }}
+          SONAR_TOKEN: ${{ secrets.SONAR_ACCESS }}
+        with:
+          projectBaseDir: taigaProject
+
       - name: Setup Pages
         uses: actions/configure-pages@v3
-      
       - name: Run unit tests and coverage
         run: |
-          pytest --exitfirst --verbose --failed-first --cov=. --cov-report html 
-
+          pytest --exitfirst --verbose --failed-first --cov=. --cov-report html
       - name: Upload coverage report
         uses: actions/upload-pages-artifact@v3
         with:
