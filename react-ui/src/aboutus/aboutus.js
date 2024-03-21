@@ -63,8 +63,8 @@ const AboutUs = () => {
                             <Row>
                                 <Col sm={8}>
                                     <h2>Meet the Developer Team!</h2><br />
-                                    We are a developer team of five members: Ashutosh Chaurasia (achaur11@asu.edu), Advait Chirmule (achirmul@asu.edu), Hasan Shahid (hshahid@asu.edu),
-                                    Sehun Park (spark29@asu.edu) and Shikha Verma (sverma27@asu.edu).
+                                    We are a developer team of five members: Ashutosh Chaurasia (achaur11@asu.edu), Advait Chirmule (achirmul@asu.edu), Hasan Shahid (shahih25@asu.edu),
+                                    Sehun Park (spark290@asu.edu) and Shikha Verma (sverma89asu@asu.edu).
                                 </Col>
                                 <Col sm={4}>
                                     <Image alt="Team Photo" src={Team} style={{ height: "100%", width: "100%", borderRadius: "10px", filter: "brightness(2.5)" }} />
