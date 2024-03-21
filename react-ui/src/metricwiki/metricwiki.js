@@ -67,7 +67,7 @@ const MetricWiki = () => {
                             The Project Slug, and the Date Range between which the Lead Time is to be measured. <br/><br/>
                             <b>Output:</b> <br/>
                             (i) A Scatter Graph representing the Lead Times of user stories within the specified date range. <br/>
-                            (i) A Scatter Graph representing the Lead Times of individual tasks within the specified date range. <br/>
+                            (ii) A Scatter Graph representing the Lead Times of individual tasks within the specified date range. <br/>
                             <br/><br/>
                         </div>
                         <div id="CycleTimeInfo">
@@ -79,7 +79,7 @@ const MetricWiki = () => {
                             The Project Slug, and the Date Range between which the Cycle Time is to be measured. <br/><br/>
                             <b>Output:</b> <br/>
                             (i) A Scatter Graph representing the Lead Times of user stories within the specified date range. <br/>
-                            (i) A Scatter Graph representing the Lead Times of individual tasks within the specified date range. <br/>
+                            (ii) A Scatter Graph representing the Lead Times of individual tasks within the specified date range. <br/>
                             <br/><br/>
                         </div>
                         <div id="BurndownChartInfo">
