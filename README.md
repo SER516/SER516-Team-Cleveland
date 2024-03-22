@@ -43,6 +43,10 @@ Go to the source folder of the backend application(`cd taigaProject/src` or `cd 
 ``` bash
 uvicorn main:app 
 ```
+Or
+``` bash
+python3.11 -m uvicorn main:app
+```
 
 You can hit the API using `http://127.0.0.1:8000/[requiredApiPath]` or `http://localhost:8000/[requiredApiPath]`
 while providing the necessary payload. 
