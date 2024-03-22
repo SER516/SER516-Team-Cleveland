@@ -1,5 +1,5 @@
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, date
 import itertools
 
 from ..task.get_task_history import get_task_lead_time, get_task_cycle_time, \
@@ -11,12 +11,16 @@ from ..task.getTasks import get_tasks_by_story_id
 from ..userStory.getBusinessValue import get_business_value
 
 
-def get_lead_time_details(project_details, auth_token):
+def get_lead_time_details(project_details, auth_token, from_date=None, to_date=None):
+    if from_date is not None and len(from_date) > 0:
+        from_date = date.fromisoformat(from_date)
+    if to_date is not None and len(to_date) > 0:
+        to_date = date.fromisoformat(to_date)
     us_lead_time, avg_us_lt = get_us_lead_time(
-        project_details["id"], auth_token
+        project_details["id"], auth_token, from_date, to_date
     )
     task_lead_time, avg_task_lt = get_task_lead_time(
-        project_details["id"], auth_token
+        project_details["id"], auth_token, from_date, to_date
     )
 
     us_lead_time.sort(key=lambda item: item["endDate"])
@@ -52,12 +56,16 @@ def metric_object(metric, time_key, lead_time, project_details):
     }
 
 
-def get_cycle_time_details(project_details, auth_token):
+def get_cycle_time_details(project_details, auth_token, from_date=None, to_date=None):
+    if from_date is not None and len(from_date) > 0:
+        from_date = date.fromisoformat(from_date)
+    if to_date is not None and len(to_date) > 0:
+        to_date = date.fromisoformat(to_date)
     task_cycle_time, avg_task_ct = get_task_cycle_time(
-        project_details["id"], auth_token
+        project_details["id"], auth_token, from_date, to_date
     )
     us_cycle_time, avg_us_ct = get_us_cycle_time(
-        project_details["id"], auth_token
+        project_details["id"], auth_token, from_date, to_date
     )
 
     task_cycle_time.sort(key=lambda item: item["endDate"])
@@ -87,15 +95,18 @@ def get_cycle_time_object(object_type, cycle_time, avg_lt):
 def get_burndown_chart_metric_detail(milestone_id, attribute_key, auth_token):
     milestone = get_milestone(milestone_id, auth_token)
 
-    partial_burndown, bv_burndown, total_burndown = calc_burndown_day_data(
-        auth_token, milestone, attribute_key
-    )
+    partial_burndown, bv_burndown, total_burndown, combined_burndown = \
+        calc_burndown_day_data(
+            auth_token, milestone, attribute_key
+        )
     partial_burndown = list(partial_burndown.values())
     partial_burndown.sort(key=lambda item: item["date"])
     bv_burndown = list(bv_burndown.values())
     bv_burndown.sort(key=lambda item: item["date"])
     total_burndown = list(total_burndown.values())
     total_burndown.sort(key=lambda item: item["date"])
+    combined_burndown["data"] = list(combined_burndown["data"].values())
+    combined_burndown["data"].sort(key=lambda item: item["date"])
 
     return {
         "partial_burndown": {
@@ -106,7 +117,8 @@ def get_burndown_chart_metric_detail(milestone_id, attribute_key, auth_token):
         },
         "total_burndown": {
             "total_burndown_data": total_burndown
-        }
+        },
+        "combined_burndown": combined_burndown
     }
 
 
@@ -114,6 +126,7 @@ def calc_burndown_day_data(auth_token, milestone, attribute_key):
     days_data = {}
     days_bv_data = {}
     days_total_data = {}
+    combined_data = {}
     start = datetime.fromisoformat(milestone["estimated_start"])
     finish = datetime.fromisoformat(milestone["estimated_finish"])
     milestone_start = start.date()
@@ -168,8 +181,47 @@ def calc_burndown_day_data(auth_token, milestone, attribute_key):
     update_bv_days_data(
         days_bv_data, milestone_start, milestone_finish, expected_bv_decrement
     )
+    
+    combined_data = {
+        "total_story_points": milestone["total_points"],
+        "total_business_value": total_business_value["bv"],
+        "data": {}
+    }
+    
+    extract_combined_data(
+        combined_data,
+        days_data,
+        days_bv_data,
+        days_total_data
+    )
 
-    return days_data, days_bv_data, days_total_data
+    return days_data, days_bv_data, days_total_data, combined_data
+
+
+def extract_combined_data(
+    combined_data,
+    days_data,
+    days_bv_data,
+    days_total_data
+):
+    total_sp = combined_data["total_story_points"]
+    total_bv = combined_data["total_business_value"]
+    for date in days_data:
+        combined_data["data"][date] = {
+            "date": date,
+            "partial": round((
+                ((total_sp - days_data[date]["remaining"]) * 100)
+                / total_sp
+            ), 2) if total_sp is not 0 else 0,
+            "total": round((
+                ((total_sp - days_total_data[date]["remaining"]) * 100)
+                / total_sp
+            ), 2) if total_sp is not 0 else 0,
+            "bv": round((
+                ((total_bv - days_bv_data[date]["remaining"]) * 100)
+                / total_bv
+            ), 2) if total_bv is not 0 else 0
+        }
 
 
 def process_burndown_details(

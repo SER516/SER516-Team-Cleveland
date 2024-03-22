@@ -5,7 +5,7 @@ const CustomScatterChart = ({ apiData, avg, chartFor, title }) => {
     const CustomToolTip = ({ active, payload }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="custom-tooltip" style={{ backgroundColor: '#ffd7b5', padding: '5px', border: '1px solid #ccc', borderRadius: "5px"}}>
+                <div className="custom-tooltip" style={{ backgroundColor: '#ffd7b5', padding: '5px', border: '2px solid black', borderRadius: "10px"}}>
                     <b>Date:</b> {payload[0].value}<br/>
                     <b>Days:</b> {payload[1].value}<br/>
                     <b>Task ID:</b> {payload[1].payload.taskRef}<br/>

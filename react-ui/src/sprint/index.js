@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Dropdown, Spinner, Stack } from "react-bootstrap";
 import Areachart from "../areachart";
+import Graph from "../graph";
 
 const SprintDetail = ({ sprintDetails, attributes, token, projectName }) => {
     const [selectedValue, setSelectedValue] = useState(null);
@@ -94,6 +95,7 @@ const SprintDetail = ({ sprintDetails, attributes, token, projectName }) => {
                             <Areachart apiData={data.total_burndown.total_burndown_data} chartFor={"Story Points"} title={"Total Burndown Chart"} />
                             <Areachart apiData={data.partial_burndown.partial_burndown_data} chartFor={"Story Points"} title={"Partial Burndown Chart"} />
                             <Areachart apiData={data.bv_burndown.bv_burndown_data} chartFor={"Business Value"} title={"Business Value Burndown Chart"} />
+                            <Graph apiData={data.combined_burndown.data} type="Burndown Chart" />
                         </div>
                     ) : null}
                 </Stack>

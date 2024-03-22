@@ -2,7 +2,7 @@ import os
 from concurrent.futures import ThreadPoolExecutor
 import requests
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, date
 
 from .getTasks import get_closed_tasks, task_by_member_in_date_range
 
@@ -93,7 +93,7 @@ def get_task_details(task, headers, taiga_url, cycle_times, cycle_time_data):
         print(f"Error fetching task by taskId: {e}")
 
 
-def get_task_lead_time(project_id, auth_token):
+def get_task_lead_time(project_id, auth_token, from_date=None, to_date=None):
     tasks = get_closed_tasks(project_id, auth_token)
     lead_time = 0
     closed_tasks = 0
@@ -101,6 +101,10 @@ def get_task_lead_time(project_id, auth_token):
     for task in tasks:
         created_date = datetime.fromisoformat(task["created_date"])
         finished_date = datetime.fromisoformat(task['finished_date'])
+        if type(from_date) == date and from_date > finished_date.date():
+            continue
+        if type(to_date) == date and to_date < finished_date.date():
+            continue
         lead_time += (finished_date - created_date).days
         lead_times.append({
             "taskDesc": task["subject"],
@@ -148,7 +152,7 @@ def extract_state_change_dates(history_data):
     return in_progress_date, closed_at
 
 
-def get_task_cycle_time(project_id, auth_token):
+def get_task_cycle_time(project_id, auth_token, from_date=None, to_date=None):
     tasks = get_closed_tasks(project_id, auth_token)
     taiga_url = os.getenv('TAIGA_URL')
 
@@ -164,6 +168,11 @@ def get_task_cycle_time(project_id, auth_token):
     }
     with ThreadPoolExecutor(max_workers=15) as executor:
         for task in tasks:
+            finished_date = datetime.fromisoformat(task['finished_date'])
+            if type(from_date) == date and from_date > finished_date.date():
+                continue
+            if type(to_date) == date and to_date < finished_date.date():
+                continue
             executor.submit(
                 get_task_details,
                 task,
@@ -172,6 +181,7 @@ def get_task_cycle_time(project_id, auth_token):
                 cycle_times,
                 cycle_time_data
             )
+
     if cycle_time_data["closed_tasks"] == 0:
         return cycle_times, 0
 

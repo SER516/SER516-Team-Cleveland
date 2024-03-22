@@ -3,7 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import requests
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, date
 
 # Load environment variables from .env file
 load_dotenv()
@@ -67,7 +67,7 @@ def get_closed_user_stories(project_id, auth_token):
         return []
 
 
-def get_us_lead_time(project_id, auth_token):
+def get_us_lead_time(project_id, auth_token, from_date=None, to_date=None):
     user_stories = get_closed_user_stories(project_id, auth_token)
     lead_time = 0
     closed_user_stories = 0
@@ -75,6 +75,10 @@ def get_us_lead_time(project_id, auth_token):
     for user_story in user_stories:
         created_date = datetime.fromisoformat(user_story["created_date"])
         finished_date = datetime.fromisoformat(user_story['finished_date'])
+        if type(from_date) == date and from_date > finished_date.date():
+            continue
+        if type(to_date) == date and to_date < finished_date.date():
+            continue
         lead_time += (finished_date - created_date).days
         lead_times.append({
             "taskDesc": user_story["subject"],
@@ -94,7 +98,7 @@ def get_us_lead_time(project_id, auth_token):
     return lead_times, avg_lead_time
 
 
-def get_us_cycle_time(project_id, auth_token):
+def get_us_cycle_time(project_id, auth_token, from_date=None, to_date=None):
     user_stories = get_closed_user_stories(project_id, auth_token)
     taiga_url = os.getenv('TAIGA_URL')
 
@@ -110,6 +114,11 @@ def get_us_cycle_time(project_id, auth_token):
     }
     with ThreadPoolExecutor(max_workers=15) as executor:
         for story in user_stories:
+            finished_date = datetime.fromisoformat(story['finished_date'])
+            if type(from_date) == date and from_date > finished_date.date():
+                continue
+            if type(to_date) == date and to_date < finished_date.date():
+                continue
             executor.submit(
                 get_user_story_details,
                 story,
@@ -118,6 +127,7 @@ def get_us_cycle_time(project_id, auth_token):
                 cycle_times,
                 cycle_time_data
             )
+
     if cycle_time_data["closed_tasks"] == 0:
         return cycle_times, 0
     avg_cycle_time = round(

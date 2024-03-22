@@ -5,6 +5,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Project from './project';
+import MetricWiki from './metricwiki/metricwiki';
+import AboutUs from './aboutus/aboutus'
 
 const router = createBrowserRouter([
   {
@@ -14,6 +16,14 @@ const router = createBrowserRouter([
   {
     path: "/project",
     element: <Project auth="" />
+  },
+  {
+    path: "/metricwiki",
+    element: <MetricWiki auth=""/>
+  },
+  {
+    path: "/aboutus", 
+    element: <AboutUs auth=""/>
   }
 ]);
 
