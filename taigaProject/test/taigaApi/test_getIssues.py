@@ -218,7 +218,7 @@ def auth_token():
     return "random_auth"
 
 
-@patch('os.getenv', MagicMock(return_value='http://fake.taiga.url'))
+@patch('os.getenv', MagicMock(return_value='https://fake.taiga.url'))
 @patch('requests.get')
 def test_get_task_history(mock_get, issues, auth_token):
     mock_response = MagicMock()

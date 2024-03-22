@@ -14,7 +14,7 @@ def token():
     return {"auth_token": "token"}
 
 
-@patch('os.getenv', MagicMock(return_value='http://fake.taiga.url'))
+@patch('os.getenv', MagicMock(return_value='https://fake.taiga.url'))
 @patch("requests.post")
 def test_auth(mock_get, token):
     mock_response = MagicMock()

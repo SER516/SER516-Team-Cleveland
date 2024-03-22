@@ -11,7 +11,10 @@ from ..task.getTasks import get_tasks_by_story_id
 from ..userStory.getBusinessValue import get_business_value
 
 
-def get_lead_time_details(project_details, auth_token, from_date=None, to_date=None):
+def get_lead_time_details(project_details,
+                          auth_token,
+                          from_date=None,
+                          to_date=None):
     if from_date is not None and len(from_date) > 0:
         from_date = date.fromisoformat(from_date)
     if to_date is not None and len(to_date) > 0:
@@ -56,7 +59,10 @@ def metric_object(metric, time_key, lead_time, project_details):
     }
 
 
-def get_cycle_time_details(project_details, auth_token, from_date=None, to_date=None):
+def get_cycle_time_details(project_details,
+                           auth_token,
+                           from_date=None,
+                           to_date=None):
     if from_date is not None and len(from_date) > 0:
         from_date = date.fromisoformat(from_date)
     if to_date is not None and len(to_date) > 0:
@@ -181,13 +187,13 @@ def calc_burndown_day_data(auth_token, milestone, attribute_key):
     update_bv_days_data(
         days_bv_data, milestone_start, milestone_finish, expected_bv_decrement
     )
-    
+
     combined_data = {
         "total_story_points": milestone["total_points"],
         "total_business_value": total_business_value["bv"],
         "data": {}
     }
-    
+
     extract_combined_data(
         combined_data,
         days_data,
@@ -206,21 +212,21 @@ def extract_combined_data(
 ):
     total_sp = combined_data["total_story_points"]
     total_bv = combined_data["total_business_value"]
-    for date in days_data:
-        combined_data["data"][date] = {
-            "date": date,
+    for date_data in days_data:
+        combined_data["data"][date_data] = {
+            "date": date_data,
             "partial": round((
-                ((total_sp - days_data[date]["remaining"]) * 100)
+                ((total_sp - days_data[date_data]["remaining"]) * 100)
                 / total_sp
-            ), 2) if total_sp is not 0 else 0,
+            ), 2) if total_sp != 0 else 0,
             "total": round((
-                ((total_sp - days_total_data[date]["remaining"]) * 100)
+                ((total_sp - days_total_data[date_data]["remaining"]) * 100)
                 / total_sp
-            ), 2) if total_sp is not 0 else 0,
+            ), 2) if total_sp != 0 else 0,
             "bv": round((
-                ((total_bv - days_bv_data[date]["remaining"]) * 100)
+                ((total_bv - days_bv_data[date_data]["remaining"]) * 100)
                 / total_bv
-            ), 2) if total_bv is not 0 else 0
+            ), 2) if total_bv != 0 else 0
         }
 
 
@@ -452,13 +458,13 @@ def extract_dev_focus(dev_focus_data):
 def get_member_violations(dev_focus, threshold):
     total_violations = 0
     members = []
-    for date in list(dev_focus["date_data"]):
-        total_violations += len(dev_focus["date_data"][date]["members"])
-        for member in dev_focus["date_data"][date]["members"]:
+    for date_data in list(dev_focus["date_data"]):
+        total_violations += len(dev_focus["date_data"][date_data]["members"])
+        for member in dev_focus["date_data"][date_data]["members"]:
             if member["violations"] < threshold:
-                dev_focus["date_data"][date]["total_violations"] -= (
+                dev_focus["date_data"][date_data]["total_violations"] -= (
                     member["violations"])
-                dev_focus["date_data"][date]["members"].remove(member)
+                dev_focus["date_data"][date_data]["members"].remove(member)
             else:
                 member_2 = check_member_exist(members, member["username"])
                 if not member_2:
@@ -468,8 +474,8 @@ def get_member_violations(dev_focus, threshold):
 
                     member.append(member)
 
-        if dev_focus["date_data"][date]["total_violations"] == 0:
-            dev_focus["date_data"].pop(date)
+        if dev_focus["date_data"][date_data]["total_violations"] == 0:
+            dev_focus["date_data"].pop(date_data)
 
     return members, total_violations
 

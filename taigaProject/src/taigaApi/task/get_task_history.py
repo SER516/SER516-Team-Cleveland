@@ -2,7 +2,7 @@ import os
 from concurrent.futures import ThreadPoolExecutor
 import requests
 from dotenv import load_dotenv
-from datetime import datetime, date
+from datetime import datetime
 
 from .getTasks import get_closed_tasks, task_by_member_in_date_range
 
@@ -101,9 +101,9 @@ def get_task_lead_time(project_id, auth_token, from_date=None, to_date=None):
     for task in tasks:
         created_date = datetime.fromisoformat(task["created_date"])
         finished_date = datetime.fromisoformat(task['finished_date'])
-        if type(from_date) == date and from_date > finished_date.date():
+        if from_date is not None and from_date > finished_date.date():
             continue
-        if type(to_date) == date and to_date < finished_date.date():
+        if to_date is not None and to_date < finished_date.date():
             continue
         lead_time += (finished_date - created_date).days
         lead_times.append({
@@ -169,9 +169,9 @@ def get_task_cycle_time(project_id, auth_token, from_date=None, to_date=None):
     with ThreadPoolExecutor(max_workers=15) as executor:
         for task in tasks:
             finished_date = datetime.fromisoformat(task['finished_date'])
-            if type(from_date) == date and from_date > finished_date.date():
+            if from_date is not None and from_date > finished_date.date():
                 continue
-            if type(to_date) == date and to_date < finished_date.date():
+            if to_date is not None and to_date < finished_date.date():
                 continue
             executor.submit(
                 get_task_details,

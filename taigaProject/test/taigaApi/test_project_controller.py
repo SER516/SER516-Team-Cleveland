@@ -36,7 +36,7 @@ def project_info():
     }
 
 
-@patch('os.getenv', MagicMock(return_value='http://fake.taiga.url'))
+@patch('os.getenv', MagicMock(return_value='https://fake.taiga.url'))
 @patch("requests.get")
 def test_get_project(mock_get, project_info):
     mock_response = MagicMock()
