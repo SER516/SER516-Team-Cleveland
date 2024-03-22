@@ -137,6 +137,7 @@ def calc_burndown_day_data(auth_token, milestone, attribute_key):
     days_data[milestone_start] = append_points_date_data(
         milestone_start, 0, milestone["total_points"]
     )
+    days_data[milestone_start]["day"] = 0
     days_data[milestone_start]["expected_remaining"] = (
         milestone["total_points"]
     )
@@ -144,13 +145,15 @@ def calc_burndown_day_data(auth_token, milestone, attribute_key):
     days_total_data[milestone_start] = append_points_date_data(
         milestone_start, 0, milestone["total_points"]
     )
+    days_total_data[milestone_start]["day"] = 0
     days_total_data[milestone_start]["expected_remaining"] = (
         milestone["total_points"]
     )
 
     days_bv_data[milestone_start] = {
         "date": milestone_start,
-        "completed": 0
+        "completed": 0,
+        "day": 0
     }
 
     total_business_value = {"bv": 0}
@@ -251,16 +254,35 @@ def update_points_days_data(
             days_data[dt] = append_points_date_data(
                 datetime.fromisoformat(str(dt)).date(), 0,
                 days_data[dt - timedelta(1)]["remaining"])
+            days_data[dt]["day"] = (
+                days_data[dt - timedelta(1)]["day"] + 1
+            )
         else:
             days_data[dt]["remaining"] = round(
                 days_data[dt - timedelta(1)]["remaining"]
                 - days_data[dt]["completed"], 2)
+            days_data[dt]["day"] = (
+                days_data[dt - timedelta(1)]["day"] + 1
+            )
+            
         days_data[dt]["expected_remaining"] = round(
             days_data[dt - timedelta(1)]["expected_remaining"]
             - expected_decrement, 2)
 
         if days_data[dt]["expected_remaining"] < 0:
             days_data[dt]["expected_remaining"] = 0
+            
+    for dt in days_data:
+        if "day" not in days_data[dt]:
+            days_data[dt]["day"] = (
+                days_data[dt - timedelta(1)]["day"] + 1
+            )
+            days_data[dt]["expected_remaining"] = (
+                days_data[dt - timedelta(1)]["expected_remaining"]
+            )
+            days_data[dt]["remaining"] = round(
+                days_data[dt - timedelta(1)]["remaining"]
+                - days_data[dt]["completed"], 2)
 
 
 def update_bv_days_data(
@@ -273,12 +295,17 @@ def update_bv_days_data(
             days_bv_data[dt] = {
                 "date": datetime.fromisoformat(str(dt)).date(),
                 "completed": 0,
-                "remaining": days_bv_data[dt - timedelta(1)]["remaining"]
+                "remaining": days_bv_data[dt - timedelta(1)]["remaining"],
+                "day": days_bv_data[dt - timedelta(1)]["day"] + 1
             }
         else:
             days_bv_data[dt]["remaining"] = round(
                 days_bv_data[dt - timedelta(1)]["remaining"]
                 - days_bv_data[dt]["completed"], 2)
+            days_bv_data[dt]["day"] = (
+                days_bv_data[dt - timedelta(1)]["day"] + 1
+            )
+
         days_bv_data[dt]["expected_remaining"] = (
             round(days_bv_data[dt - timedelta(1)]["expected_remaining"]
                   - expected_bv_decrement, 2)
@@ -286,6 +313,18 @@ def update_bv_days_data(
 
         if days_bv_data[dt]["expected_remaining"] < 0:
             days_bv_data[dt]["expected_remaining"] = 0
+            
+    for dt in days_bv_data:
+        if "day" not in days_bv_data[dt]:
+            days_bv_data[dt]["day"] = (
+                days_bv_data[dt - timedelta(1)]["day"] + 1
+            )
+            days_bv_data[dt]["expected_remaining"] = (
+                days_bv_data[dt - timedelta(1)]["expected_remaining"]
+            )
+            days_bv_data[dt]["remaining"] = round(
+                days_bv_data[dt - timedelta(1)]["remaining"]
+                - days_bv_data[dt]["completed"], 2)
 
 
 def extract_partial_burndown_data(user_story, tasks, days_data):
