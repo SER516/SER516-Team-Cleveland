@@ -91,6 +91,24 @@ def get_cycle_time_object(object_type, cycle_time, avg_lt):
     }
 
 
+def get_multi_sprint_data(milestone_ids, attribute_key, auth_token):
+    sprint_burndown = {}
+    for milestone_id in milestone_ids:
+        burndown_data = get_burndown_chart_metric_detail(
+            milestone_id,
+            attribute_key,
+            auth_token
+        )
+        sprint_burndown[burndown_data["sprint"]] = {
+            "combined_burndown": burndown_data["combined_burndown"],
+            "sprint": burndown_data["sprint"],
+            "total_sp": burndown_data["total_sp"],
+            "total_bv": burndown_data["total_bv"]
+        }
+
+    return sprint_burndown
+
+
 def get_burndown_chart_metric_detail(milestone_id, attribute_key, auth_token):
     milestone = get_milestone(milestone_id, auth_token)
 
@@ -117,7 +135,10 @@ def get_burndown_chart_metric_detail(milestone_id, attribute_key, auth_token):
         "total_burndown": {
             "total_burndown_data": total_burndown
         },
-        "combined_burndown": combined_burndown
+        "combined_burndown": combined_burndown,
+        "sprint": milestone["name"],
+        "total_sp": combined_burndown["total_story_points"],
+        "total_bv": combined_burndown["total_business_value"]
     }
 
 
@@ -211,6 +232,9 @@ def extract_combined_data(
     for date in days_data:
         combined_data["data"][date] = {
             "date": date,
+            "day": days_data[date]["day"],
+            "completed_sp": total_sp - days_total_data[date]["remaining"],
+            "completed_bv": total_bv - days_bv_data[date]["remaining"],
             "partial": round((
                 ((total_sp - days_data[date]["remaining"]) * 100)
                 / total_sp
