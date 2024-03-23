@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Select from 'react-select';
-import { Spinner, Stack } from "react-bootstrap";
+import { Button, Spinner, Stack } from "react-bootstrap";
 import Areachart from "../areachart";
 import Graph from "../graph";
 
@@ -26,13 +26,16 @@ const SprintDetail = ({ sprintDetails, attributes, token, projectName }) => {
 
     const handleSelect = (selectedOptions) => {
         setSelectedValues(selectedOptions);
+    };
+
+    const handleSubmit = () => {
         setError(false);
         setSpinner(true);
 
-        const fetchDataForSelectedValues = selectedOptions.map(option => {
+        const fetchDataForSelectedValues = selectedValues.map(option => {
             const formData = {
-                milestoneId: option.value,
-                ...(bvAttribute && { attributeKey: bvAttribute })
+                milestoneId: option.value.toString(),
+                attributeKey: bvAttribute? bvAttribute.toString() : ""
             };
 
             return axios({
@@ -83,24 +86,28 @@ const SprintDetail = ({ sprintDetails, attributes, token, projectName }) => {
                     />
                 </div>
 
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Button onClick={handleSubmit} variant="primary" type="submit" className="submitButton backgroundButton">Submit</Button>
+                </div>
+
                 {spinner && (
                     <Spinner animation="border" variant="primary" style={{ display: "block", marginLeft: "auto", marginRight: "auto" }} />
                 )}
 
                 {error && <p className="errorMessage">Unable to fetch Sprint Detail</p>}
                 
-                {Object.keys(data).length > 0 && Object.entries(data).map(([key, value]) => (
-                    <div key={key}>
+                {Object.keys(data).length > 0 && Object.entries(data).map(([valueKey, data]) => (
+                    <div key={valueKey}>
                         <br />
-                        <Areachart apiData={data.total_burndown.total_burndown_data} chartFor={"Story Points"} title={`Total Burndown Chart for ${key}`} />
-                        <Areachart apiData={data.partial_burndown.partial_burndown_data} chartFor={"Story Points"} title={`Partial Burndown Chart for ${key}`} />
-                        <Areachart apiData={data.bv_burndown.bv_burndown_data} chartFor={"Business Value"} title={`Business Value Burndown Chart for ${key}`} />
-                        <Graph apiData={data.combined_burndown.data} type={`Burndown Chart for ${key}`} />
+                        <Areachart apiData={data.total_burndown.total_burndown_data} chartFor={"Story Points"} title={`Total Burndown Chart`} />
+                        <Areachart apiData={data.partial_burndown.partial_burndown_data} chartFor={"Story Points"} title={`Partial Burndown Chart`} />
+                        <Areachart apiData={data.bv_burndown.bv_burndown_data} chartFor={"Business Value"} title={`Business Value Burndown Chart`} />
+                        <Graph apiData={data.combined_burndown.data} type={`Burndown Chart`} />
                     </div>
                 ))}
             </Stack>
         </div>
-    );
-};
+    )
+}
 
 export default SprintDetail;
