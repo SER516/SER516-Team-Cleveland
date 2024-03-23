@@ -236,15 +236,15 @@ def extract_combined_data(
             "completed_sp": total_sp - days_total_data[date]["remaining"],
             "completed_bv": total_bv - days_bv_data[date]["remaining"],
             "partial": round((
-                ((total_sp - days_data[date]["remaining"]) * 100)
+                ((days_data[date]["remaining"]) * 100)
                 / total_sp
             ), 2) if total_sp is not 0 else 0,
             "total": round((
-                ((total_sp - days_total_data[date]["remaining"]) * 100)
+                ((days_total_data[date]["remaining"]) * 100)
                 / total_sp
             ), 2) if total_sp is not 0 else 0,
             "bv": round((
-                ((total_bv - days_bv_data[date]["remaining"]) * 100)
+                ((days_bv_data[date]["remaining"]) * 100)
                 / total_bv
             ), 2) if total_bv is not 0 else 0
         }
