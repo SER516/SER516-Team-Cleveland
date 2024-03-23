@@ -82,7 +82,7 @@ const SprintDetail = ({ sprintDetails, attributes, token, projectName }) => {
                         className="basic-multi-select"
                         classNamePrefix="select"
                         onChange={handleSelect}
-                        placeholder="Select Metrics"
+                        placeholder="Select Sprints"
                     />
                 </div>
 
