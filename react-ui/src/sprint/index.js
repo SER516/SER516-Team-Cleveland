@@ -1,13 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Dropdown, Spinner, Stack } from "react-bootstrap";
+import Select from 'react-select';
+import { Spinner, Stack } from "react-bootstrap";
 import Areachart from "../areachart";
 import Graph from "../graph";
 
 const SprintDetail = ({ sprintDetails, attributes, token, projectName }) => {
-    const [selectedValue, setSelectedValue] = useState(null);
+    const [selectedValues, setSelectedValues] = useState([]);
     const [bvAttribute, setBvAttribute] = useState(null);
-    const [data, setData] = useState(null);
+    const [data, setData] = useState({});
     const [error, setError] = useState(false);
     const [spinner, setSpinner] = useState(false);
 
@@ -23,85 +24,83 @@ const SprintDetail = ({ sprintDetails, attributes, token, projectName }) => {
         setBvAttribute(attribute.length !== 0 ? attribute[0].toString() : null);
     }, [attributes]);
 
-    const handleSelect = (eventKey) => {
-        const splitEventKey = eventKey.split(',');
-        setSelectedValue(splitEventKey[1]);
+    const handleSelect = (selectedOptions) => {
+        setSelectedValues(selectedOptions);
         setError(false);
         setSpinner(true);
 
-        const formData = {
-            milestoneId: splitEventKey[0]
-        }
+        const fetchDataForSelectedValues = selectedOptions.map(option => {
+            const formData = {
+                milestoneId: option.value,
+                ...(bvAttribute && { attributeKey: bvAttribute })
+            };
 
-        if (bvAttribute !== null) {
-            formData.attributeKey = bvAttribute
-        }
+            return axios({
+                url: "http://localhost:8000/metric/Burndown",
+                method: "post",
+                data: formData,
+                headers: {
+                    "token": token,
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "http://localhost:3000/project"
+                }
+            })
+            .then(res => ({ [option.value]: res.data }))
+            .catch(ex => {
+                console.error(ex);
+                setError(true);
+            });
+        });
 
-        axios({
-            url: "http://localhost:8000/metric/Burndown",
-            method: "post",
-            data: formData,
-            headers: {
-                "token": token,
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "http://localhost:3000/project"
-            }
-        })
-        .then(res => {
-            setData(res.data);
-            console.log(res.data);
-            setError(false);
-            setSpinner(false);
-        })
-        .catch(ex => {
-            console.log(ex);
-            setError(true);
+        Promise.all(fetchDataForSelectedValues).then(results => {
+            const newData = results.reduce((acc, result) => ({
+                ...acc,
+                ...result
+            }), {});
+
+            setData(newData);
             setSpinner(false);
         });
-    }
+    };
+
+    const options = sprintDetails.map(detail => ({
+        value: detail.id,
+        label: detail.name
+    }));
 
     return (
         <div>
-            <div>
-                <Stack gap={4}>
-                    <h3 className="projectName">{projectName}</h3>
-                    <div className="d-flex justify-content-center backgroundWhite">
+            <Stack gap={4}>
+                <h3 className="projectName">{projectName}</h3>
+                <div className="d-flex justify-content-center backgroundWhite">
+                    <Select
+                        isMulti
+                        options={options}
+                        className="basic-multi-select"
+                        classNamePrefix="select"
+                        onChange={handleSelect}
+                        placeholder="Select Metrics"
+                    />
+                </div>
+
+                {spinner && (
+                    <Spinner animation="border" variant="primary" style={{ display: "block", marginLeft: "auto", marginRight: "auto" }} />
+                )}
+
+                {error && <p className="errorMessage">Unable to fetch Sprint Detail</p>}
+                
+                {Object.keys(data).length > 0 && Object.entries(data).map(([key, value]) => (
+                    <div key={key}>
                         <br />
-                        <Dropdown onSelect={handleSelect}>
-                            <Dropdown.Toggle variant="outline-secondary" className="backgroundButton">
-                                {selectedValue ? selectedValue : 'Select Metric'}
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                                {
-                                    sprintDetails.map((item) => <Dropdown.Item key={item.id} eventKey={[item.id, item.name]}>{item.name}</Dropdown.Item>)
-                                }
-                            </Dropdown.Menu>
-                        </Dropdown>
+                        <Areachart apiData={data.total_burndown.total_burndown_data} chartFor={"Story Points"} title={`Total Burndown Chart for ${key}`} />
+                        <Areachart apiData={data.partial_burndown.partial_burndown_data} chartFor={"Story Points"} title={`Partial Burndown Chart for ${key}`} />
+                        <Areachart apiData={data.bv_burndown.bv_burndown_data} chartFor={"Business Value"} title={`Business Value Burndown Chart for ${key}`} />
+                        <Graph apiData={data.combined_burndown.data} type={`Burndown Chart for ${key}`} />
                     </div>
-
-                    {spinner ? (
-                        <div>
-                            <Spinner variant="primary" animation="border" style={{ justifyContent: "center", alignItems: "center", display:"flex", marginLeft: "49%" }} />
-                        </div>
-                    ) : null}
-
-                    {error ? (
-                        <p className="errorMessage">Unable to fetch Sprint Detail</p>
-                    ) : null}
-                    
-                    {data ? (
-                        <div>
-                            <br />
-                            <Areachart apiData={data.total_burndown.total_burndown_data} chartFor={"Story Points"} title={"Total Burndown Chart"} />
-                            <Areachart apiData={data.partial_burndown.partial_burndown_data} chartFor={"Story Points"} title={"Partial Burndown Chart"} />
-                            <Areachart apiData={data.bv_burndown.bv_burndown_data} chartFor={"Business Value"} title={"Business Value Burndown Chart"} />
-                            <Graph apiData={data.combined_burndown.data} type="Burndown Chart" />
-                        </div>
-                    ) : null}
-                </Stack>
-            </div>
+                ))}
+            </Stack>
         </div>
-    )
-}
+    );
+};
 
 export default SprintDetail;
