@@ -4,11 +4,13 @@ import Select from 'react-select';
 import { Button, Spinner, Stack } from "react-bootstrap";
 import Areachart from "../areachart";
 import Graph from "../graph";
+import CustomMultiSeriesLineChart from "../graph/multiseries";
+import { SimpleBarChart } from "../graph/barchart";
 
 const SprintDetail = ({ sprintDetails, attributes, token, projectName }) => {
     const [selectedValues, setSelectedValues] = useState([]);
     const [bvAttribute, setBvAttribute] = useState(null);
-    const [data, setData] = useState({});
+    const [data, setData] = useState(null);
     const [error, setError] = useState(false);
     const [spinner, setSpinner] = useState(false);
 
@@ -32,37 +34,36 @@ const SprintDetail = ({ sprintDetails, attributes, token, projectName }) => {
         setError(false);
         setSpinner(true);
 
-        const fetchDataForSelectedValues = selectedValues.map(option => {
-            const formData = {
-                milestoneId: option.value.toString(),
-                attributeKey: bvAttribute? bvAttribute.toString() : ""
-            };
+        let sprints = [];
 
-            return axios({
-                url: "http://localhost:8000/metric/Burndown",
-                method: "post",
-                data: formData,
-                headers: {
-                    "token": token,
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "http://localhost:3000/project"
-                }
-            })
-            .then(res => ({ [option.value]: res.data }))
-            .catch(ex => {
-                console.error(ex);
-                setError(true);
-            });
-        });
+        selectedValues.forEach(v => {
+            sprints.push(v.value.toString());
+        })
 
-        Promise.all(fetchDataForSelectedValues).then(results => {
-            const newData = results.reduce((acc, result) => ({
-                ...acc,
-                ...result
-            }), {});
+        const formData = {
+            milestoneIds: sprints,
+            attributeKey: bvAttribute ? bvAttribute.toString() : ""
+        };
 
-            setData(newData);
+        axios({
+            url: "http://localhost:8000/metric/Burndown",
+            method: "post",
+            data: formData,
+            headers: {
+                "token": token,
+                "Content-Type": "application/json",
+                
+            }
+        })
+        .then(res => {
+            setData(res.data);
+            console.log(res.data);
+            setError(false);
             setSpinner(false);
+        })
+        .catch(ex => {
+            console.error(ex);
+            setError(true);
         });
     };
 
@@ -96,15 +97,24 @@ const SprintDetail = ({ sprintDetails, attributes, token, projectName }) => {
 
                 {error && <p className="errorMessage">Unable to fetch Sprint Detail</p>}
                 
-                {Object.keys(data).length > 0 && Object.entries(data).map(([valueKey, data]) => (
-                    <div key={valueKey}>
+                {data?.total_burndown ? (
+                    <div>
                         <br />
-                        <Areachart apiData={data.total_burndown.total_burndown_data} chartFor={"Story Points"} title={`Total Burndown Chart`} />
-                        <Areachart apiData={data.partial_burndown.partial_burndown_data} chartFor={"Story Points"} title={`Partial Burndown Chart`} />
-                        <Areachart apiData={data.bv_burndown.bv_burndown_data} chartFor={"Business Value"} title={`Business Value Burndown Chart`} />
-                        <Graph apiData={data.combined_burndown.data} type={`Burndown Chart`} />
+                        <Areachart apiData={data.total_burndown.total_burndown_data} chartFor={"Story Points"} title={"Total Burndown Chart"} />
+                        <Areachart apiData={data.partial_burndown.partial_burndown_data} chartFor={"Story Points"} title={"Partial Burndown Chart"} />
+                        <Areachart apiData={data.bv_burndown.bv_burndown_data} chartFor={"Business Value"} title={"Business Value Burndown Chart"} />
+                        <Graph apiData={data.combined_burndown.data} type="Burndown Chart" />
                     </div>
-                ))}
+                ) : null}
+
+                {data && selectedValues.length > 1 ? (
+                    <div>
+                        <br />                    
+                        <CustomMultiSeriesLineChart apiData={Object.values(data)} title="Multi-sprint Story Point Comparison" chartType="Story Point" dataKey="completed_sp" />
+                        <CustomMultiSeriesLineChart apiData={Object.values(data)} title="Multi-sprint Business Value Comparison" chartType="Business Value" dataKey="completed_bv" />
+                        <SimpleBarChart apiData={Object.values(data)} />
+                    </div>
+                ) : null}
             </Stack>
         </div>
     )
