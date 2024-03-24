@@ -233,8 +233,8 @@ def extract_combined_data(
         combined_data["data"][date] = {
             "date": date,
             "day": days_data[date]["day"],
-            "completed_sp": total_sp - days_total_data[date]["remaining"],
-            "completed_bv": total_bv - days_bv_data[date]["remaining"],
+            "remaining_sp": days_total_data[date]["remaining"],
+            "remaining_bv": days_bv_data[date]["remaining"],
             "partial": round((
                 ((days_data[date]["remaining"]) * 100)
                 / total_sp
