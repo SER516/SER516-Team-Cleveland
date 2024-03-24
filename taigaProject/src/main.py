@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-
 from taigaApi.controller import project_controller
 from taigaApi.controller import auth_controller
 from taigaApi.controller import metric_controller
