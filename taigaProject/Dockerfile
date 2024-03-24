@@ -1,6 +1,6 @@
 FROM python:3.11
 WORKDIR /code
-COPY requirements.txt /code/requirements.txt
+COPY / /code/
 RUN pip install --no-cache-dir --upgrade -r ./requirements.txt
 COPY . /code/taigaProject
 WORKDIR taigaProject/src
