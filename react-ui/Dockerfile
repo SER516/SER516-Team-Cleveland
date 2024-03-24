@@ -5,13 +5,13 @@ FROM node:14-alpine
 WORKDIR /app
 
 # Copy package.json and package-lock.json from the react-ui directory to the working directory
-COPY react-ui/package*.json ./
+COPY ./package*.json ./
 
 # Install npm dependencies
 RUN npm install
 
 # Copy the rest of the application code from the react-ui directory to the working directory
-COPY react-ui ./
+COPY . ./
 
 # Build the React app for production
 RUN npm run build
