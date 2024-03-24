@@ -106,6 +106,13 @@ const SprintDetail = ({ sprintDetails, attributes, token, projectName }) => {
                         <Graph apiData={data.combined_burndown.data} type="Burndown Chart" />
                     </div>
                 ) : null}
+
+                {/* <div>
+                    <br />                    
+                    <CustomMultiSeriesLineChart apiData={Object.values(data)} title="Multi-sprint Story Point Comparison" chartType="Story Point" dataKey="remaining_sp" />
+                    <CustomMultiSeriesLineChart apiData={Object.values(data)} title="Multi-sprint Business Value Comparison" chartType="Business Value" dataKey="remaining_bv" />
+                    <SimpleBarChart apiData={Object.values(data)} />
+                </div> */}
             </Stack>
         </div>
     )
