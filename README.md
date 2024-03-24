@@ -12,7 +12,7 @@
 
 This project is a Python script for interacting with the Taiga API to perform various task and calculating metrics.
 
-### Prerequisites
+- ### Prerequisites
 
 Before running the script, make sure you have the following installed:
 
@@ -26,7 +26,7 @@ Before running the script, make sure you have the following installed:
    cd SER516-Team-Cleveland/taigaProject
 ```
 
-### Getting Taiga Project Slug
+- ### Getting Taiga Project Slug
 
 To interact with the Taiga API using the provided Python script, you will need the project slug of your Taiga project. Follow these steps to find the project slug:
 
@@ -36,7 +36,7 @@ To interact with the Taiga API using the provided Python script, you will need t
 
 3. **Project URL**: Look at the URL in your browser's address bar while you are inside the project. The project slug is the part of the URL that comes after the last slash ("/"). For example:
 
-### Running the Application using Docker
+- ### Running the Application using Docker
 
 To run the application this way, you need to install docker on your system first. Docker is an application that
 uses containerization technology to package software and its dependencies into standardized units called containers. 
@@ -51,7 +51,7 @@ docker-compose up --build
 It should run a multi-container application, which contains the front-end and the back-end applications. 
 Visit http://localhost:3000 to start the application. 
 
-### Running the Backend Application
+- ### Running the Backend Application
 
 Go to `taigaProject` folder
 ``` bash
@@ -94,9 +94,7 @@ pytest
 ```
 in the terminal to run the tests and get the results.
 
-### To run the frontend
-
-### Download Node.js
+- ### To run the frontend
 
 Download node.js from https://nodejs.org/en/download
 
@@ -107,7 +105,7 @@ On Mac, you can download either from above website or using homebrew.
 
 #### `brew install node`
 
-### Check Node and npm version
+#### Check Node and npm version
 
 Command to check the Node version to confirm successful installation
 
@@ -120,9 +118,9 @@ Command to check the npm version
 #### Run the project
 1. Go to `react-ui` folder
 2. Install the packages using command:
-### `npm install`
+#### `npm install`
 3. After successful install, start the project:
-### `npm start`
+#### `npm start`
 4. Go to http://localhost:3000 to view in browser
 
 #### Fetch Metrics from Application
