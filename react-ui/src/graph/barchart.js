@@ -119,4 +119,34 @@ const CustomBarChart = ({ title, data, threshold, endDate }) => {
     );
 }
 
+export const SimpleBarChart = ({ apiData }) => {
+    return (
+        <div>
+            <h4 style={{ textAlign: 'center' }}>Multi-sprint Bar Chart</h4>
+            <ResponsiveContainer width="100%" height={600}>
+                <BarChart
+                    data={apiData}
+                    margin={{ top: 20, right: 40, bottom: 70, left: 30 }}
+                >    
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis type="category" dataKey="sprint" label={{
+                        value: 'Sprint', position: 'insideBottom', offset: -50, style: { fontSize: '20px' }
+                    }}
+                        tick={{ fontSize: 12 }} allowDuplicatedCategory={true} />
+                    <YAxis type="number" dataKey="" label={{
+                        value: 'BV/TP', angle: -90, position: 'insideLeft', style: { fontSize: '20px' }
+                    }} />
+
+                    <Tooltip />
+                    <Legend align="right" verticalAlign="top" layout="horizontal" iconType="square"/>
+                    <Bar dataKey="total_sp" fill="#8884d8" activeBar={<Rectangle fill="orange" stroke="purple" />} />
+                    <Bar dataKey="total_bv" fill="#888234" activeBar={<Rectangle fill="purple" stroke="orange" />} />
+                </BarChart>
+            </ResponsiveContainer>
+        </div>
+    );
+};
+
+
+
 export default CustomBarChart;
