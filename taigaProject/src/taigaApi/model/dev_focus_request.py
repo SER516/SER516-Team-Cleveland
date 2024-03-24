@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 
+
 class DevFocusRequest(BaseModel):
     project_id: str
     members: Optional[list] = None
