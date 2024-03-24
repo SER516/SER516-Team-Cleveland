@@ -1,10 +1,18 @@
 # SER516-Team-Cleveland
+<div>
+    <img width="20" src="https://user-images.githubusercontent.com/25181517/183423507-c056a6f9-1ba8-4312-a350-19bcbc5a8697.png" alt="Python" title="Python"/>
+    <img width="20" src="https://user-images.githubusercontent.com/25181517/183897015-94a058a6-b86e-4e42-a37f-bf92061753e5.png" alt="React" title="React"/>
+    <img width="20" src="https://user-images.githubusercontent.com/25181517/117207330-263ba280-adf4-11eb-9b97-0ac5b40bc3be.png" alt="Docker" title="Docker"/>
+    <img width="20" src="https://user-images.githubusercontent.com/25181517/121401671-49102800-c959-11eb-9f6f-74d49a5e1774.png" alt="npm" title="npm"/>
+    <img width="20" src="https://user-images.githubusercontent.com/25181517/184146221-671413cb-b1ae-47db-a232-b37c99281516.png" alt="SonarQube" title="SonarQube"/>
+    <img width="20" src="https://user-images.githubusercontent.com/25181517/184117132-9e89a93b-65fb-47c3-91e7-7d0f99e7c066.png" alt="pytest" title="pytest"/>
+</div>
 
-# Taiga API Integration
+## Taiga API Integration
 
 This project is a Python script for interacting with the Taiga API to perform various task and calculating metrics.
 
-## Prerequisites
+- ### Prerequisites
 
 Before running the script, make sure you have the following installed:
 
@@ -18,7 +26,7 @@ Before running the script, make sure you have the following installed:
    cd SER516-Team-Cleveland/taigaProject
 ```
 
-## Getting Taiga Project Slug
+- ### Getting Taiga Project Slug
 
 To interact with the Taiga API using the provided Python script, you will need the project slug of your Taiga project. Follow these steps to find the project slug:
 
@@ -28,8 +36,22 @@ To interact with the Taiga API using the provided Python script, you will need t
 
 3. **Project URL**: Look at the URL in your browser's address bar while you are inside the project. The project slug is the part of the URL that comes after the last slash ("/"). For example:
 
+- ### Running the Application using Docker
 
-## Running the Backend Application
+To run the application this way, you need to install docker on your system first. Docker is an application that
+uses containerization technology to package software and its dependencies into standardized units called containers. 
+You can download docker to your system from- https://docs.docker.com/get-docker/.
+
+To run the application using docker, go to the folder - SER516-Team-Cleaveland (The base folder of the project),
+and run the command- 
+
+``` bash
+docker-compose up --build
+```
+It should run a multi-container application, which contains the front-end and the back-end applications. 
+Visit http://localhost:3000 to start the application. 
+
+- ### Running the Backend Application
 
 Go to `taigaProject` folder
 ``` bash
@@ -59,7 +81,7 @@ uvicorn main:app --reload
 ```
 to run the application in developer mode, it reloads everytime there's a change in a file. 
 
-### Writing/Running unit test
+#### Writing/Running unit test
 
 We're using pytest to write the unit test for the backend application. 
 The dependency is added to the requirements.txt file, please do a pip install before trying to run the tests. 
@@ -72,38 +94,36 @@ pytest
 ```
 in the terminal to run the tests and get the results.
 
-## To run the frontend
-
-## Download Node.js
+- ### To run the frontend
 
 Download node.js from https://nodejs.org/en/download
 
 On Mac, you can download either from above website or using homebrew.
 
-### `brew search node`
+#### `brew search node`
 
 
-### `brew install node`
+#### `brew install node`
 
-## Check Node and npm version
+#### Check Node and npm version
 
 Command to check the Node version to confirm successful installation
 
-### `node -v`
+#### `node -v`
 
 Command to check the npm version
 
-### `npm -v`
+#### `npm -v`
 
-### Run the project
+#### Run the project
 1. Go to `react-ui` folder
 2. Install the packages using command:
-## `npm install`
+#### `npm install`
 3. After successful install, start the project:
-## `npm start`
+#### `npm start`
 4. Go to http://localhost:3000 to view in browser
 
-### Fetch Metrics from Application
+#### Fetch Metrics from Application
 1. Go to http://localhost:3000 to view in browser
 2. Enter username and password of taiga account to login
 3. Project page will be displayed
