@@ -1,15 +1,19 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Dropdown, Spinner, Stack } from "react-bootstrap";
+import Select from 'react-select';
+import { Button, Spinner, Stack } from "react-bootstrap";
 import Areachart from "../areachart";
 import Graph from "../graph";
+import CustomMultiSeriesLineChart from "../graph/multiseries";
+import { SimpleBarChart } from "../graph/barchart";
 
 const SprintDetail = ({ sprintDetails, attributes, token, projectName }) => {
-    const [selectedValue, setSelectedValue] = useState(null);
+    const [selectedValues, setSelectedValues] = useState([]);
     const [bvAttribute, setBvAttribute] = useState(null);
     const [data, setData] = useState(null);
     const [error, setError] = useState(false);
     const [spinner, setSpinner] = useState(false);
+    const [isMultiChart, setIsMultiChart] = useState(false);
 
     useEffect(() => {
         const attribute = attributes.map(attribute => {
@@ -23,19 +27,24 @@ const SprintDetail = ({ sprintDetails, attributes, token, projectName }) => {
         setBvAttribute(attribute.length !== 0 ? attribute[0].toString() : null);
     }, [attributes]);
 
-    const handleSelect = (eventKey) => {
-        const splitEventKey = eventKey.split(',');
-        setSelectedValue(splitEventKey[1]);
+    const handleSelect = (selectedOptions) => {
+        setSelectedValues(selectedOptions);
+    };
+
+    const handleSubmit = () => {
         setError(false);
         setSpinner(true);
 
-        const formData = {
-            milestoneId: splitEventKey[0]
-        }
+        let sprints = [];
 
-        if (bvAttribute !== null) {
-            formData.attributeKey = bvAttribute
-        }
+        selectedValues.forEach(v => {
+            sprints.push(v.value.toString());
+        })
+
+        const formData = {
+            milestoneIds: sprints,
+            attributeKey: bvAttribute ? bvAttribute.toString() : ""
+        };
 
         axios({
             url: "http://localhost:8000/metric/Burndown",
@@ -44,7 +53,7 @@ const SprintDetail = ({ sprintDetails, attributes, token, projectName }) => {
             headers: {
                 "token": token,
                 "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "http://localhost:3000/project"
+                
             }
         })
         .then(res => {
@@ -52,54 +61,63 @@ const SprintDetail = ({ sprintDetails, attributes, token, projectName }) => {
             console.log(res.data);
             setError(false);
             setSpinner(false);
+            setIsMultiChart(sprints.length > 1);
         })
         .catch(ex => {
-            console.log(ex);
+            console.error(ex);
             setError(true);
-            setSpinner(false);
         });
-    }
+    };
+
+    const options = sprintDetails.map(detail => ({
+        value: detail.id,
+        label: detail.name
+    }));
 
     return (
         <div>
-            <div>
-                <Stack gap={4}>
-                    <h3 className="projectName">{projectName}</h3>
-                    <div className="d-flex justify-content-center backgroundWhite">
+            <Stack gap={4}>
+                <h3 className="projectName">{projectName}</h3>
+                <div className="d-flex justify-content-center backgroundWhite">
+                    <Select
+                        isMulti
+                        options={options}
+                        className="basic-multi-select"
+                        classNamePrefix="select"
+                        onChange={handleSelect}
+                        placeholder="Select Sprints"
+                    />
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Button onClick={handleSubmit} variant="primary" type="submit" className="submitButton backgroundButton">Submit</Button>
+                </div>
+
+                {spinner && (
+                    <Spinner animation="border" variant="primary" style={{ display: "block", marginLeft: "auto", marginRight: "auto" }} />
+                )}
+
+                {error && <p className="errorMessage">Unable to fetch Sprint Detail</p>}
+                
+                {data?.total_burndown && isMultiChart === false ? 
+                (
+                    <div>
                         <br />
-                        <Dropdown onSelect={handleSelect}>
-                            <Dropdown.Toggle variant="outline-secondary" className="backgroundButton">
-                                {selectedValue ? selectedValue : 'Select Metric'}
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                                {
-                                    sprintDetails.map((item) => <Dropdown.Item key={item.id} eventKey={[item.id, item.name]}>{item.name}</Dropdown.Item>)
-                                }
-                            </Dropdown.Menu>
-                        </Dropdown>
+                        <Areachart apiData={data.total_burndown.total_burndown_data} chartFor={"Story Points"} title={"Total Burndown Chart"} />
+                        <Areachart apiData={data.partial_burndown.partial_burndown_data} chartFor={"Story Points"} title={"Partial Burndown Chart"} />
+                        <Areachart apiData={data.bv_burndown.bv_burndown_data} chartFor={"Business Value"} title={"Business Value Burndown Chart"} />
+                        <Graph apiData={data.combined_burndown.data} type="Burndown Chart" />
                     </div>
+                ) : null}
 
-                    {spinner ? (
-                        <div>
-                            <Spinner variant="primary" animation="border" style={{ justifyContent: "center", alignItems: "center", display:"flex", marginLeft: "49%" }} />
-                        </div>
-                    ) : null}
-
-                    {error ? (
-                        <p className="errorMessage">Unable to fetch Sprint Detail</p>
-                    ) : null}
-                    
-                    {data ? (
-                        <div>
-                            <br />
-                            <Areachart apiData={data.total_burndown.total_burndown_data} chartFor={"Story Points"} title={"Total Burndown Chart"} />
-                            <Areachart apiData={data.partial_burndown.partial_burndown_data} chartFor={"Story Points"} title={"Partial Burndown Chart"} />
-                            <Areachart apiData={data.bv_burndown.bv_burndown_data} chartFor={"Business Value"} title={"Business Value Burndown Chart"} />
-                            <Graph apiData={data.combined_burndown.data} type="Burndown Chart" />
-                        </div>
-                    ) : null}
-                </Stack>
-            </div>
+                {data && isMultiChart ? (
+                <div>
+                    <br />                    
+                    <CustomMultiSeriesLineChart apiData={Object.values(data)} title="Multi-sprint Story Point Comparison" chartType="Story Point" dataKey="remaining_sp" />
+                    <CustomMultiSeriesLineChart apiData={Object.values(data)} title="Multi-sprint Business Value Comparison" chartType="Business Value" dataKey="remaining_bv" />
+                    <SimpleBarChart apiData={Object.values(data)} />
+                </div> ) : null}
+            </Stack>
         </div>
     )
 }

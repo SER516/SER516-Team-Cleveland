@@ -11,7 +11,8 @@ from ..util.metric_service import (
     get_cycle_time_details,
     get_burndown_chart_metric_detail,
     get_zero_business_value_user_stories,
-    fetch_member_tasks
+    fetch_member_tasks,
+    get_multi_sprint_data
 )
 from ..util.SimpleCache import cache
 from ..issues.get_issues import get_issues
@@ -76,12 +77,22 @@ def get_burndown_chart_metric(
     burndownChartRequest: BurndownChartRequest,
     token: Annotated[str | None, Header()] = None
 ):
-    return get_burndown_chart_metric_detail(
-        burndownChartRequest.milestoneId,
-        burndownChartRequest.attributeKey,
-        token
-    )
-
+    if burndownChartRequest.milestoneId is not None:
+        return get_burndown_chart_metric_detail(
+            burndownChartRequest.milestoneId, 
+            burndownChartRequest.attributeKey, token
+        )
+    elif len(burndownChartRequest.milestoneIds) == 1:
+        return get_burndown_chart_metric_detail(
+            burndownChartRequest.milestoneIds[0], 
+            burndownChartRequest.attributeKey, token
+        )
+    else:
+        return get_multi_sprint_data(
+            burndownChartRequest.milestoneIds,
+            burndownChartRequest.attributeKey,
+            token
+        )
 
 @router.post("/metric/Devfocus")
 def get_dev_focus_metrics(
