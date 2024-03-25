@@ -48,8 +48,14 @@ const CustomBarChart = ({ title, data, threshold, endDate }) => {
                 members.push(name);
             }
         }
+        const sortedDateData = Object.values(tempDateMap).sort((a, b) => {
+            const dateA = new Date(a.date);
+            const dateB = new Date(b.date);
+            return dateA - dateB;
+        });
+
         setMemberData(temp_arr);
-        setDateData(Object.values(tempDateMap));
+        setDateData(sortedDateData);
         setMembers(members);
     }, [data, threshold]);
 
