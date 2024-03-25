@@ -1,0 +1,4 @@
+# Docker ignores the folder/files mentioned in this file during the image build
+.idea
+test
+sonar-project.properties

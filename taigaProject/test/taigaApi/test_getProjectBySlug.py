@@ -1,8 +1,8 @@
-import pytest
 from unittest.mock import patch
 from requests.exceptions import HTTPError
 
-from taigaProject.src.taigaApi.project.getProjectBySlug import get_project_by_slug
+from taigaProject.src.taigaApi.project.getProjectBySlug \
+    import get_project_by_slug
 
 
 @patch('taigaProject.src.taigaApi.project.getProjectBySlug.requests.get')

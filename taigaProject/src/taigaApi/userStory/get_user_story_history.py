@@ -3,7 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import requests
 from dotenv import load_dotenv
-from datetime import datetime, date
+from datetime import datetime
 
 # Load environment variables from .env file
 load_dotenv()
@@ -14,7 +14,8 @@ def get_user_story(project_id, auth_token):
 
     # Get Taiga API URL from environment variables
     taiga_url = os.getenv('TAIGA_URL')
-    # Construct the URL for the user stories API endpoint for the specified project
+    # Construct the URL for the user stories API endpoint
+    # for the specified project
     user_story_api_url = f"{taiga_url}/userstories?project={project_id}"
 
     # Define headers including the authorization token and content type
@@ -28,7 +29,8 @@ def get_user_story(project_id, auth_token):
 
         # Make a GET request to Taiga API to retrieve user stories
         response = requests.get(user_story_api_url, headers=headers)
-        response.raise_for_status()  # Raise an exception for HTTP errors (4xx or 5xx)
+        # Raise an exception for HTTP errors (4xx or 5xx)
+        response.raise_for_status()
 
         # Extract and return the user stories information from the response
         project_info = response.json()
@@ -40,7 +42,8 @@ def get_user_story(project_id, auth_token):
         print(f"Error fetching stories by slug: {e}")
         return None
 
-#Method to return the details for closed user stories
+
+# Method to return the details for closed user stories
 def get_closed_user_stories(project_id, auth_token):
 
     user_stories = get_user_story(project_id, auth_token)
@@ -72,9 +75,9 @@ def get_us_lead_time(project_id, auth_token, from_date=None, to_date=None):
     for user_story in user_stories:
         created_date = datetime.fromisoformat(user_story["created_date"])
         finished_date = datetime.fromisoformat(user_story['finished_date'])
-        if type(from_date) == date and from_date > finished_date.date():
+        if from_date is not None and from_date > finished_date.date():
             continue
-        if type(to_date) == date and to_date < finished_date.date():
+        if to_date is not None and to_date < finished_date.date():
             continue
         lead_time += (finished_date - created_date).days
         lead_times.append({
@@ -112,26 +115,47 @@ def get_us_cycle_time(project_id, auth_token, from_date=None, to_date=None):
     with ThreadPoolExecutor(max_workers=15) as executor:
         for story in user_stories:
             finished_date = datetime.fromisoformat(story['finished_date'])
-            if type(from_date) == date and from_date > finished_date.date():
+            if from_date is not None and from_date > finished_date.date():
                 continue
-            if type(to_date) == date and to_date < finished_date.date():
+            if to_date is not None and to_date < finished_date.date():
                 continue
-            executor.submit(get_user_story_details, story, headers, taiga_url, cycle_times, cycle_time_data)
+            executor.submit(
+                get_user_story_details,
+                story,
+                headers,
+                taiga_url,
+                cycle_times,
+                cycle_time_data
+            )
+
     if cycle_time_data["closed_tasks"] == 0:
         return cycle_times, 0
-    avg_cycle_time = round((cycle_time_data["cycle_time"] / cycle_time_data["closed_tasks"]), 2)
+    avg_cycle_time = round(
+        (cycle_time_data["cycle_time"] / cycle_time_data["closed_tasks"]),
+        2
+    )
     return cycle_times, avg_cycle_time
 
 
 def extract_new_to_in_progress_date(history_data):
     for event in history_data:
         values_diff = event.get("values_diff", {})
-        if "status" in values_diff and values_diff["status"] == ["New", "In progress"]:
+        if (
+            "status" in values_diff and
+            values_diff["status"] == ["New", "In progress"]
+        ):
             created_at = datetime.fromisoformat(event["created_at"])
             return created_at
     return None
 
-def get_user_story_details(story, headers, taiga_url, cycle_times, cycle_time_data):
+
+def get_user_story_details(
+    story,
+    headers,
+    taiga_url,
+    cycle_times,
+    cycle_time_data
+):
     task_history_url = f"{taiga_url}/history/userstory/{story['id']}"
     finished_date = story["finished_date"]
     try:
@@ -143,7 +167,9 @@ def get_user_story_details(story, headers, taiga_url, cycle_times, cycle_time_da
 
         finished_date = datetime.fromisoformat(finished_date[:-1])
         if in_progress_date:
-            in_progress_date = datetime.fromisoformat(str(in_progress_date)[:-6])
+            in_progress_date = datetime.fromisoformat(
+                str(in_progress_date)[:-6]
+            )
 
             cycle_times.append({
                 "taskId": story["id"],
@@ -157,11 +183,18 @@ def get_user_story_details(story, headers, taiga_url, cycle_times, cycle_time_da
                 "taskRef": story["ref"]
             })
             cycle_time_data["closed_tasks"] += 1
-            cycle_time_data["cycle_time"] += (finished_date - in_progress_date).days
+            cycle_time_data["cycle_time"] += (
+                finished_date - in_progress_date).days
     except requests.exceptions.RequestException as e:
         print(f"Error fetching task by taskId: {e}")
 
-def get_zero_bv_us(project_id, start_range, end_range, auth_token):
+
+def get_zero_bv_us(
+    project_id,
+    start_range,
+    end_range,
+    auth_token
+):
     user_stories = get_closed_user_stories(project_id, auth_token)
     user_stories_in_range = []
     start_range_date = datetime.strptime(start_range, '%Y-%m-%d')
@@ -172,5 +205,5 @@ def get_zero_bv_us(project_id, start_range, end_range, auth_token):
         endTime = datetime.fromisoformat(user_story["finished_date"]).date()
         if endTime >= start_range_date and endTime <= end_range_date:
             user_stories_in_range.append(user_story)
-        
+
     return user_stories_in_range
