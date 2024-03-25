@@ -82,7 +82,7 @@ jobs:
         with:
           images: hasanova2503/SER516-Team-Cleveland-BE
       
-      - name: Build and push Docker image
+      - name: Build and push Docker image Backend
         uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
         with:
           context: ./taigaProject
@@ -98,7 +98,7 @@ jobs:
         with:
           images: hasanova2503/SER516-Team-Cleveland-FE
       
-      - name: Build and push Docker image
+      - name: Build and push Docker image frontend
         uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
         with:
           context: ./react-ui
