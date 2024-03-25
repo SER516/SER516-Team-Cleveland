@@ -26,12 +26,12 @@ const CustomMultiSeriesLineChart = ({ apiData, title, chartType, dataKey }) => {
 
                             <XAxis type="number" dataKey="day" name="Day" label={{ value: 'Day',
                                     position: 'insideBottom', offset: -50, style: {fontSize: '20px'}}}
-                                    tick={{ angle: -45, textAnchor: 'end', fontSize: 12}} allowDuplicatedCategory={true} />
+                                    tick={{ textAnchor: 'end', fontSize: 12}} allowDuplicatedCategory={true} />
                             <YAxis dateKey="" name={chartType} label={{ value: `${chartType}`, 
                                     angle: -90, position: 'insideLeft', style: {fontSize: '20px'}}} />
                             <Tooltip />
 
-                            <Legend align="right" verticalAlign="top" wrapperStyle={{ top: 0, right: 0, marginTop: '20px' }} />
+                            <Legend align="right" verticalAlign="top" wrapperStyle={{ top: 0, right: 40, marginTop: '20px' }} />
 
                             {
                                 apiData.map((s) => (
