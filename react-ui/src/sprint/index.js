@@ -13,6 +13,7 @@ const SprintDetail = ({ sprintDetails, attributes, token, projectName }) => {
     const [data, setData] = useState(null);
     const [error, setError] = useState(false);
     const [spinner, setSpinner] = useState(false);
+    const [isMultiChart, setIsMultiChart] = useState(false);
 
     useEffect(() => {
         const attribute = attributes.map(attribute => {
@@ -60,6 +61,7 @@ const SprintDetail = ({ sprintDetails, attributes, token, projectName }) => {
             console.log(res.data);
             setError(false);
             setSpinner(false);
+            setIsMultiChart(sprints.length > 1);
         })
         .catch(ex => {
             console.error(ex);
@@ -97,7 +99,8 @@ const SprintDetail = ({ sprintDetails, attributes, token, projectName }) => {
 
                 {error && <p className="errorMessage">Unable to fetch Sprint Detail</p>}
                 
-                {data?.total_burndown ? (
+                {data?.total_burndown && isMultiChart === false ? 
+                (
                     <div>
                         <br />
                         <Areachart apiData={data.total_burndown.total_burndown_data} chartFor={"Story Points"} title={"Total Burndown Chart"} />
@@ -107,12 +110,13 @@ const SprintDetail = ({ sprintDetails, attributes, token, projectName }) => {
                     </div>
                 ) : null}
 
-                {/* <div>
+                {data && isMultiChart ? (
+                <div>
                     <br />                    
                     <CustomMultiSeriesLineChart apiData={Object.values(data)} title="Multi-sprint Story Point Comparison" chartType="Story Point" dataKey="remaining_sp" />
                     <CustomMultiSeriesLineChart apiData={Object.values(data)} title="Multi-sprint Business Value Comparison" chartType="Business Value" dataKey="remaining_bv" />
                     <SimpleBarChart apiData={Object.values(data)} />
-                </div> */}
+                </div> ) : null}
             </Stack>
         </div>
     )
