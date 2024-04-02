@@ -8,7 +8,7 @@ from ..userStory.get_user_story_history import get_us_lead_time, \
     get_us_cycle_time, get_zero_bv_us
 from ..milestone.get_milestone import get_milestone
 from tasks.get_tasks import get_tasks_by_story_id
-from ..userStory.getBusinessValue import get_business_value
+from userStory.getBusinessValue import get_business_value
 
 
 def get_lead_time_details(project_details,
