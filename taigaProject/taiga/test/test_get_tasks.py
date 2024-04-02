@@ -2,10 +2,11 @@ import pytest
 
 from unittest.mock import MagicMock, patch
 
-from ..tasks.get_task_history import (
-    get_task_details,
-    dev_focus_tasks,
-    sorted_tasks_data
+from ..tasks.get_tasks import (
+    get_tasks,
+    get_closed_tasks,
+    get_tasks_by_story_id,
+    get_task_for_member
 )
 
 
@@ -74,7 +75,7 @@ def task():
             "watchers": [],
             "is_blocked": False,
             "blocked_note": "",
-            "is_closed": False,
+            "is_closed": True,
             "username": "hmshahid",
             "full_name": "Hasan Shahid",
             "user_story_extra_info": {
@@ -109,65 +110,49 @@ def task():
     ]
 
 
-@pytest.fixture
-def headers():
-    return {"auth": "random_auth"}
-
-
 @patch('requests.get')
-def test_task_details(mock_get, task, headers):
+def test_get_tasks(mock_get, task):
     mock_response = MagicMock()
     mock_response.json.return_value = task
 
     mock_get.return_value = mock_response
 
-    cycle_time = []
-    cycle_time_data = {
-        "closed_tasks": 0,
-        "cycle_time": 0
-    }
-    get_task_details(task[0], headers, "sample", cycle_time, cycle_time_data)
+    result = get_tasks("sample", "auth")
 
-    assert len(cycle_time) == 1
-    assert cycle_time_data["closed_tasks"] == 1
-    assert cycle_time_data["cycle_time"] != 0
+    assert len(result) == 1
 
 
 @patch('requests.get')
-def test_dev_focus(mock_get, task, headers):
+def test_closed_tasks(mock_get, task):
     mock_response = MagicMock()
     mock_response.json.return_value = task
 
     mock_get.return_value = mock_response
 
-    dev_focus = []
-    dev_focus_tasks(
-        task[0],
-        headers,
-        "sample",
-        "2021-01-15",
-        "2021-01-22",
-        dev_focus
-    )
+    result = get_closed_tasks("sample", "auth")
 
-    assert len(dev_focus) != 0
+    assert len(result) == 1
 
 
 @patch('requests.get')
-def test_sorted_tasks(mock_get, task, headers):
+def test_task_by_story_id(mock_get, task):
     mock_response = MagicMock()
     mock_response.json.return_value = task
 
     mock_get.return_value = mock_response
 
-    member_tasks = {}
-    sorted_tasks_data(
-        task[0],
-        headers,
-        "sample",
-        "2021-01-15",
-        "2021-01-22",
-        member_tasks
-    )
+    result = get_tasks_by_story_id("storyId", "auth")
 
-    assert len(member_tasks) != 0
+    assert len(result) == 1
+
+
+@patch('requests.get')
+def test_task_for_member(mock_get, task):
+    mock_response = MagicMock()
+    mock_response.json.return_value = task
+
+    mock_get.return_value = mock_response
+
+    result = get_task_for_member("sample", "member_id", "auth")
+
+    assert len(result) == 1
