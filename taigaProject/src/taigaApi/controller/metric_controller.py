@@ -79,12 +79,12 @@ def get_burndown_chart_metric(
 ):
     if burndownChartRequest.milestoneId is not None:
         return get_burndown_chart_metric_detail(
-            burndownChartRequest.milestoneId, 
+            burndownChartRequest.milestoneId,
             burndownChartRequest.attributeKey, token
         )
     elif len(burndownChartRequest.milestoneIds) == 1:
         return get_burndown_chart_metric_detail(
-            burndownChartRequest.milestoneIds[0], 
+            burndownChartRequest.milestoneIds[0],
             burndownChartRequest.attributeKey, token
         )
     else:
@@ -93,6 +93,7 @@ def get_burndown_chart_metric(
             burndownChartRequest.attributeKey,
             token
         )
+
 
 @router.post("/metric/Devfocus")
 def get_dev_focus_metrics(
