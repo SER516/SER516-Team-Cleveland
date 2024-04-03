@@ -4,7 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 import requests
 from dotenv import load_dotenv
 from datetime import datetime
-from userStory import (
+from userStory.get_user_story_history import (
     get_user_story,
     get_closed_user_stories
 )
