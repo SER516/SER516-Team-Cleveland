@@ -65,6 +65,11 @@ This project is a Python script for interacting with the Taiga API to perform va
     python3.11 -m uvicorn main:app
     ```
 
+    To run on different port:
+    ``` bash
+    uvicorn main:app --reload --host 0.0.0.0 --port 8001
+    ```
+
     You can hit the API using `http://127.0.0.1:8000/[requiredApiPath]` or `http://localhost:8000/[requiredApiPath]`
     while providing the necessary payload. 
 
