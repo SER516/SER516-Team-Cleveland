@@ -6,7 +6,7 @@ from ..task.get_task_history import get_task_lead_time, get_task_cycle_time, \
     get_all_dev_focus, member_tasks
 from ..userStory.get_user_story_history import get_us_lead_time, \
     get_us_cycle_time, get_zero_bv_us
-from ..milestone.get_milestone import get_milestone
+from milestone.get_milestone import get_milestone
 from tasks.get_tasks import get_tasks_by_story_id
 from userStory.getBusinessValue import get_business_value
 
