@@ -6,7 +6,7 @@ setup(
     packages=['src', 'src.taigaApi', 'src.taigaApi.auth', 'src.taigaApi.task',
               'src.taigaApi.util', 'src.taigaApi.project',
               'src.taigaApi.userStory', 'src.taigaApi.controller',
-              'test', 'test.taigaApi', 'taiga', 'taiga.tasks'],
+              'test', 'test.taigaApi', 'taiga', 'taiga.tasks', 'taiga.userStory'],
     url='',
     license='',
     author='shikhaverma',
