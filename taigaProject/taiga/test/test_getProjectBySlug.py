@@ -1,7 +1,7 @@
 from unittest.mock import patch
 from requests.exceptions import HTTPError
 
-from taigaProject.src.taigaApi.project.getProjectBySlug \
+from ..project.getProjectBySlug \
     import get_project_by_slug
 
 

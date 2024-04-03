@@ -5,7 +5,7 @@ from ..model.dev_focus_request import DevFocusRequest
 from ..model.timeRequest import TimeRequest
 from ..model.cruft import CruftRequest
 from ..model.burndownChartRequest import BurndownChartRequest
-from ..project.getProjectBySlug import get_project_by_slug
+from project.getProjectBySlug import get_project_by_slug
 from ..util.metric_service import (
     get_lead_time_details,
     get_cycle_time_details,

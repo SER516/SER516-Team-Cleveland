@@ -3,7 +3,7 @@ from typing import Annotated
 
 from ..model.projectRequest import ProjectRequest
 
-from ..project.getProjectBySlug import get_project_by_slug
+from project.getProjectBySlug import get_project_by_slug
 from ..util.SimpleCache import cache
 
 from ..util.sprint_service import (
