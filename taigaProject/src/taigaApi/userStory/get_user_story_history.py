@@ -5,7 +5,6 @@ import requests
 from dotenv import load_dotenv
 from datetime import datetime
 from userStory.get_user_story_history import (
-    get_user_story,
     get_closed_user_stories,
     get_user_story_details_by_id
 )
