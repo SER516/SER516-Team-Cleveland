@@ -1,5 +1,4 @@
 import os
-from concurrent.futures import ThreadPoolExecutor
 
 import requests
 from dotenv import load_dotenv
@@ -64,3 +63,12 @@ def get_closed_user_stories(project_id, auth_token):
         return closed_user_stories
     else:
         return []
+
+
+def get_user_story_details_by_id(
+    story,
+    headers,
+    taiga_url
+):
+    task_history_url = f"{taiga_url}/history/userstory/{story['id']}"
+    return requests.get(task_history_url, headers=headers)

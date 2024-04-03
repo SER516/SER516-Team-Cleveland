@@ -6,7 +6,8 @@ from dotenv import load_dotenv
 from datetime import datetime
 from userStory.get_user_story_history import (
     get_user_story,
-    get_closed_user_stories
+    get_closed_user_stories,
+    get_user_story_details_by_id
 )
 
 # Load environment variables from .env file
@@ -102,10 +103,9 @@ def get_user_story_details(
     cycle_times,
     cycle_time_data
 ):
-    task_history_url = f"{taiga_url}/history/userstory/{story['id']}"
+    response = get_user_story_details_by_id(story, headers, taiga_url)
     finished_date = story["finished_date"]
     try:
-        response = requests.get(task_history_url, headers=headers)
         response.raise_for_status()
         history_data = response.json()
 
