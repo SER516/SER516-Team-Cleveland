@@ -7,4 +7,4 @@ pytest-cov
 pytest-github-actions-annotate-failures
 httpx
 twine
-hmtaiga>=0.1.6
+hmtaiga>=0.1.7

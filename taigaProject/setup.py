@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
     name='taigaProject',
     version='1.0',
-    packages=['src', 'src.taigaApi', 'src.taigaApi.auth', 'src.taigaApi.task',
+    packages=['src', 'src.taigaApi', 'src.taigaApi.task',
               'src.taigaApi.util', 'src.taigaApi.userStory',
               'src.taigaApi.controller', 'test', 'test.taigaApi'],
     url='',
