@@ -3,6 +3,8 @@ from typing import Annotated
 
 from pydantic import BaseModel
 from datetime import date
+from library.project.getProjectBySlug import get_project_by_slug
+from library.userStory.get_user_story_history import get_closed_user_stories
 
 router = APIRouter()
 
