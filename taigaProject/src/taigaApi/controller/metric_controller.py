@@ -15,7 +15,7 @@ from ..util.metric_service import (
     get_multi_sprint_data
 )
 from ..util.SimpleCache import cache
-from ..issues.get_issues import get_issues
+from issues.get_issues import get_issues
 from datetime import date
 
 router = APIRouter()
