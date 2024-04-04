@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 setup(
     name='hmtaiga',
     packages=find_packages(),
-    version='0.1.6',
+    version='0.1.7',
     description='Taiga Library',
     author='shikhaverma'
 )
