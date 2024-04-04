@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-from ..auth.authenticate import authenticate
+from auth.authenticate import authenticate
 from ..model.authRequest import AuthRequest
 
 from ..util.SimpleCache import cache

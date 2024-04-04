@@ -5,7 +5,7 @@ from ..model.dev_focus_request import DevFocusRequest
 from ..model.timeRequest import TimeRequest
 from ..model.cruft import CruftRequest
 from ..model.burndownChartRequest import BurndownChartRequest
-from ..project.getProjectBySlug import get_project_by_slug
+from project.getProjectBySlug import get_project_by_slug
 from ..util.metric_service import (
     get_lead_time_details,
     get_cycle_time_details,
@@ -15,7 +15,7 @@ from ..util.metric_service import (
     get_multi_sprint_data
 )
 from ..util.SimpleCache import cache
-from ..issues.get_issues import get_issues
+from issues.get_issues import get_issues
 from datetime import date
 
 router = APIRouter()
@@ -79,12 +79,12 @@ def get_burndown_chart_metric(
 ):
     if burndownChartRequest.milestoneId is not None:
         return get_burndown_chart_metric_detail(
-            burndownChartRequest.milestoneId, 
+            burndownChartRequest.milestoneId,
             burndownChartRequest.attributeKey, token
         )
     elif len(burndownChartRequest.milestoneIds) == 1:
         return get_burndown_chart_metric_detail(
-            burndownChartRequest.milestoneIds[0], 
+            burndownChartRequest.milestoneIds[0],
             burndownChartRequest.attributeKey, token
         )
     else:
@@ -93,6 +93,7 @@ def get_burndown_chart_metric(
             burndownChartRequest.attributeKey,
             token
         )
+
 
 @router.post("/metric/Devfocus")
 def get_dev_focus_metrics(
