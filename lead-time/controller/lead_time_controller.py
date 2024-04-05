@@ -4,6 +4,7 @@ from typing import Annotated
 from service.lead_time_service import get_lead_time_details
 from model.lead_time_model import TimeRequest
 from service.simple_cache import cache
+from project.getProjectBySlug import get_project_by_slug
 
 router = APIRouter()
 
