@@ -6,3 +6,5 @@ pytest>=7.3.1
 pytest-cov
 pytest-github-actions-annotate-failures
 httpx
+twine
+hmtaiga>=0.1.8

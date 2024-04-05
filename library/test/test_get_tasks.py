@@ -1,13 +1,17 @@
-from unittest.mock import MagicMock, patch
-
 import pytest
 
-from taigaProject.src.taigaApi.task.get_task_history import get_task_history
+from unittest.mock import MagicMock, patch
+
+from ..tasks.get_tasks import (
+    get_tasks,
+    get_closed_tasks,
+    get_tasks_by_story_id,
+    get_task_for_member
+)
 
 
-# content of test_sample.py
 @pytest.fixture
-def tasks():
+def task():
     return [
         {
             "due_date": None,
@@ -58,8 +62,9 @@ def tasks():
             "ref": 37,
             "milestone": 376615,
             "milestone_slug": "sprint1-1018",
-            "created_date": "2024-02-01T03: 23: 24.914Z",
-            "modified_date": "2024-02-02T01: 22: 52.672Z",
+            "created_at": "2021-01-20T16:03:15.369Z",
+            "created_date": "2021-01-20T16:03:15.369Z",
+            "modified_date": "2024-02-02T01:22:52.672Z",
             "finished_date": "2024-02-05T00:00:00Z",
             "subject": "FE Login Page",
             "us_order": 1706757804885,
@@ -70,7 +75,9 @@ def tasks():
             "watchers": [],
             "is_blocked": False,
             "blocked_note": "",
-            "is_closed": False,
+            "is_closed": True,
+            "username": "hmshahid",
+            "full_name": "Hasan Shahid",
             "user_story_extra_info": {
                 "id": 5468188,
                 "ref": 12,
@@ -88,58 +95,64 @@ def tasks():
                         }
                     }
                 ]
+            },
+            "values_diff": {
+                "status": [
+                    "New",
+                    "In progress"
+                ],
+                "taskboard_order": [
+                    1610518445123,
+                    1
+                ]
             }
         }
     ]
 
 
-@pytest.fixture
-def task_details():
-    return [
-        {
-            'id': '819e8332-c169-11ee-b0eb-e398cbe6c1dc',
-            'user': {
-                'pk': 599211, 'username': 'sverma89', 'name': 'Shikha Verma',
-                'photo': None, 'is_active': True,
-                'gravatar_id': 'd163ef3bd427c2473f561446d8397bca'
-            },
-            'created_at': '2024-02-02T01:22:18.544Z',
-            'type': 1, 'key': 'tasks.task:5331138',
-            'diff': {
-                'status': [7600963, 7600964],
-                'taskboard_order': [1706758347617, 3]
-            },
-            'snapshot': None,
-            'values': {
-                'users': {},
-                'status': {'7600963': 'New', '7600964': 'In progress'}
-            },
-            'values_diff': {
-                'status': ['New', 'In progress'],
-                'taskboard_order': [1706758347617, 3]
-            },
-            'comment': '',
-            'comment_html': '', 'delete_comment_date': None,
-            'delete_comment_user': None, 'edit_comment_date': None,
-            'is_hidden': False, 'is_snapshot': False
-        }
-    ]
-
-
-@pytest.fixture
-def auth_token():
-    return "random_auth"
-
-
-@patch('os.getenv', MagicMock(return_value='https://fake.taiga.url'))
 @patch('requests.get')
-def test_get_task_history(mock_get, tasks, auth_token, task_details):
+def test_get_tasks(mock_get, task):
     mock_response = MagicMock()
-    mock_response.json.return_value = task_details
+    mock_response.json.return_value = task
 
     mock_get.return_value = mock_response
 
-    cycle_time, closed_tasks = get_task_history(tasks, auth_token)
+    result = get_tasks("sample", "auth")
 
-    assert cycle_time == 2  # Example cycle time for this test case
-    assert closed_tasks == 1  # Both tasks are closed
+    assert len(result) == 1
+
+
+@patch('requests.get')
+def test_closed_tasks(mock_get, task):
+    mock_response = MagicMock()
+    mock_response.json.return_value = task
+
+    mock_get.return_value = mock_response
+
+    result = get_closed_tasks("sample", "auth")
+
+    assert len(result) == 1
+
+
+@patch('requests.get')
+def test_task_by_story_id(mock_get, task):
+    mock_response = MagicMock()
+    mock_response.json.return_value = task
+
+    mock_get.return_value = mock_response
+
+    result = get_tasks_by_story_id("storyId", "auth")
+
+    assert len(result) == 1
+
+
+@patch('requests.get')
+def test_task_for_member(mock_get, task):
+    mock_response = MagicMock()
+    mock_response.json.return_value = task
+
+    mock_get.return_value = mock_response
+
+    result = get_task_for_member("sample", "member_id", "auth")
+
+    assert len(result) == 1

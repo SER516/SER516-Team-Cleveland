@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from datetime import date
 
-from taigaProject.src.taigaApi.issues.get_issues import get_issues
+from ..issues.get_issues import get_issues
 
 
 # content of test_sample.py

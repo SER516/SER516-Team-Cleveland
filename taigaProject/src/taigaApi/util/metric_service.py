@@ -6,9 +6,9 @@ from ..task.get_task_history import get_task_lead_time, get_task_cycle_time, \
     get_all_dev_focus, member_tasks
 from ..userStory.get_user_story_history import get_us_lead_time, \
     get_us_cycle_time, get_zero_bv_us
-from ..milestone.get_milestone import get_milestone
-from ..task.getTasks import get_tasks_by_story_id
-from ..userStory.getBusinessValue import get_business_value
+from milestone.get_milestone import get_milestone
+from tasks.get_tasks import get_tasks_by_story_id
+from userStory.getBusinessValue import get_business_value
 
 
 def get_lead_time_details(project_details,
@@ -236,22 +236,22 @@ def extract_combined_data(
 ):
     total_sp = combined_data["total_story_points"]
     total_bv = combined_data["total_business_value"]
-    for date in days_data:
-        combined_data["data"][date] = {
-            "date": date,
-            "day": days_data[date]["day"],
-            "remaining_sp": days_total_data[date]["remaining"],
-            "remaining_bv": days_bv_data[date]["remaining"],
+    for dt in days_data:
+        combined_data["data"][dt] = {
+            "date": dt,
+            "day": days_data[dt]["day"],
+            "remaining_sp": days_total_data[dt]["remaining"],
+            "remaining_bv": days_bv_data[dt]["remaining"],
             "partial": round((
-                ((days_data[date]["remaining"]) * 100)
+                ((days_data[dt]["remaining"]) * 100)
                 / total_sp
             ), 2) if total_sp != 0 else 0,
             "total": round((
-                ((days_total_data[date]["remaining"]) * 100)
+                ((days_total_data[dt]["remaining"]) * 100)
                 / total_sp
             ), 2) if total_sp != 0 else 0,
             "bv": round((
-                ((days_bv_data[date]["remaining"]) * 100)
+                ((days_bv_data[dt]["remaining"]) * 100)
                 / total_bv
             ), 2) if total_bv != 0 else 0
         }
@@ -295,14 +295,14 @@ def update_points_days_data(
             days_data[dt]["day"] = (
                 days_data[dt - timedelta(1)]["day"] + 1
             )
-            
+
         days_data[dt]["expected_remaining"] = round(
             days_data[dt - timedelta(1)]["expected_remaining"]
             - expected_decrement, 2)
 
         if days_data[dt]["expected_remaining"] < 0:
             days_data[dt]["expected_remaining"] = 0
-            
+
     for dt in days_data:
         if "day" not in days_data[dt]:
             days_data[dt]["day"] = (
@@ -344,7 +344,7 @@ def update_bv_days_data(
 
         if days_bv_data[dt]["expected_remaining"] < 0:
             days_bv_data[dt]["expected_remaining"] = 0
-            
+
     for dt in days_bv_data:
         if "day" not in days_bv_data[dt]:
             days_bv_data[dt]["day"] = (
