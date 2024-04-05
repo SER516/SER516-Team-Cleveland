@@ -1,5 +1,4 @@
 from datetime import date
-from library.userStory.get_user_story_history import get_closed_user_stories
 
 
 def get_lead_time_details(project_details,
