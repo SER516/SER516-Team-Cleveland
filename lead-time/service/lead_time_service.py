@@ -1,9 +1,5 @@
-from fastapi import APIRouter
-
 from datetime import date
 from library.userStory.get_user_story_history import get_closed_user_stories
-
-router = APIRouter()
 
 
 class SimpleCache:
