@@ -2,28 +2,6 @@ from datetime import date
 from library.userStory.get_user_story_history import get_closed_user_stories
 
 
-class SimpleCache:
-    def __init__(self):
-        self.cache = {}
-
-    def set(self, key, value):
-        self.cache[key] = value
-
-    def get(self, key):
-        return self.cache.get(key)
-
-    def delete(self, key):
-        if key in self.cache:
-            del self.cache[key]
-
-    def clear(self):
-        self.cache.clear()
-
-
-# Create an instance of SimpleCache that can be imported in other files
-cache = SimpleCache()
-
-
 def get_lead_time_details(project_details,
                           auth_token,
                           from_date=None,

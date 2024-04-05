@@ -3,7 +3,7 @@ from typing import Annotated
 
 from service.lead_time_service import get_lead_time_details
 from model.lead_time_model import TimeRequest
-from service.lead_time_service import cache
+from service.simle_service import cache
 from library.project.getProjectBySlug import get_project_by_slug
 
 router = APIRouter()
