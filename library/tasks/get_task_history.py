@@ -1,8 +1,5 @@
 import requests
-from dotenv import load_dotenv
 from datetime import datetime
-
-load_dotenv()
 
 
 def get_task_details(task, headers, taiga_url, cycle_times, cycle_time_data):

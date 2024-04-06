@@ -30,7 +30,7 @@ const Project = () => {
     const handleSelect = (eventKey) => {
         setSelectedValue(eventKey);
         if (eventKey === "Lead Time") {
-            setMetric("metric/LeadTime");
+            setMetric("8001/metric/LeadTime");
             setIsBurndown(false);
             setIsCycleTime(false);
             setIsDevFocus(false);
@@ -38,7 +38,7 @@ const Project = () => {
             setIsLeadTime(true);
         }
         else if (eventKey === "Cycle Time") {
-            setMetric("metric/CycleTime");
+            setMetric("8000/metric/CycleTime");
             setIsBurndown(false);
             setIsCycleTime(true);
             setIsDevFocus(false);
@@ -46,7 +46,7 @@ const Project = () => {
             setIsLeadTime(false);
         }
         else if (eventKey === "Burndown Chart") {
-            setMetric("Sprints");
+            setMetric("8000/Sprints");
             setIsCycleTime(false);
             setIsDevFocus(false);
             setIsLeadTime(false);
@@ -57,10 +57,10 @@ const Project = () => {
             setIsLeadTime(false);
             setIsCycleTime(false);
             setIsCruft(false);
-            setMetric("Project");
+            setMetric("8000/Project");
         }
         else if (eventKey === "Cruft") {
-            setMetric("Sprints");
+            setMetric("8000/Sprints");
             setIsBurndown(false);
             setIsCycleTime(false);
             setIsDevFocus(false);
@@ -79,7 +79,7 @@ const Project = () => {
 
         axios({
             method: "post",
-            url: `http://localhost:8000/${metric}`,
+            url: `http://localhost:${metric}`,
             data: {
                 projectslug: project,
                 from_date: startDate,

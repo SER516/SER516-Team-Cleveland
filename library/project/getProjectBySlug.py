@@ -1,15 +1,10 @@
-import os
 import requests
-from dotenv import load_dotenv
-
-# Load environment variables from a .env file
-load_dotenv()
 
 
 # Function to retrieve project information by slug from the Taiga API
 def get_project_by_slug(project_slug, auth_token):
     # Get Taiga API URL from environment variables
-    taiga_url = os.getenv('TAIGA_URL')
+    taiga_url = "https://api.taiga.io/api/v1"
 
     # Construct the URL for the project information API endpoint by slug
     project_api_url = f"{taiga_url}/projects/by_slug?slug={project_slug}"

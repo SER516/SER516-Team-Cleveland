@@ -1,6 +1,11 @@
 version: '3.8'
 
 services:
+  lead-time:
+    build: lead-time/
+    ports:
+      - "8001:8001"
+
   backend:
     build: ./taigaProject
     ports:

@@ -1,12 +1,8 @@
-import os
 import requests
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 def get_tasks(project_id, auth_token):
-    taiga_url = os.getenv('TAIGA_URL')
+    taiga_url = "https://api.taiga.io/api/v1"
 
     task_api_url = f"{taiga_url}/tasks?project={project_id}"
 
@@ -46,7 +42,7 @@ def get_closed_tasks(project_id, auth_token):
 
 
 def get_tasks_by_story_id(user_story_id, auth_token):
-    taiga_url = os.getenv('TAIGA_URL')
+    taiga_url = "https://api.taiga.io/api/v1"
 
     user_story_id = f"{taiga_url}/tasks?user_story={user_story_id}"
 
@@ -66,7 +62,7 @@ def get_tasks_by_story_id(user_story_id, auth_token):
 
 
 def get_task_for_member(project_id, member_id, auth_token):
-    taiga_url = os.getenv('TAIGA_URL')
+    taiga_url = "https://api.taiga.io/api/v1"
 
     task_by_member = f"""
         {taiga_url}/tasks?assigned_to={member_id}&project={project_id}"""
