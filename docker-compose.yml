@@ -6,6 +6,11 @@ services:
     ports:
       - "8001:8001"
 
+  dev-focus:
+    build: dev-focus/
+    ports:
+      - "8003:8003"
+
   backend:
     build: ./taigaProject
     ports:
