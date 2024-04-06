@@ -1,16 +1,11 @@
-import os
 import requests
-from dotenv import load_dotenv
 from datetime import datetime
-
-# Load environment variables from a .env file
-load_dotenv()
 
 
 # Function to retrieve issues for a specific project from the Taiga API
 def get_closed_issues_by_project(project_id, auth_token):
     # Get Taiga API URL from environment variables
-    taiga_url = os.getenv('TAIGA_URL')
+    taiga_url = "https://api.taiga.io/api/v1"
 
     # Construct the URL for the tasks API endpoint for the specified project
     task_api_url = f"""

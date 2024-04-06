@@ -1,4 +1,6 @@
 from datetime import date, datetime
+from userStory.get_user_story_history import get_closed_user_stories
+from tasks.get_tasks import get_closed_tasks
 
 
 def get_lead_time_details(project_details,
@@ -55,8 +57,8 @@ def get_us_lead_time(project_id, auth_token, from_date=None, to_date=None):
     closed_user_stories = 0
     lead_times = []
     for user_story in user_stories:
-        created_date = date.fromisoformat(user_story["created_date"])
-        finished_date = date.fromisoformat(user_story['finished_date'])
+        created_date = datetime.fromisoformat(user_story["created_date"])
+        finished_date = datetime.fromisoformat(user_story['finished_date'])
         if from_date is not None and from_date > finished_date.date():
             continue
         if to_date is not None and to_date < finished_date.date():
@@ -78,6 +80,7 @@ def get_us_lead_time(project_id, auth_token, from_date=None, to_date=None):
         return lead_times, 0
     avg_lead_time = round((lead_time / closed_user_stories), 2)
     return lead_times, avg_lead_time
+
 
 def get_task_lead_time(project_id, auth_token, from_date=None, to_date=None):
     tasks = get_closed_tasks(project_id, auth_token)
