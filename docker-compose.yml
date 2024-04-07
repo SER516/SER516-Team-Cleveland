@@ -3,15 +3,23 @@ version: '3.8'
 services:
   gateway:
     build: ./APIGateway
+    container_name: APIGateway
     ports:
       - "8000:8000"
 
   backend:
     build: ./taigaProject
+    container_name: backend
     ports:
       - "8001:8001"
 
   frontend:
     build: ./react-ui
+    container_name: frontend
     ports:
       - "3000:3000"
+    networks:
+      - taiga-url-service
+networks:
+  taiga-url-service:
+    driver: bridge
