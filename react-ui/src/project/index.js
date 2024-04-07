@@ -38,7 +38,7 @@ const Project = () => {
             setIsLeadTime(true);
         }
         else if (eventKey === "Cycle Time") {
-            setMetric("8000/metric/CycleTime");
+            setMetric("8002/metric/CycleTime");
             setIsBurndown(false);
             setIsCycleTime(true);
             setIsDevFocus(false);
@@ -79,7 +79,7 @@ const Project = () => {
 
         axios({
             method: "post",
-            url: `http://localhost:${metric}`,
+            url: `http://localhost:/${metric}`,
             data: {
                 projectslug: project,
                 from_date: startDate,

@@ -6,6 +6,11 @@ services:
     ports:
       - "8001:8001"
 
+  cycle-time:
+    build: cycle-time/
+    ports:
+      - "8002:8002"
+
   dev-focus:
     build: dev-focus/
     ports:
