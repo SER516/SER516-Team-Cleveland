@@ -47,7 +47,7 @@ const DateSelector = ({ onDateSubmit, memberDetails, token, projectId }) => {
 
         axios({
             method: "post",
-            url: `http://localhost:8000/metric/Devfocus`,
+            url: `http://localhost:8003/metric/Devfocus`,
             data: {
                 members: selectedMemeberId,
                 from_date: startDate,
