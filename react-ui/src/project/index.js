@@ -60,7 +60,7 @@ const Project = () => {
             setMetric("8000/Project");
         }
         else if (eventKey === "Cruft") {
-            setMetric("8000/Sprints");
+            setMetric("8005/metric/Cruft");
             setIsBurndown(false);
             setIsCycleTime(false);
             setIsDevFocus(false);
