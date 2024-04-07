@@ -1,6 +1,11 @@
 version: '3.8'
 
 services:
+  cycle-time:
+    build: cycle-time/
+    ports:
+      - "8002:8002"
+
   backend:
     build: ./taigaProject
     ports:
