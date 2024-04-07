@@ -1,12 +1,8 @@
-import os
 import requests
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 def get_milestone(milstone_id, auth_token):
-    taiga_url = os.getenv('TAIGA_URL')
+    taiga_url = "https://api.taiga.io/api/v1"
 
     milestone_api_url = f"{taiga_url}/milestones/{milstone_id}"
 

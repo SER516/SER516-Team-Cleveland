@@ -1,14 +1,9 @@
-import os
 import requests
-from dotenv import load_dotenv
-
-# Load environment variables from a .env file
-load_dotenv()
 
 
 # Function to authenticate with the Taiga API using provided credentials
 def authenticate(username, password):
-    taiga_url = os.getenv('TAIGA_URL')
+    taiga_url = "https://api.taiga.io/api/v1"
     payload = {
         "type": "normal",
         "username": username,

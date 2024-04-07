@@ -1,17 +1,11 @@
-import os
-
 import requests
-from dotenv import load_dotenv
-
-# Load environment variables from .env file
-load_dotenv()
 
 
 # Function to retrieve user stories for a specific project from the Taiga API
 def get_user_story(project_id, auth_token):
 
     # Get Taiga API URL from environment variables
-    taiga_url = os.getenv('TAIGA_URL')
+    taiga_url = "https://api.taiga.io/api/v1"
     # Construct the URL for the user stories API endpoint
     # for the specified project
     user_story_api_url = f"{taiga_url}/userstories?project={project_id}"
