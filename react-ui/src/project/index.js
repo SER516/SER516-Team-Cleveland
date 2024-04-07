@@ -79,7 +79,7 @@ const Project = () => {
 
         axios({
             method: "post",
-            url: `http://localhost:/${metric}`,
+            url: `http://localhost:${metric}`,
             data: {
                 projectslug: project,
                 from_date: startDate,
