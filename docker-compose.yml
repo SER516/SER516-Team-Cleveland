@@ -16,6 +16,11 @@ services:
     ports:
       - "8003:8003"
 
+  burndown-chart:
+    build: burndown-chart/
+    ports:
+      - "8004:8004"
+
   backend:
     build: ./taigaProject
     ports:
