@@ -128,7 +128,7 @@ This project is a Python script for interacting with the Taiga API to perform va
     ```
     4. Go to http://localhost:3000 to view in browser
 
-  - ## Run microserices
+  - #### 4. Run individual microserices
     1. Lead-time: Go to lead-time folder and run it on port 8001
     ``` bash
     uvicorn main:app --reload --host 0.0.0.0 --port 8001
