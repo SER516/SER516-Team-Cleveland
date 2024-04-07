@@ -134,9 +134,19 @@ This project is a Python script for interacting with the Taiga API to perform va
     uvicorn main:app --reload --host 0.0.0.0 --port 8001
     ```
 
-    2. Dev-focus: Go to dev-focus folder and run it on port 8003
+    2. Cycle-time: Go to cycle-time folder and run it on port 8002
+    ``` bash
+    uvicorn main:app --reload --host 0.0.0.0 --port 8002
+    ```
+
+    3. Dev-focus: Go to dev-focus folder and run it on port 8003
     ``` bash
     uvicorn main:app --reload --host 0.0.0.0 --port 8003
+    ```
+
+    4. Burndown-chart: Go to burndown-chart folder and run it on port 8004
+    ``` bash
+    uvicorn main:app --reload --host 0.0.0.0 --port 8004
     ```
 
 ## Using the application
