@@ -15,6 +15,10 @@ services:
     build: dev-focus/
     ports:
       - "8003:8003"
+  cruft:
+    build: cruft/
+    ports:
+      - "8005:8005"
 
   backend:
     build: ./taigaProject
