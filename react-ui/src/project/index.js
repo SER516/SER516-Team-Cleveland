@@ -46,7 +46,7 @@ const Project = () => {
             setIsLeadTime(false);
         }
         else if (eventKey === "Burndown Chart") {
-            setMetric("8000/Sprints");
+            setMetric("8003/Sprints");
             setIsCycleTime(false);
             setIsDevFocus(false);
             setIsLeadTime(false);
