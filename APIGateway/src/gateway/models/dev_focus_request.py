@@ -19,5 +19,7 @@ class DevFocusRequest(BaseModel):
         }
 
     def toJSON(self):
-        return json.dumps(self, default=lambda obj: self.custom_serializer(obj), skipkeys=True,
+        return json.dumps(self,
+                          default=lambda obj: self.custom_serializer(obj),
+                          skipkeys=True,
                           sort_keys=True, indent=4).encode('utf8')

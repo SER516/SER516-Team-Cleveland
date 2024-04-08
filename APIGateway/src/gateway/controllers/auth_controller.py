@@ -9,6 +9,7 @@ from ..models.authRequest import AuthRequest
 router = APIRouter()
 load_dotenv()
 
+
 @router.post("/auth")
 def auth(auth: AuthRequest):
     auth_url = os.getenv('AUTH_URL')

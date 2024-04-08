@@ -13,6 +13,7 @@ from ..util.http_requests_util import post_call
 router = APIRouter()
 load_dotenv()
 
+
 @router.post("/metric/LeadTime")
 def get_lead_time_metric(
     lead_time_request: TimeRequest,
@@ -56,6 +57,3 @@ def get_zero_business_value(
 ):
     cruft_url = os.getenv('METRICS_CRUFT_URL')
     return post_call(cruft_url, token, cruft_request, 'metric/Cruft')
-
-
-

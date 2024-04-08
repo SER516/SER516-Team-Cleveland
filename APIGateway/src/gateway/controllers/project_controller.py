@@ -1,7 +1,5 @@
 import os
-from http.client import HTTPException
 
-import requests
 from dotenv import load_dotenv
 from fastapi import APIRouter, Header
 from typing import Annotated
@@ -11,6 +9,7 @@ from ..util.http_requests_util import post_call
 
 router = APIRouter()
 load_dotenv()
+
 
 @router.post("/Project")
 def auth(

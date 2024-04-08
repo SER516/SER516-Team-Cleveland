@@ -10,6 +10,7 @@ from ..util.http_requests_util import post_call
 router = APIRouter()
 load_dotenv()
 
+
 @router.post("/Sprints")
 def get_sprint_and_custom_field_details(
     projectRequest: ProjectRequest,
