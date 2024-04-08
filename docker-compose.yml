@@ -16,6 +16,11 @@ services:
     ports:
       - "8003:8003"
 
+  auth:
+    build: authenticate/
+    ports:
+      - "8007:8007"
+
   backend:
     build: ./taigaProject
     ports:
