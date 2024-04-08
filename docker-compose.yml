@@ -3,26 +3,31 @@ version: '3.8'
 services:
   lead-time:
     build: lead-time/
+    container_name: lead_time
     ports:
       - "8001:8001"
 
   cycle-time:
     build: cycle-time/
+    container_name: cycle_time
     ports:
       - "8002:8002"
 
   dev-focus:
     build: dev-focus/
+    container_name: dev_focus
     ports:
       - "8003:8003"
   
   cruft:
     build: cruft/
+    container_name: cruft
     ports:
       - "8005:8005"
 
   burndown-chart:
     build: burndown-chart/
+    container_name: burndown_chart
     ports:
       - "8004:8004"
   
@@ -34,6 +39,7 @@ services:
 
   auth:
     build: authenticate/
+    container_name: authenticate
     ports:
       - "8007:8007"
 
@@ -50,6 +56,7 @@ services:
       - "3000:3000"
     networks:
       - taiga-url-service
+
 networks:
   taiga-url-service:
     driver: bridge
