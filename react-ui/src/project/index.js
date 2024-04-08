@@ -30,7 +30,7 @@ const Project = () => {
     const handleSelect = (eventKey) => {
         setSelectedValue(eventKey);
         if (eventKey === "Lead Time") {
-            setMetric("8001/metric/LeadTime");
+            setMetric("8000/metric/LeadTime");
             setIsBurndown(false);
             setIsCycleTime(false);
             setIsDevFocus(false);
@@ -38,7 +38,7 @@ const Project = () => {
             setIsLeadTime(true);
         }
         else if (eventKey === "Cycle Time") {
-            setMetric("8002/metric/CycleTime");
+            setMetric("8000/metric/CycleTime");
             setIsBurndown(false);
             setIsCycleTime(true);
             setIsDevFocus(false);

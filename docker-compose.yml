@@ -3,39 +3,76 @@ version: '3.8'
 services:
   lead-time:
     build: lead-time/
+    container_name: lead_time
     ports:
       - "8001:8001"
+    networks:
+      - taiga-url-service
 
   cycle-time:
     build: cycle-time/
+    container_name: cycle_time
     ports:
       - "8002:8002"
+    networks:
+      - taiga-url-service
 
   dev-focus:
     build: dev-focus/
+    container_name: dev_focus
     ports:
       - "8003:8003"
+    networks:
+      - taiga-url-service
+  
   cruft:
     build: cruft/
+    container_name: cruft
     ports:
       - "8005:8005"
+    networks:
+      - taiga-url-service
 
   burndown-chart:
     build: burndown-chart/
+    container_name: burndown_chart
     ports:
       - "8004:8004"
+    networks:
+      - taiga-url-service
+  
+  gateway:
+    build: ./APIGateway
+    container_name: APIGateway
+    ports:
+      - "8000:8000"
+    networks:
+      - taiga-url-service
 
   auth:
     build: authenticate/
+    container_name: authenticate
     ports:
       - "8007:8007"
+    networks:
+      - taiga-url-service
 
   backend:
     build: ./taigaProject
+    container_name: backend
     ports:
-      - "8000:8000"
+      - "8010:8010"
+    networks:
+      - taiga-url-service
 
   frontend:
     build: ./react-ui
+    container_name: frontend
     ports:
       - "3000:3000"
+    networks:
+      - taiga-url-service
+
+networks:
+  taiga-url-service:
+    driver: bridge
